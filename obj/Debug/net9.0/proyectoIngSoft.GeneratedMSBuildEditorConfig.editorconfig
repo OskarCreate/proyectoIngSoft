@@ -188,12 +188,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Accidente/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjaWRlbnRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/EnfermedadFam/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5mZXJtZWRhZEZhbVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Enfermedad/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5mZXJtZWRhZFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Fallecimiento/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmFsbGVjaW1pZW50b1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Maternidad/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJuaWRhZFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Paternidad/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0ZXJuaWRhZFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/RegistrarDescanso/Index.cshtml]
@@ -210,6 +234,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/SistemaSolicitud/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2lzdGVtYVNvbGljaXR1ZFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/TipoSolicitud/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1NvbGljaXR1ZFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ADMIN/Desktop/Software2/proyectoIngSoft/Views/_ViewImports.cshtml]

@@ -407,3 +407,5 @@ C:\Users\ADMIN\Desktop\Software2\proyectoIngSoft\bin\Debug\net9.0\ru\Microsoft.C
 C:\Users\ADMIN\Desktop\Software2\proyectoIngSoft\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\ADMIN\Desktop\Software2\proyectoIngSoft\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\ADMIN\Desktop\Software2\proyectoIngSoft\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
+C:\Users\ADMIN\Desktop\Software2\proyectoIngSoft\obj\Debug\net9.0\compressed\n2shdywuqt-xmcwek153q.gz
+C:\Users\ADMIN\Desktop\Software2\proyectoIngSoft\obj\Debug\net9.0\compressed\ts7n49f7uj-zw1jejf7j0.gz

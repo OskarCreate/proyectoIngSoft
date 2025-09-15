@@ -1,0 +1,58 @@
+@model proyectoIngSoft.Models.Accidente
+
+@{
+    ViewData["Title"] = "Registrar Accidente";
+}
+
+<h2>Nueva Solicitud por Accidente</h2>
+
+<form method="post" asp-action="Registrar">
+    <div>
+        <label>Nombre del Empleado</label>
+        <input asp-for="NombreComp" class="form-control" />
+        <span asp-validation-for="NombreComp" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>DNI</label>
+        <input asp-for="DNI" class="form-control" maxlength="8" />
+        <span asp-validation-for="DNI" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha de Inicio</label>
+        <input asp-for="FechaIni" type="date" class="form-control" />
+        <span asp-validation-for="FechaIni" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha de Fin</label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+        <span asp-validation-for="FechaFin" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Tipo de Descanso Médico</label>
+        <select asp-for="TipoDM" class="form-control">
+            <option value="">-- Seleccione --</option>
+            <option>Temporal</option>
+            <option>Permanente</option>
+            <option>Otro</option>
+        </select>
+        <span asp-validation-for="TipoDM" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Observaciones</label>
+        <textarea asp-for="Observaciones" class="form-control" placeholder="Detalles adicionales si aplica"></textarea>
+        <span asp-validation-for="Observaciones" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Adjuntar Certificado Medido</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar Accidente</button>
+</form>

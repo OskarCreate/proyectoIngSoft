@@ -1,0 +1,64 @@
+@model proyectoIngSoft.Models.Fallecimiento
+
+@{
+    ViewData["Title"] = "Registrar Fallecimiento";
+}
+
+<h2>Nueva Solicitud por Fallecimiento</h2>
+
+<form method="post" asp-action="Registrar">
+    <div>
+        <label>Nombre del Fallecido</label>
+        <input asp-for="NombreFallec" class="form-control" />
+        <span asp-validation-for="NombreFallec" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Parentesco</label>
+        <select asp-for="Parentesco" class="form-control">
+            <option value="">-- Seleccione --</option>
+            <option>Padre</option>
+            <option>Madre</option>
+            <option>Esposo</option>
+            <option>Esposa</option>
+            <option>Hijo</option>
+            <option>Hija</option>
+            <option>Hermano</option>
+            <option>Hermana</option>
+            <option>Abuelo</option>
+            <option>Abuela</option>
+            <option>Otro</option>
+        </select>
+        <span asp-validation-for="Parentesco" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha de Comunicación</label>
+        <input asp-for="FechaComun" type="date" class="form-control" />
+        <span asp-validation-for="FechaComun" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Lugar de Sepelio</label>
+        <input asp-for="LugarSep" class="form-control" />
+        <span asp-validation-for="LugarSep" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Traslado</label>
+        <input asp-for="Traslado" class="form-control" placeholder="Ej: Nacional, Internacional, Otro" />
+        <span asp-validation-for="Traslado" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Partida de defuncion</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
+    <div>
+        <label>DNI del familiar</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar Solicitud</button>
+</form>

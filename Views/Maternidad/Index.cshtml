@@ -1,0 +1,56 @@
+@model proyectoIngSoft.Models.Maternidad
+
+@{
+    ViewData["Title"] = "Registrar Maternidad";
+}
+
+<h2>Nueva Solicitud por Maternidad</h2>
+
+<form method="post" asp-action="Registrar">
+    <div>
+        <label>Fecha de Parto</label>
+        <input asp-for="FechaParto" type="date" class="form-control" />
+        <span asp-validation-for="FechaParto" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Semanas de Gestación</label>
+        <input asp-for="SemanasGest" type="number" class="form-control" />
+        <span asp-validation-for="SemanasGest" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Parto Múltiple</label>
+        <input asp-for="PartoMult" class="form-control" placeholder="Sí / No" />
+        <span asp-validation-for="PartoMult" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha Última Menstruación</label>
+        <input asp-for="FechaUltM" type="date" class="form-control" />
+        <span asp-validation-for="FechaUltM" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Centro Médico</label>
+        <input asp-for="CentroMed" class="form-control" />
+        <span asp-validation-for="CentroMed" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Médico Tratante</label>
+        <input asp-for="MedicoT" class="form-control" />
+        <span asp-validation-for="MedicoT" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar Solicitud</button>
+</form>

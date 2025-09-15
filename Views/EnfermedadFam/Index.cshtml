@@ -1,0 +1,75 @@
+@model proyectoIngSoft.Models.EnfermedadFam
+
+@{
+    ViewData["Title"] = "Registrar Enfermedad Familiar";
+}
+
+<h2>Nueva Solicitud por Enfermedad Familiar</h2>
+
+<form method="post" asp-action="Registrar">
+    <div>
+        <label>Nombre del Familiar</label>
+        <input asp-for="NombreFamiliar" class="form-control" />
+        <span asp-validation-for="NombreFamiliar" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Parentesco</label>
+        <select asp-for="Parentesco" class="form-control">
+            <option value="">-- Seleccione --</option>
+            <option>Padre</option>
+            <option>Madre</option>
+            <option>Esposo</option>
+            <option>Esposa</option>
+            <option>Hijo</option>
+            <option>Hija</option>
+            <option>Hermano</option>
+            <option>Hermana</option>
+            <option>Abuelo</option>
+            <option>Abuela</option>
+            <option>Otro</option>
+        </select>
+        <span asp-validation-for="Parentesco" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Centro Médico</label>
+        <input asp-for="CentroMedico" class="form-control" />
+        <span asp-validation-for="CentroMedico" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Nombre del Médico</label>
+        <input asp-for="Medico" class="form-control" />
+        <span asp-validation-for="Medico" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Número CMP del Médico</label>
+        <input asp-for="NumeroCMP" class="form-control" />
+        <span asp-validation-for="NumeroCMP" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Fecha de Diagnostico</label>
+        <input asp-for="FechaDiag" type="date" class="form-control" />
+        <span asp-validation-for="FechaDiag" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Días Solicitados</label>
+        <input asp-for="DiaSoli" type="number" class="form-control" />
+        <span asp-validation-for="DiaSoli" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Certificado del Familiar</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
+    <div>
+        <label>Dni del Familiar</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar Solicitud</button>
+</form>

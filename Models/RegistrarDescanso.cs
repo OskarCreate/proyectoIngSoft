@@ -21,18 +21,17 @@ namespace proyectoIngSoft.Models
 
         [Required]
         public DateTime FechaAtencion { get; set; }
-
+        [NotNull]
         [Required]
         public string NombreDoctor { get; set; }
-
+        [NotNull]
         [Required]
         public string CodigoAtencion { get; set; }
-
+        [NotNull]
         [Required]
         public string RazonDescanso { get; set; }
-
-        // Para guardar la ruta del archivo adjunto
-        public string ArchivoAdjunto { get; set; }
+    
+       
 
        
     }

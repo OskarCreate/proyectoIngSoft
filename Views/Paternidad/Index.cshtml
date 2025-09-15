@@ -1,0 +1,44 @@
+@model proyectoIngSoft.Models.Paternidad
+
+@{
+    ViewData["Title"] = "Registrar Paternidad";
+}
+
+<h2>Nueva Solicitud por Paternidad</h2>
+
+<form method="post" asp-action="Registrar">
+    <div>
+        <label>Fecha de Parto</label>
+        <input asp-for="FechaParto" type="date" class="form-control" />
+        <span asp-validation-for="FechaParto" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Nombre de la Pareja</label>
+        <input asp-for="NombrePareja" class="form-control" />
+        <span asp-validation-for="NombrePareja" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Tipo de Situación</label>
+        <input asp-for="TipoSituacion" class="form-control" placeholder="Ej: Nacimiento, Emergencia, etc." />
+        <span asp-validation-for="TipoSituacion" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Centro Médico</label>
+        <input asp-for="CentroMed" class="form-control" />
+        <span asp-validation-for="CentroMed" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha de Comunicación</label>
+        <input asp-for="FechaComun" type="date" class="form-control" />
+        <span asp-validation-for="FechaComun" class="text-danger"></span>
+    </div>
+
+   
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar Solicitud</button>
+</form>

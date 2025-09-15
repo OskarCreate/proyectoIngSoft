@@ -1,0 +1,71 @@
+@model proyectoIngSoft.Models.Enfermedad
+
+@{
+    ViewData["Title"] = "Registrar Enfermedad";
+}
+
+<h2>Nueva Solicitud por Enfermedad</h2>
+
+<form method="post" asp-action="Registrar">
+    <div>
+        <label>Subtipo de Solicitud</label>
+        <select asp-for="SubtipoSol" class="form-control">
+            <option value="">-- Seleccione --</option>
+            <option>EsSalud</option>
+            <option>Particular</option>
+            <option>Accidente Laboral</option>
+            <option>Accidente de Transito</option>
+        </select>
+        <span asp-validation-for="SubtipoSol" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha de Inicio</label>
+        <input asp-for="FechaIni" type="date" class="form-control" />
+        <span asp-validation-for="FechaIni" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Fecha de Fin</label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+        <span asp-validation-for="FechaFin" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Nombre del Médico</label>
+        <input asp-for="NombreMedi" class="form-control" />
+        <span asp-validation-for="NombreMedi" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Centro Médico</label>
+        <input asp-for="CentroMedico" class="form-control" />
+        <span asp-validation-for="CentroMedico" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Días de Descanso</label>
+        <input asp-for="DiasDesc" type="number" min="1" class="form-control" />
+        <span asp-validation-for="DiasDesc" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Diagnóstico</label>
+        <textarea asp-for="Diagnostico" class="form-control" placeholder="Escriba el diagnóstico"></textarea>
+        <span asp-validation-for="Diagnostico" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Descripción de la Enfermedad</label>
+        <textarea asp-for="DescEnfe" class="form-control" placeholder="Detalles adicionales"></textarea>
+        <span asp-validation-for="DescEnfe" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Adjuntar Certificado Medico</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar Enfermedad</button>
+</form>

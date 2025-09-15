@@ -10,5 +10,12 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
     public DbSet<RegistrarDescanso> Descansos { get; set; }
+    public DbSet<EnfermedadFam> EnfermedadF { get; set; }
+    public DbSet<Maternidad> DbSetMaternidad { get; set; }
+    public DbSet<Paternidad> DbSetPaternidad { get; set; }
+    public DbSet<Fallecimiento> DbSetFallecimiento { get; set; }
+    public DbSet<Accidente> DbSetAccidente { get; set; }
+    public DbSet<Enfermedad> DbSetEnfermedad { get; set; }
 }
+
 
