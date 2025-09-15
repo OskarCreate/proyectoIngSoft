@@ -70,10 +70,33 @@ namespace proyectoIngSoft.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required(ErrorMessage = "El nombre es obligatorio.")]
+            [StringLength(50, ErrorMessage = "El nombre no puede tener más de 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El nombre solo puede contener letras y espacios.")]
+            public string Nombres { get; set; }
+
+            [Required(ErrorMessage = "El apellido es obligatorio.")]
+            [StringLength(50, ErrorMessage = "El apellido no puede tener más de 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El apellido solo puede contener letras y espacios.")]
+            public string Apellidos { get; set; }
+
+
+            [Required(ErrorMessage = "El DNI es obligatorio.")]
+            [RegularExpression(@"^\d{8}$", ErrorMessage = "El DNI debe tener 8 dígitos.")]
+            public string DNI { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            /// 
+            [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
+            [DataType(DataType.Date, ErrorMessage = "Ingrese una fecha válida.")]
+            public DateTime FechaNacimiento { get; set; }
+
+            [Required(ErrorMessage = "El número de teléfono es obligatorio.")]
+            [RegularExpression(@"^\d{9}$", ErrorMessage = "El número de teléfono debe tener 9 dígitos.")]
+            public string Telefono { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -97,6 +120,25 @@ namespace proyectoIngSoft.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required(ErrorMessage = "El ubigeo es obligatorio.")]
+            [RegularExpression(@"^\d{6}$", ErrorMessage = "El ubigeo debe tener 6 dígitos.")]
+            public string Ubigeo { get; set; }
+
+            [Required(ErrorMessage = "El distrito es obligatorio.")]
+            [StringLength(50, ErrorMessage = "El distrito no puede tener más de 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El distrito solo puede contener letras y espacios.")]
+            public string Distrito { get; set; }
+
+            [Required(ErrorMessage = "La razón social es obligatoria.")]
+            [StringLength(100, ErrorMessage = "La razón social no puede tener más de 100 caracteres.")]
+            [RegularExpression(@"^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-&]+$", ErrorMessage = "La razón social solo puede contener letras, números, espacios y los caracteres . - &")]
+            public string RazonSocial { get; set; }
+            
+            [Required(ErrorMessage = "El cargo laboral es obligatorio.")]
+            [StringLength(50, ErrorMessage = "El cargo laboral no puede tener más de 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\.\-]+$", ErrorMessage = "El cargo laboral solo puede contener letras, espacios y los caracteres . -")]
+            public string CargoLaboral { get; set; }
         }
 
 
