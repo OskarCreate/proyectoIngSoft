@@ -34,6 +34,7 @@ namespace proyectoIngSoft.Controllers
             {
                 try
                 {
+                    
 
                     _context.DbSetMaternidad.Add(maternidad);
                     _context.SaveChanges();

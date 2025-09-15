@@ -9,7 +9,7 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-    public DbSet<RegistrarDescanso> Descansos { get; set; }
+    
     public DbSet<EnfermedadFam> EnfermedadF { get; set; }
     public DbSet<Maternidad> DbSetMaternidad { get; set; }
     public DbSet<Paternidad> DbSetPaternidad { get; set; }

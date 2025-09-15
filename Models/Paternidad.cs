@@ -16,7 +16,7 @@ namespace proyectoIngSoft.Models
         public int Id { get; set; }
 
         [Required]
-        public DateTime FechaParto { get; set; }
+        public DateOnly FechaParto { get; set; }
         [NotNull]
         [Required]
         public string NombrePareja { get; set; }
@@ -29,7 +29,7 @@ namespace proyectoIngSoft.Models
         public string CentroMed { get; set; }
         
         [Required]
-        public DateTime FechaComun { get; set; }
+        public DateOnly FechaComun { get; set; }
 
 
     }

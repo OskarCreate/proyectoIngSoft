@@ -30,7 +30,7 @@ namespace proyectoIngSoft.Models
         [Required]
         public string NumeroCMP { get; set; }
         [Required]
-        public DateTime FechaDiag { get; set; }
+        public DateOnly FechaDiag { get; set; }
         [Required]
         public int DiaSoli { get; set; }
 
