@@ -17,12 +17,12 @@ namespace proyectoIngSoft.Models
 
         
         [Required]
-        public int NombreFallec { get; set; }
+        public string NombreFallec { get; set; }
         [NotNull]
         [Required]
         public string Parentesco { get; set; }
         [Required]
-        public DateTime FechaComun { get; set; }
+        public DateOnly FechaComun { get; set; }
         [NotNull]
         [Required]
         public string LugarSep { get; set; }

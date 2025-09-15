@@ -18,9 +18,9 @@ namespace proyectoIngSoft.Models
         [Required]
         public string SubtipoSol { get; set; }
         [Required]
-        public DateTime FechaIni { get; set; }
+        public DateOnly FechaIni { get; set; }
         [Required]
-        public DateTime FechaFin { get; set; }
+        public DateOnly FechaFin { get; set; }
         [NotNull]
         [Required]
         public string NombreMedi { get; set; }

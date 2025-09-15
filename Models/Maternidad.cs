@@ -16,15 +16,15 @@ namespace proyectoIngSoft.Models
         public int Id { get; set; }
 
         [Required]
-        public DateTime FechaParto { get; set; }
+        public DateOnly FechaParto { get; set; }
         [Required]
         public int SemanasGest { get; set; }
         [NotNull]
         [Required]
         public string PartoMult { get; set; }
-        [NotNull]
+        
         [Required]
-        public DateTime FechaUltM { get; set; }
+        public DateOnly FechaUltM { get; set; }
         [NotNull]
         [Required]
         public string CentroMed { get; set; }

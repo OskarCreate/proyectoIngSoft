@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyectoIngSoft.Data;
@@ -11,9 +12,11 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250915045757_cuartaMigracion")]
+    partial class cuartaMigracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,11 +236,11 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<int>("DNI")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("FechaFin")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("FechaIni")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaIni")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NombreComp")
                         .IsRequired()
@@ -279,11 +282,11 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<int>("DiasDesc")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("FechaFin")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("FechaIni")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaIni")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NombreMedi")
                         .IsRequired()
@@ -313,8 +316,8 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<int>("DiaSoli")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("FechaDiag")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaDiag")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Medico")
                         .IsRequired()
@@ -345,16 +348,15 @@ namespace proyectoIngSoft.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateOnly>("FechaComun")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaComun")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LugarSep")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("NombreFallec")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("NombreFallec")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Parentesco")
                         .IsRequired()
@@ -385,11 +387,11 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("FechaParto")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaParto")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("FechaUltM")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaUltM")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MedicoT")
                         .IsRequired()
@@ -419,11 +421,11 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("FechaComun")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaComun")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("FechaParto")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaParto")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NombrePareja")
                         .IsRequired()
