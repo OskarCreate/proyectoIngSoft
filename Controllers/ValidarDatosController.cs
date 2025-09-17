@@ -14,10 +14,12 @@ namespace proyectoIngSoft.Controllers
     public class ValidarDatosController : Controller
     {
         private readonly ILogger<ValidarDatosController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public ValidarDatosController(ILogger<ValidarDatosController> logger)
+        public ValidarDatosController(ILogger<ValidarDatosController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         // GET: Vista inicial
@@ -34,11 +36,10 @@ namespace proyectoIngSoft.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Captcha = GenerarCaptcha(); // regenerar si error
+                ViewBag.Captcha = GenerarCaptcha();
                 return View(model);
             }
 
-            // Validar captcha
             if (model.Captcha != TempData["Captcha"]?.ToString())
             {
                 ModelState.AddModelError("Captcha", "El código ingresado no es correcto");
@@ -46,7 +47,18 @@ namespace proyectoIngSoft.Controllers
                 return View(model);
             }
 
-            // Redirigir al controlador ConfirmacionIdentidad
+            try
+            {
+                _context.ValidarDatos.Add(model);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar los datos de validación");
+                ModelState.AddModelError("", "Ocurrió un error al guardar los datos.");
+                return View(model);
+            }
+
             return RedirectToAction("Index", "ConfirmacionIdentidad");
         }
 
@@ -56,7 +68,6 @@ namespace proyectoIngSoft.Controllers
             return View();
         }
 
-        // Generar captcha simple
         private string GenerarCaptcha()
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

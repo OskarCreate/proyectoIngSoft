@@ -10,22 +10,21 @@ using proyectoIngSoft.Models;
 
 namespace proyectoIngSoft.Controllers
 {
-
     public class DocumentoMedicoController : Controller
     {
         private readonly ILogger<DocumentoMedicoController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        // Lista en memoria (se borra cuando apagas el proyecto)
-        private static List<DocumentoMedico> _documentos = new List<DocumentoMedico>();
-
-        public DocumentoMedicoController(ILogger<DocumentoMedicoController> logger)
+        public DocumentoMedicoController(ILogger<DocumentoMedicoController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View(_documentos);
+            var documentos = _context.DocumentosMedicos.ToList();
+            return View(documentos);
         }
 
         [HttpPost]
@@ -33,29 +32,32 @@ namespace proyectoIngSoft.Controllers
         {
             if (archivos == null || !archivos.Any())
             {
-                ViewData["Message"] = "No se seleccionaron archivos.";
+                TempData["Message"] = "No se seleccionaron archivos.";
                 return RedirectToAction("Index");
             }
 
             foreach (var archivo in archivos)
             {
-                if (archivo.Length > 0)
+                using (var stream = new MemoryStream())
                 {
+                    archivo.CopyTo(stream);
                     var doc = new DocumentoMedico
                     {
                         Nombre = archivo.FileName,
                         Tamaño = archivo.Length,
-                        FechaSubida = DateTime.Now
+                        FechaSubida = DateTime.UtcNow,
+                        Archivo = stream.ToArray() 
                     };
 
-                    _documentos.Add(doc);
+                    _context.DocumentosMedicos.Add(doc);
                 }
             }
 
+            _context.SaveChanges();
             TempData["Message"] = $"{archivos.Count} archivo(s) enviado(s) exitosamente.";
             return RedirectToAction("Index");
         }
-
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

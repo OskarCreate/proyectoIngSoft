@@ -9,13 +9,15 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-    
+
     public DbSet<EnfermedadFam> EnfermedadF { get; set; }
     public DbSet<Maternidad> DbSetMaternidad { get; set; }
     public DbSet<Paternidad> DbSetPaternidad { get; set; }
     public DbSet<Fallecimiento> DbSetFallecimiento { get; set; }
     public DbSet<Accidente> DbSetAccidente { get; set; }
     public DbSet<Enfermedad> DbSetEnfermedad { get; set; }
+    public DbSet<DocumentoMedico> DocumentosMedicos { get; set; }
+    public DbSet<ValidarDatos> ValidarDatos { get; set; }
 }
 
 
