@@ -1,0 +1,131 @@
+@model List<proyectoIngSoft.Models.User>
+
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Empleado</th>
+                <th>DNI</th>
+                <th>Razón del Descanso</th>
+                <th>Fecha de Registro</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username @user.Apellidos</td>
+                <td>@user.Dni</td>
+                <td>Consulta médica especializada</td> <!-- Aquí puedes usar otro campo de tu BD -->
+                <td>@DateTime.Now.ToString("dd/MM/yyyy")</td> <!-- Reemplaza con fecha real -->
+                <td>
+                    <span class="status status-proceso">En Proceso</span>
+                </td>
+                <td>
+                    <a href="/Usuarios/Detalles/@user.Id" class="action-btn">Ver Detalles</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Contenedor de la tabla */
+.table-container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    font-family: Arial, sans-serif;
+}
+
+/* Tabla general */
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+/* Encabezado */
+.table-container thead {
+    background: #2d3748; /* gris oscuro */
+    color: #fff;
+}
+
+.table-container th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+/* Filas */
+.table-container td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #333;
+}
+
+/* Alternar color en filas */
+.table-container tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+/* Hover en filas */
+.table-container tbody tr:hover {
+    background: #edf2f7;
+    transition: 0.2s;
+}
+
+/* Estado */
+.status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Colores de estados */
+.status-proceso {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-aprobado {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-rechazado {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Botón de acción */
+.action-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: #3182ce;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.action-btn:hover {
+    background: #2b6cb0;
+}
+
+</style>

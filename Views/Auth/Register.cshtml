@@ -1,0 +1,42 @@
+@model proyectoIngSoft.Models.User
+
+<h2>Registro</h2>
+<form asp-action="Register" method="post">
+    <label>Usuario</label>
+    <input asp-for="Username" class="form-control" />
+
+    <label>Apellidos</label>
+    <input asp-for="Apellidos" class="form-control" />
+
+    <label>DNI</label>
+    <input asp-for="Dni" class="form-control" />
+
+    <label>Fecha de Nacimiento</label>
+    <input asp-for="FechaNacimiento" type="date" class="form-control" />
+
+    <label>Teléfono</label>
+    <input asp-for="Telefono" class="form-control" />
+
+    <label>Ubigeo</label>
+    <input asp-for="Ubigeo" class="form-control" />
+
+    <label>Distrito</label>
+    <input asp-for="Distrito" class="form-control" />
+
+    <label>Razón Social</label>
+    <input asp-for="RazonSocial" class="form-control" />
+
+    <label>Cargo Laboral</label>
+    <input asp-for="CargoLaboral" class="form-control" />
+
+    <label>Email</label>
+    <input asp-for="Email" type="email" class="form-control" />
+
+    <label>Contraseña</label>
+    <input asp-for="Password" type="password" class="form-control" />
+
+    <label>Confirmar Contraseña</label>
+    <input asp-for="ConfirmarPassword" type="password" class="form-control" />
+
+    <button type="submit" class="btn btn-primary mt-3">Registrar</button>
+</form>
