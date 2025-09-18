@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using proyectoIngSoft.Data;
@@ -11,9 +12,11 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250917220917_usuarioMigracion")]
+    partial class usuarioMigracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -438,7 +441,7 @@ namespace proyectoIngSoft.Data.Migrations
                     b.ToTable("t_Paternidad");
                 });
 
-            modelBuilder.Entity("proyectoIngSoft.Models.User", b =>
+            modelBuilder.Entity("proyectoIngSoft.Models.RegyLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -446,45 +449,12 @@ namespace proyectoIngSoft.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Apellidos")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CargoLaboral")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConfirmarPassword")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Distrito")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Dni")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DateTime>("FechaNacimiento")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RazonSocial")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Ubigeo")
                         .IsRequired()
                         .HasColumnType("text");
 
