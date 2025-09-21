@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿
+
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using proyectoIngSoft.Models;
 namespace proyectoIngSoft.Data;
@@ -16,6 +18,9 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Fallecimiento> DbSetFallecimiento { get; set; }
     public DbSet<Accidente> DbSetAccidente { get; set; }
     public DbSet<Enfermedad> DbSetEnfermedad { get; set; }
+    public DbSet<DocumentoMedico> DocumentosMedicos { get; set; }
+    public DbSet<ValidarDatos> ValidarDatos { get; set; }
+
     public DbSet<User> DbSetUser { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,5 +32,3 @@ public class ApplicationDbContext : IdentityDbContext
         .HasColumnType("timestamp without time zone");
 }
 }
-
-

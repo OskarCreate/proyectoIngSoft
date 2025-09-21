@@ -52,7 +52,7 @@ namespace proyectoIngSoft.Controllers
             {
                 ViewData["Message"] = "Datos de entrada no válidos";
             }
-            return View("Index");
+            return RedirectToAction("Index", "DocumentoMedico");
             
 
         }

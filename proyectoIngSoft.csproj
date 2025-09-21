@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-proyectoIngSoft-e63b6fe7-c989-421c-8bde-0f756daf67be</UserSecretsId>
+    
   </PropertyGroup>
 
   <ItemGroup>
