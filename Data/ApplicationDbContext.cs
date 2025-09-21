@@ -18,6 +18,17 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Enfermedad> DbSetEnfermedad { get; set; }
     public DbSet<DocumentoMedico> DocumentosMedicos { get; set; }
     public DbSet<ValidarDatos> ValidarDatos { get; set; }
+
+    public DbSet<User> DbSetUser { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    modelBuilder.Entity<User>()
+        .Property(u => u.FechaNacimiento)
+        .HasColumnType("timestamp without time zone");
+}
 }
 
 
