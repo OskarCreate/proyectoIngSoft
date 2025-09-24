@@ -1,4 +1,4 @@
-@model List<proyectoIngSoft.Models.User>
+@model List<proyectoIngSoft.Models.Lista>
 
 
 <div class="table-container">
@@ -14,24 +14,50 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var user in Model)
+       @foreach (var item in Model)
         {
             <tr>
-                <td>@user.Username @user.Apellidos</td>
-                <td>@user.Dni</td>
-                <td>Consulta médica especializada</td> <!-- Aquí puedes usar otro campo de tu BD -->
-                <td>@DateTime.Now.ToString("dd/MM/yyyy")</td> <!-- Reemplaza con fecha real -->
+                <td>@item.Username @item.Apellidos</td>
+                <td>@item.Dni</td>
+                <td>@item.Observaciones</td>
+                <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
                 <td>
-                    <span class="status status-proceso">En Proceso</span>
+                    <span class="status status-proceso">@item.Estado</span>
                 </td>
                 <td>
-                    <a href="/Usuarios/Detalles/@user.Id" class="action-btn">Ver Detalles</a>
+                    <a href="javascript:void(0)" 
+   class="action-btn" 
+   data-id="@item.IdUser" 
+   onclick="abrirModal(@item.IdUser)">
+   Ver Detalles
+</a>
                 </td>
             </tr>
         }
-        </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="detalleModalLabel">Detalle del Descanso</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="detalleContenido">
+            <!-- Aquí se cargan los datos con AJAX -->
+        </div>
+    </div>
+  </div>
+</div>
+<script>
+function abrirModal(userId) {
+    $.get("/Lista/DetalleDescanso", { id: userId }, function (data) {
+        $("#detalleContenido").html(data);
+        $("#detalleModal").modal("show");
+    });
+}
+</script>
 
 <style>
     /* Contenedor de la tabla */

@@ -7088,11 +7088,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (3)\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (4)\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "projectName": "proyectoIngSoft",
-      "projectPath": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (3)\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectPath": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (4)\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (3)\\proyectoIngSoft\\obj\\",
+      "outputPath": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (4)\\proyectoIngSoft\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

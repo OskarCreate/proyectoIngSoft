@@ -28,19 +28,33 @@ namespace proyectoIngSoft.Controllers
         }
         [HttpPost]
        
-        public IActionResult Registrar(EnfermedadFam enfermedadFam)
+        public IActionResult Registrar(EnfermedadFam model)
         {
             if (ModelState.IsValid)
             {
-                try
+                 try
+            {
+                // 1. Guardar Accidente
+                _context.DbSetEnfermedadF.Add(model);
+                _context.SaveChanges();
+
+                // 2. Obtener usuario logueado (simulado)
+                var user = _context.DbSetUser.First(); // ⚠️ cambiar por usuario en sesión
+
+                // 3. Crear Descanso
+                var descanso = new Descanso
                 {
+                    UserId = user.IdUser,               // FK a T_Usuarios
+                    TipoDescansoId = 5,                 // 1 = Accidente
+                    FechaSolicitud = DateTime.UtcNow,
+                    EnfermedadFamId = model.IdEnfermedadFam     // FK al Accidente recién creado
+                };
 
-                    _context.EnfermedadF.Add(enfermedadFam);
-                    _context.SaveChanges();
-                    _logger.LogInformation("Descanso registrado exitosamente.");
-                    ViewData["Message"] = "Se registró el descanso exitosamente.";
+                _context.DbSetDescanso.Add(descanso);
+                _context.SaveChanges();
 
-                }
+                ViewData["Message"] = "Accidente registrado con éxito";
+            }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error al registrar el descanso.");
@@ -51,7 +65,7 @@ namespace proyectoIngSoft.Controllers
             {
                 ViewData["Message"] = "Datos de entrada no válidos";
             }
-            return RedirectToAction("Index", "DocumentoMedico");
+            return View("Index");
             
 
         }

@@ -13,9 +13,8 @@ namespace proyectoIngSoft.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        
+        public int IdFallec { get; set; }
+      
         [Required]
         public string NombreFallec { get; set; }
         [NotNull]

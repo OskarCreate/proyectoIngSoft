@@ -28,18 +28,32 @@ namespace proyectoIngSoft.Controllers
         }
         [HttpPost]
        
-        public IActionResult Registrar(Paternidad paternidad)
+        public IActionResult Registrar(Paternidad model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-
-                    _context.DbSetPaternidad.Add(paternidad);
+                    // 1. Guardar Accidente
+                    _context.DbSetPaternidad.Add(model);
                     _context.SaveChanges();
-                    _logger.LogInformation("Descanso registrado exitosamente.");
-                    ViewData["Message"] = "Se registró el descanso exitosamente.";
 
+                    // 2. Obtener usuario logueado (simulado)
+                    var user = _context.DbSetUser.First(); // ⚠️ cambiar por usuario en sesión
+
+                    // 3. Crear Descanso
+                    var descanso = new Descanso
+                    {
+                        UserId = user.IdUser,               // FK a T_Usuarios
+                        TipoDescansoId = 3,                 // 1 = Accidente
+                        FechaSolicitud = DateTime.UtcNow,
+                        PaternidadId = model.IdPater    // FK al Accidente recién creado
+                    };
+
+                    _context.DbSetDescanso.Add(descanso);
+                    _context.SaveChanges();
+
+                    ViewData["Message"] = "Accidente registrado con éxito";
                 }
                 catch (Exception ex)
                 {
@@ -51,7 +65,7 @@ namespace proyectoIngSoft.Controllers
             {
                 ViewData["Message"] = "Datos de entrada no válidos";
             }
-            return RedirectToAction("Index", "DocumentoMedico");
+            return View("Index");
             
 
         }

@@ -13,7 +13,8 @@ namespace proyectoIngSoft.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int IdEnfermedad { get; set; }
+       
         [NotNull]
         [Required]
         public string SubtipoSol { get; set; }
