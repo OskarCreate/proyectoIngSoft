@@ -49,21 +49,17 @@ namespace proyectoIngSoft.Controllers
  
         }
 
-        public IActionResult DetalleDescanso(int id)
+        public IActionResult DetalleDescanso(int descansoId)
         {
             var descanso = _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
                 .Include(d => d.Accidente)
                 .Include(d => d.DocumentosMedicos)
-                .FirstOrDefault(d => d.UserId == id);
+                .FirstOrDefault(d => d.IdDescanso == descansoId);
 
-            if (descanso == null)
-            {
-                return NotFound();
-            }
+            if (descanso == null) return NotFound();
 
-          
             return PartialView("_DetalleDescanso", descanso);
         }
 

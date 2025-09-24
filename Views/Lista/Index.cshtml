@@ -21,17 +21,15 @@
                 <td>@item.Dni</td>
                 <td>@item.Observaciones</td>
                 <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
-                
+                <td><span class="status status-proceso">@item.Estado</span></td>
                 <td>
-                    <span class="status status-proceso">@item.Estado</span>
-                </td>
-                <td>
-                    <a href="javascript:void(0)" 
-   class="action-btn" 
-   data-id="@item.IdUser" 
-   onclick="abrirModal(@item.IdUser)">
-   Ver Detalles
-</a>
+                    <!-- PASAR IdDescanso en vez de IdUser -->
+                    <a href="javascript:void(0)"
+                    class="action-btn"
+                    data-descanso-id="@item.IdDescanso"
+                    onclick="abrirModal(@item.IdDescanso)">
+                    Ver Detalles
+                    </a>
                 </td>
             </tr>
         }
@@ -52,10 +50,12 @@
   </div>
 </div>
 <script>
-function abrirModal(userId) {
-    $.get("/Lista/DetalleDescanso", { id: userId }, function (data) {
+function abrirModal(descansoId) {
+    $.get("/Lista/DetalleDescanso", { descansoId: descansoId }, function (data) {
         $("#detalleContenido").html(data);
         $("#detalleModal").modal("show");
+    }).fail(function () {
+        alert("No se pudo cargar el detalle del descanso.");
     });
 }
 </script>
