@@ -12,7 +12,7 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250924054754_NovoMigracion")]
+    [Migration("20250924202038_NovoMigracion")]
     partial class NovoMigracion
     {
         /// <inheritdoc />
@@ -638,6 +638,33 @@ namespace proyectoIngSoft.Data.Migrations
                     b.ToTable("T_Usuarios");
                 });
 
+            modelBuilder.Entity("proyectoIngSoft.Models.ValidarDatos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Captcha")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DNI")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)");
+
+                    b.Property<string>("Ubigeo")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ValidarDatos");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -747,12 +774,17 @@ namespace proyectoIngSoft.Data.Migrations
             modelBuilder.Entity("proyectoIngSoft.Models.DocumentoMedico", b =>
                 {
                     b.HasOne("proyectoIngSoft.Models.Descanso", "Descanso")
-                        .WithMany()
+                        .WithMany("DocumentosMedicos")
                         .HasForeignKey("DescansoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Descanso");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>
+                {
+                    b.Navigation("DocumentosMedicos");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.TipoDescanso", b =>

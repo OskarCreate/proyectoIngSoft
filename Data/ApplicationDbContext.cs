@@ -23,6 +23,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Descanso> DbSetDescanso { get; set; }
     
     public DbSet<TipoDescanso> DbSetTipoDescanso { get; set; }
+     public DbSet<ValidarDatos> ValidarDatos { get; set; }
    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,7 +42,7 @@ public class ApplicationDbContext : IdentityDbContext
             new TipoDescanso { IdTDescanso = 5, Nombre = "Enfermedad Familiar" },
             new TipoDescanso { IdTDescanso = 6, Nombre = "Accidente" }
         );
-            
+
     }
 }
 

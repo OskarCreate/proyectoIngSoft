@@ -63,6 +63,21 @@ namespace proyectoIngSoft.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ValidarDatos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DNI = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
+                    Ubigeo = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false),
+                    Captcha = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ValidarDatos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "t_Descanso",
                 columns: table => new
                 {
@@ -212,6 +227,9 @@ namespace proyectoIngSoft.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DocumentosMedicos");
+
+            migrationBuilder.DropTable(
+                name: "ValidarDatos");
 
             migrationBuilder.DropTable(
                 name: "t_Descanso");

@@ -75,7 +75,7 @@ namespace proyectoIngSoft.Controllers
               
 
         // Redirigir al módulo de Documentos
-                 return RedirectToAction("Index", "DocumentoMedico");
+                 return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
             }
             catch (Exception ex)
             {
@@ -85,18 +85,7 @@ namespace proyectoIngSoft.Controllers
 
             return View("Index");
         }
-         [HttpPost]
-        public IActionResult IrADocumentos(Accidente model)
-        {
-            if (!ModelState.IsValid)
-                return View("Index", model);
-
-            // Guardar el form serializado en TempData
-            TempData["AccidenteData"] = System.Text.Json.JsonSerializer.Serialize(model);
-
-            // Redirigir al módulo de Documentos
-            return RedirectToAction("Index", "DocumentoMedico");
-        }
+        
         
     }
 }

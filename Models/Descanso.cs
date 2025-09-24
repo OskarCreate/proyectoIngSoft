@@ -25,10 +25,10 @@ namespace proyectoIngSoft.Models
         public int TipoDescansoId { get; set; }
         public TipoDescanso TipoDescanso { get; set; }
         [Required]
-      
+
 
         public DateTime FechaSolicitud { get; set; }
-      
+
 
         // FKs opcionales según el tipo
         public int? AccidenteId { get; set; }
@@ -47,6 +47,8 @@ namespace proyectoIngSoft.Models
 
         public int? EnfermedadFamId { get; set; }
         public EnfermedadFam? EnfermedadFam { get; set; }
+        public ICollection<DocumentoMedico> DocumentosMedicos { get; set; } = new List<DocumentoMedico>();
+
 
         
 

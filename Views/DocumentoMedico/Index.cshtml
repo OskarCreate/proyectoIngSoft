@@ -11,6 +11,7 @@
 
     <!-- Caja Drag & Drop -->
     <form asp-action="Subir" method="post" enctype="multipart/form-data" id="uploadForm">
+    <input type="hidden" name="descansoId" value="@ViewBag.DescansoId" />
         <div class="border rounded d-flex flex-column justify-content-center align-items-center p-5 mb-3" 
              style="border: 2px dashed #ccc; cursor: pointer;" 
              id="dropArea">

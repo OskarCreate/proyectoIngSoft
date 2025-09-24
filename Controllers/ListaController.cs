@@ -40,7 +40,8 @@ namespace proyectoIngSoft.Controllers
                     Observaciones = d.Accidente != null ? d.Accidente.Observaciones : "N/A",
                     FechaSolicitud = d.FechaSolicitud,
                     Estado = "En Proceso", // Puedes mapear según tu lógica
-                    IdUser = d.User.IdUser
+                    IdUser = d.User.IdUser,
+                    IdDescanso = d.IdDescanso
                 })
                 .ToList();
 
@@ -54,6 +55,7 @@ namespace proyectoIngSoft.Controllers
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
                 .Include(d => d.Accidente)
+                .Include(d => d.DocumentosMedicos)
                 .FirstOrDefault(d => d.UserId == id);
 
             if (descanso == null)
@@ -61,17 +63,22 @@ namespace proyectoIngSoft.Controllers
                 return NotFound();
             }
 
-            var vm = new
-            {
-                NombreCompleto = descanso.User.Username + " " + descanso.User.Apellidos,
-                Dni = descanso.User.Dni,
-                TipoLicencia = descanso.TipoDescanso.Nombre, // Ej: "Maternidad", "Fallecimiento"
-                Observacion = descanso.Accidente != null ? descanso.Accidente.Observaciones : "N/A",
-                FechaRegistro = descanso.FechaSolicitud,
-                Estado = "En Proceso" // luego lo puedes mapear a tu BD
-            };
+          
+            return PartialView("_DetalleDescanso", descanso);
+        }
 
-            return PartialView("_DetalleDescanso", vm);
+        public IActionResult VerDocumento(int id)
+        {
+            var documento = _context.DocumentosMedicos
+                .AsNoTracking()
+                .FirstOrDefault(d => d.IdDocumento == id);
+
+            if (documento == null || documento.Archivo == null || documento.Archivo.Length == 0)
+                return NotFound();
+
+            // Forzar inline para que se vea en el iframe
+            Response.Headers["Content-Disposition"] = $"inline; filename=\"{documento.Nombre}\"";
+            return File(documento.Archivo, "application/pdf");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

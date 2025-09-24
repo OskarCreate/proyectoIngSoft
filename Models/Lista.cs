@@ -11,6 +11,7 @@ namespace proyectoIngSoft.Models
     public class Lista
     {
         public string Username { get; set; }
+        public int IdDescanso { get; set; } 
         public string Apellidos { get; set; }
         public string Dni { get; set; }
         public string Observaciones { get; set; }

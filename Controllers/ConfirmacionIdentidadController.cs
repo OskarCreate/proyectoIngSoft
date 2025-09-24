@@ -11,7 +11,7 @@ using proyectoIngSoft.Models;
 namespace proyectoIngSoft.Controllers
 {
 
-    public class ConfirmacionIdentidadController : Controller
+     public class ConfirmacionIdentidadController : Controller
     {
         private readonly ILogger<ConfirmacionIdentidadController> _logger;
 
