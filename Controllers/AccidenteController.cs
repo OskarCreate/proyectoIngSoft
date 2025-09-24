@@ -25,13 +25,7 @@ namespace proyectoIngSoft.Controllers
         // GET: /Accidente/Index
         public IActionResult Index()
         {
-            if (TempData["AccidenteData"] != null)
-            {
-                var model = System.Text.Json.JsonSerializer.Deserialize<Accidente>(
-                    TempData["AccidenteData"].ToString()!
-                );
-                return View(model);
-            }
+            var documentos = _context.DocumentosMedicos.ToList();
 
             return View();
         }
@@ -52,8 +46,20 @@ namespace proyectoIngSoft.Controllers
                 _context.SaveChanges();
 
                 // 2. Obtener usuario logueado (simulado)
-                var user = _context.DbSetUser.First(); // ⚠️ cambiar por usuario en sesión
+                var username = HttpContext.Session.GetString("User");
+                if (string.IsNullOrEmpty(username))
+                {
+                    ViewData["Message"] = "No hay usuario logueado";
+                    return View("Index", model);
+                }
 
+                // 3. Buscar el usuario en la base de datos
+                var user = _context.DbSetUser.FirstOrDefault(u => u.Username == username);
+                if (user == null)
+                {
+                    ViewData["Message"] = "Usuario no encontrado";
+                    return View("Index", model);
+                }
                 // 3. Crear Descanso
                 var descanso = new Descanso
                 {
@@ -66,7 +72,10 @@ namespace proyectoIngSoft.Controllers
                 _context.DbSetDescanso.Add(descanso);
                 _context.SaveChanges();
 
-                ViewData["Message"] = "Accidente registrado con éxito";
+              
+
+        // Redirigir al módulo de Documentos
+                 return RedirectToAction("Index", "DocumentoMedico");
             }
             catch (Exception ex)
             {
@@ -76,7 +85,7 @@ namespace proyectoIngSoft.Controllers
 
             return View("Index");
         }
-        [HttpPost]
+         [HttpPost]
         public IActionResult IrADocumentos(Accidente model)
         {
             if (!ModelState.IsValid)
@@ -88,5 +97,6 @@ namespace proyectoIngSoft.Controllers
             // Redirigir al módulo de Documentos
             return RedirectToAction("Index", "DocumentoMedico");
         }
+        
     }
 }

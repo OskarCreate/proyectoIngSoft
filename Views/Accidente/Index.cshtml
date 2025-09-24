@@ -48,14 +48,11 @@
         <span asp-validation-for="Observaciones" class="text-danger"></span>
     </div>
 
-    
+    <div>
+        <label>Adjuntar Certificado Medido</label>
+        <input type="file" name="archivo" class="form-control" />
+    </div>
 
     <br />
-    <button type="submit" formaction="/Accidente/Registrar" class="btn btn-primary">
-        Registrar Accidente
-    </button>
-
-    <button type="submit" formaction="/Accidente/IrADocumentos" class="btn btn-secondary">
-        Adjuntar Documento
-    </button>
+    <button type="submit" class="btn btn-primary">Registrar Accidente</button>
 </form>

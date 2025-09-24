@@ -324,6 +324,9 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
+                    b.Property<int>("DescansoId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("FechaSubida")
                         .HasColumnType("timestamp with time zone");
 
@@ -335,6 +338,8 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("IdDocumento");
+
+                    b.HasIndex("DescansoId");
 
                     b.ToTable("DocumentosMedicos");
                 });
@@ -734,6 +739,17 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Navigation("TipoDescanso");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.DocumentoMedico", b =>
+                {
+                    b.HasOne("proyectoIngSoft.Models.Descanso", "Descanso")
+                        .WithMany()
+                        .HasForeignKey("DescansoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Descanso");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.TipoDescanso", b =>

@@ -24,7 +24,7 @@ namespace proyectoIngSoft.Controllers
         public IActionResult Index()
         {
             var documentos = _context.DocumentosMedicos.ToList();
-            return View(documentos);
+            return View();
         }
 
         [HttpPost]
@@ -35,6 +35,13 @@ namespace proyectoIngSoft.Controllers
                 TempData["Message"] = "No se seleccionaron archivos.";
                 return RedirectToAction("Index");
             }
+             if (TempData["DescansoId"] == null)
+            {
+                TempData["Message"] = "No se encontró el descanso asociado.";
+                return RedirectToAction("Index");
+            }
+
+            int descansoId = (int)TempData["DescansoId"];
 
             foreach (var archivo in archivos)
             {
@@ -46,7 +53,8 @@ namespace proyectoIngSoft.Controllers
                         Nombre = archivo.FileName,
                         Tamaño = archivo.Length,
                         FechaSubida = DateTime.UtcNow,
-                        Archivo = stream.ToArray() 
+                        Archivo = stream.ToArray(),
+                        DescansoId = descansoId
                     };
 
                     _context.DocumentosMedicos.Add(doc);
@@ -55,7 +63,7 @@ namespace proyectoIngSoft.Controllers
 
             _context.SaveChanges();
             TempData["Message"] = $"{archivos.Count} archivo(s) enviado(s) exitosamente.";
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "TipoSolicitud");
         }
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

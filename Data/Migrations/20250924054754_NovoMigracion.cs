@@ -50,22 +50,6 @@ namespace proyectoIngSoft.Data.Migrations
                 newName: "IdAccidente");
 
             migrationBuilder.CreateTable(
-                name: "DocumentosMedicos",
-                columns: table => new
-                {
-                    IdDocumento = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nombre = table.Column<string>(type: "text", nullable: false),
-                    Tamaño = table.Column<long>(type: "bigint", nullable: false),
-                    FechaSubida = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Archivo = table.Column<byte[]>(type: "bytea", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DocumentosMedicos", x => x.IdDocumento);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "t_TiposDescanso",
                 columns: table => new
                 {
@@ -141,6 +125,29 @@ namespace proyectoIngSoft.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DocumentosMedicos",
+                columns: table => new
+                {
+                    IdDocumento = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DescansoId = table.Column<int>(type: "integer", nullable: false),
+                    Nombre = table.Column<string>(type: "text", nullable: false),
+                    Tamaño = table.Column<long>(type: "bigint", nullable: false),
+                    FechaSubida = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Archivo = table.Column<byte[]>(type: "bytea", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentosMedicos", x => x.IdDocumento);
+                    table.ForeignKey(
+                        name: "FK_DocumentosMedicos_t_Descanso_DescansoId",
+                        column: x => x.DescansoId,
+                        principalTable: "t_Descanso",
+                        principalColumn: "IdDescanso",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "t_TiposDescanso",
                 columns: new[] { "IdTDescanso", "Nombre" },
@@ -153,6 +160,11 @@ namespace proyectoIngSoft.Data.Migrations
                     { 5, "Enfermedad Familiar" },
                     { 6, "Accidente" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentosMedicos_DescansoId",
+                table: "DocumentosMedicos",
+                column: "DescansoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_Descanso_AccidenteId",
