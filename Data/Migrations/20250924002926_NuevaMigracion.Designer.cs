@@ -12,8 +12,8 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250915045757_cuartaMigracion")]
-    partial class cuartaMigracion
+    [Migration("20250924002926_NuevaMigracion")]
+    partial class NuevaMigracion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,20 +227,20 @@ namespace proyectoIngSoft.Data.Migrations
 
             modelBuilder.Entity("proyectoIngSoft.Models.Accidente", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdAccidente")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdAccidente"));
 
                     b.Property<int>("DNI")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("FechaFin")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaFin")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("FechaIni")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaIni")
+                        .HasColumnType("date");
 
                     b.Property<string>("NombreComp")
                         .IsRequired()
@@ -254,18 +254,106 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdAccidente");
 
                     b.ToTable("t_Accidente");
                 });
 
-            modelBuilder.Entity("proyectoIngSoft.Models.Enfermedad", b =>
+            modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdDescanso")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdDescanso"));
+
+                    b.Property<int?>("AccidenteId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("EnfermedadFamId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("EnfermedadId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("FallecimientoId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("FechaSolicitud")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("MaternidadId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PaternidadId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TipoDescansoId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("IdDescanso");
+
+                    b.HasIndex("AccidenteId");
+
+                    b.HasIndex("EnfermedadFamId");
+
+                    b.HasIndex("EnfermedadId");
+
+                    b.HasIndex("FallecimientoId");
+
+                    b.HasIndex("MaternidadId");
+
+                    b.HasIndex("PaternidadId");
+
+                    b.HasIndex("TipoDescansoId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("t_Descanso");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.DocumentoMedico", b =>
+                {
+                    b.Property<int>("IdArchivo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdArchivo"));
+
+                    b.Property<byte[]>("Archivo")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<int>("DescansoId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("FechaSubida")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("Tamaño")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("IdArchivo");
+
+                    b.HasIndex("DescansoId");
+
+                    b.ToTable("t_DocumentoMedico");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.Enfermedad", b =>
+                {
+                    b.Property<int>("IdEnfermedad")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdEnfermedad"));
 
                     b.Property<string>("CentroMedico")
                         .IsRequired()
@@ -282,11 +370,11 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<int>("DiasDesc")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("FechaFin")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaFin")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("FechaIni")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaIni")
+                        .HasColumnType("date");
 
                     b.Property<string>("NombreMedi")
                         .IsRequired()
@@ -296,18 +384,18 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdEnfermedad");
 
                     b.ToTable("t_Enfermedad");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.EnfermedadFam", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdEnfermedadFam")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdEnfermedadFam"));
 
                     b.Property<string>("CentroMedico")
                         .IsRequired()
@@ -316,8 +404,8 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<int>("DiaSoli")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("FechaDiag")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaDiag")
+                        .HasColumnType("date");
 
                     b.Property<string>("Medico")
                         .IsRequired()
@@ -335,28 +423,29 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdEnfermedadFam");
 
                     b.ToTable("t_EnfermedadFamiliar");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.Fallecimiento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdFallec")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdFallec"));
 
-                    b.Property<DateTime>("FechaComun")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaComun")
+                        .HasColumnType("date");
 
                     b.Property<string>("LugarSep")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("NombreFallec")
-                        .HasColumnType("integer");
+                    b.Property<string>("NombreFallec")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Parentesco")
                         .IsRequired()
@@ -366,18 +455,18 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdFallec");
 
                     b.ToTable("t_Fallecimiento");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.Maternidad", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdMater")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdMater"));
 
                     b.Property<string>("CentroMed")
                         .IsRequired()
@@ -387,11 +476,11 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("FechaParto")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaParto")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("FechaUltM")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaUltM")
+                        .HasColumnType("date");
 
                     b.Property<string>("MedicoT")
                         .IsRequired()
@@ -404,28 +493,28 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<int>("SemanasGest")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdMater");
 
                     b.ToTable("t_Maternidad");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.Paternidad", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdPater")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPater"));
 
                     b.Property<string>("CentroMed")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("FechaComun")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaComun")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("FechaParto")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("FechaParto")
+                        .HasColumnType("date");
 
                     b.Property<string>("NombrePareja")
                         .IsRequired()
@@ -435,9 +524,118 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdPater");
 
                     b.ToTable("t_Paternidad");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.TipoDescanso", b =>
+                {
+                    b.Property<int>("IdTDescanso")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdTDescanso"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("IdTDescanso");
+
+                    b.ToTable("t_TiposDescanso");
+
+                    b.HasData(
+                        new
+                        {
+                            IdTDescanso = 1,
+                            Nombre = "Enfermedad"
+                        },
+                        new
+                        {
+                            IdTDescanso = 2,
+                            Nombre = "Maternidad"
+                        },
+                        new
+                        {
+                            IdTDescanso = 3,
+                            Nombre = "Paternidad"
+                        },
+                        new
+                        {
+                            IdTDescanso = 4,
+                            Nombre = "Fallecimiento Familiar"
+                        },
+                        new
+                        {
+                            IdTDescanso = 5,
+                            Nombre = "Enfermedad Familiar"
+                        },
+                        new
+                        {
+                            IdTDescanso = 6,
+                            Nombre = "Accidente"
+                        });
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.User", b =>
+                {
+                    b.Property<int>("IdUser")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdUser"));
+
+                    b.Property<string>("Apellidos")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CargoLaboral")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConfirmarPassword")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Distrito")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Dni")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RazonSocial")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ubigeo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("IdUser");
+
+                    b.ToTable("T_Usuarios");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -489,6 +687,82 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>
+                {
+                    b.HasOne("proyectoIngSoft.Models.Accidente", "Accidente")
+                        .WithMany()
+                        .HasForeignKey("AccidenteId");
+
+                    b.HasOne("proyectoIngSoft.Models.EnfermedadFam", "EnfermedadFam")
+                        .WithMany()
+                        .HasForeignKey("EnfermedadFamId");
+
+                    b.HasOne("proyectoIngSoft.Models.Enfermedad", "Enfermedad")
+                        .WithMany()
+                        .HasForeignKey("EnfermedadId");
+
+                    b.HasOne("proyectoIngSoft.Models.Fallecimiento", "Fallecimiento")
+                        .WithMany()
+                        .HasForeignKey("FallecimientoId");
+
+                    b.HasOne("proyectoIngSoft.Models.Maternidad", "Maternidad")
+                        .WithMany()
+                        .HasForeignKey("MaternidadId");
+
+                    b.HasOne("proyectoIngSoft.Models.Paternidad", "Paternidad")
+                        .WithMany()
+                        .HasForeignKey("PaternidadId");
+
+                    b.HasOne("proyectoIngSoft.Models.TipoDescanso", "TipoDescanso")
+                        .WithMany("Descansos")
+                        .HasForeignKey("TipoDescansoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proyectoIngSoft.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accidente");
+
+                    b.Navigation("Enfermedad");
+
+                    b.Navigation("EnfermedadFam");
+
+                    b.Navigation("Fallecimiento");
+
+                    b.Navigation("Maternidad");
+
+                    b.Navigation("Paternidad");
+
+                    b.Navigation("TipoDescanso");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.DocumentoMedico", b =>
+                {
+                    b.HasOne("proyectoIngSoft.Models.Descanso", "Descanso")
+                        .WithMany("Documentos")
+                        .HasForeignKey("DescansoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Descanso");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>
+                {
+                    b.Navigation("Documentos");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.TipoDescanso", b =>
+                {
+                    b.Navigation("Descansos");
                 });
 #pragma warning restore 612, 618
         }

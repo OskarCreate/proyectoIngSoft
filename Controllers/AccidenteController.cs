@@ -22,44 +22,51 @@ namespace proyectoIngSoft.Controllers
             _context = context;
         }
 
+        // GET: /Accidente/Index
         public IActionResult Index()
         {
             return View();
         }
+
         [HttpPost]
-       
-        public IActionResult Registrar(Accidente accidente)
+        public IActionResult Registrar(Accidente model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-
-                    _context.DbSetAccidente.Add(accidente);
-                    _context.SaveChanges();
-                    _logger.LogInformation("Descanso registrado exitosamente.");
-                    ViewData["Message"] = "Se registró el descanso exitosamente.";
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error al registrar el descanso.");
-                    ViewData["Message"] = "Error al registrar el descanso: " + ex.Message;
-                }
+                ViewData["Message"] = "Datos no válidos";
+                return View("Index");
             }
-            else
+
+            try
             {
-                ViewData["Message"] = "Datos de entrada no válidos";
+                // 1. Guardar Accidente
+                _context.DbSetAccidente.Add(model);
+                _context.SaveChanges();
+
+                // 2. Obtener usuario logueado (simulado)
+                var user = _context.DbSetUser.First(); // ⚠️ cambiar por usuario en sesión
+
+                // 3. Crear Descanso
+                var descanso = new Descanso
+                {
+                    UserId = user.IdUser,               // FK a T_Usuarios
+                    TipoDescansoId = 6,                 // 1 = Accidente
+                    FechaSolicitud = DateTime.UtcNow,
+                    AccidenteId = model.IdAccidente     // FK al Accidente recién creado
+                };
+
+                _context.DbSetDescanso.Add(descanso);
+                _context.SaveChanges();
+
+                ViewData["Message"] = "Accidente registrado con éxito";
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al registrar Accidente");
+                ViewData["Message"] = "Error al registrar: " + ex.Message;
+            }
+
             return View("Index");
-            
-
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
         }
     }
 }

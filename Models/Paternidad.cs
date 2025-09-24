@@ -13,7 +13,8 @@ namespace proyectoIngSoft.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int IdPater { get; set; }
+       
 
         [Required]
         public DateOnly FechaParto { get; set; }

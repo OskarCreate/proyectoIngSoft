@@ -12,7 +12,7 @@ namespace proyectoIngSoft.Models
     public class User
     {
         [Key]
-        public int Id { get; set; }
+        public int IdUser { get; set; }
 
         [NotNull]
         [Required, MaxLength(100)]
