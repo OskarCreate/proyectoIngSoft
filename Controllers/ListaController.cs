@@ -55,6 +55,11 @@ namespace proyectoIngSoft.Controllers
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
                 .Include(d => d.Accidente)
+                .Include(d => d.Enfermedad)
+                .Include(d => d.EnfermedadFam)
+                .Include(d => d.Fallecimiento)
+                .Include(d => d.Maternidad)
+                .Include(d => d.Paternidad)
                 .Include(d => d.DocumentosMedicos)
                 .FirstOrDefault(d => d.IdDescanso == descansoId);
 

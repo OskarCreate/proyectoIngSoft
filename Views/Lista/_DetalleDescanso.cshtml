@@ -36,7 +36,22 @@
         <div>
             <p class="label-title">Información Adicional</p>
             <p class="info-box text-muted">
-                @(Model.Accidente != null ? Model.Accidente.Observaciones : "N/A")
+                @if (Model.Accidente != null)
+                {
+                    @Model.Accidente.Observaciones
+                }
+                else if (Model.Maternidad != null)
+                {
+                    @Model.Maternidad.Descripcion
+                }
+                else if (Model.Enfermedad != null)
+                {
+                    @Model.Enfermedad.DescEnfe
+                }
+                else
+                {
+                    @("N/A")
+                }
             </p>
         </div>
 
