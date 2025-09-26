@@ -6,7 +6,7 @@
         <thead>
             <tr>
                 <th>Empleado</th>
-                <th>DNI</th>
+              
                 <th>Razón del Descanso</th>
                 <th>Fecha de Registro</th>
                 <th>Estado</th>
@@ -17,8 +17,8 @@
        @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Username @item.Apellidos</td>
-                <td>@item.Dni</td>
+                <td>@item.Username @item.Apellidos <p>DNI: @item.Dni</p></td>
+              
                 <td>@item.Observaciones</td>
                 <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
                 <td><span class="status status-proceso">@item.Estado</span></td>
@@ -37,7 +37,7 @@
 </div>
 
 <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-custom">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="detalleModalLabel">Detalle del Descanso</h5>
@@ -154,5 +154,12 @@ function abrirModal(descansoId) {
 .action-btn:hover {
     background: #2b6cb0;
 }
+
+.modal-custom {
+  max-width: 600px;  /* Ajusta según lo que quieras, en tu captura parece ~550px */
+  margin: auto;
+}
+
+
 
 </style>

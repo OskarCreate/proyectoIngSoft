@@ -31,13 +31,13 @@ namespace proyectoIngSoft.Controllers
         {
             var lista = _context.DbSetDescanso
                 .Include(d => d.User)
-                .Include(d => d.Accidente)
+                .Include(d => d.TipoDescanso)
                 .Select(d => new Lista
                 {
                     Username = d.User.Username,
                     Apellidos = d.User.Apellidos,
                     Dni = d.User.Dni,
-                    Observaciones = d.Accidente != null ? d.Accidente.Observaciones : "N/A",
+                    Observaciones = d.TipoDescanso.Nombre,
                     FechaSolicitud = d.FechaSolicitud,
                     Estado = "En Proceso", // Puedes mapear según tu lógica
                     IdUser = d.User.IdUser,
