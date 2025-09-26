@@ -24,6 +24,7 @@ namespace proyectoIngSoft.Controllers
 
         public IActionResult Index()
         {
+            var documentos = _context.DocumentosMedicos.ToList();
             return View();
         }
         [HttpPost]
@@ -32,28 +33,41 @@ namespace proyectoIngSoft.Controllers
         {
             if (ModelState.IsValid)
             {
-                 try
-            {
-                // 1. Guardar Accidente
-                _context.DbSetEnfermedadF.Add(model);
-                _context.SaveChanges();
-
-                // 2. Obtener usuario logueado (simulado)
-                var user = _context.DbSetUser.First(); // ⚠️ cambiar por usuario en sesión
-
-                // 3. Crear Descanso
-                var descanso = new Descanso
+                try
                 {
-                    UserId = user.IdUser,               // FK a T_Usuarios
-                    TipoDescansoId = 5,                 // 1 = Accidente
-                    FechaSolicitud = DateTime.UtcNow,
-                    EnfermedadFamId = model.IdEnfermedadFam     // FK al Accidente recién creado
-                };
+                    // 1. Guardar Accidente
+                    _context.DbSetEnfermedadF.Add(model);
+                    _context.SaveChanges();
 
-                _context.DbSetDescanso.Add(descanso);
-                _context.SaveChanges();
+                    // 2. Obtener usuario logueado (simulado)
+                    var username = HttpContext.Session.GetString("User");
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        ViewData["Message"] = "No hay usuario logueado";
+                        return View("Index", model);
+                    }
 
-                ViewData["Message"] = "Accidente registrado con éxito";
+                    var user = _context.DbSetUser.FirstOrDefault(u => u.Username == username);
+                    if (user == null)
+                    {
+                        ViewData["Message"] = "Usuario no encontrado";
+                        return View("Index", model);
+                    }
+
+                    // 3. Crear Descanso
+                    var descanso = new Descanso
+                    {
+                        UserId = user.IdUser,               // FK a T_Usuarios
+                        TipoDescansoId = 5,                 // 1 = Accidente
+                        FechaSolicitud = DateTime.UtcNow,
+                        EnfermedadFamId = model.IdEnfermedadFam     // FK al Accidente recién creado
+                    };
+
+                    _context.DbSetDescanso.Add(descanso);
+                    _context.SaveChanges();
+
+                    ViewData["Message"] = "Accidente registrado con éxito";
+                    return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
             }
                 catch (Exception ex)
                 {

@@ -24,6 +24,7 @@ namespace proyectoIngSoft.Controllers
 
         public IActionResult Index()
         {
+            var documentos = _context.DocumentosMedicos.ToList();
             return View();
         }
         [HttpPost]
@@ -39,7 +40,19 @@ namespace proyectoIngSoft.Controllers
                     _context.SaveChanges();
 
                     // 2. Obtener usuario logueado (simulado)
-                    var user = _context.DbSetUser.First(); // ⚠️ cambiar por usuario en sesión
+                    var username = HttpContext.Session.GetString("User");
+                    if (string.IsNullOrEmpty(username))
+                    {
+                        ViewData["Message"] = "No hay usuario logueado";
+                        return View("Index", model);
+                    }
+
+                    var user = _context.DbSetUser.FirstOrDefault(u => u.Username == username);
+                    if (user == null)
+                    {
+                        ViewData["Message"] = "Usuario no encontrado";
+                        return View("Index", model);
+                    }
 
                     // 3. Crear Descanso
                     var descanso = new Descanso
@@ -54,6 +67,8 @@ namespace proyectoIngSoft.Controllers
                     _context.SaveChanges();
 
                     ViewData["Message"] = "Accidente registrado con éxito";
+                    
+                    return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
                 }
                 catch (Exception ex)
                 {
