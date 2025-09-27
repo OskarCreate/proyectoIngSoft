@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Notificaciones";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Barra lateral -->
+        <div class="col-3 border-end bg-light p-3" style="min-height:100vh;">
+            <h5 class="mb-3">Mensajes</h5>
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-light d-flex align-items-center text-start notification-btn active" data-section="todos">
+                    <img src="~/images/iconoimagen.png" alt="icono" width="20" class="me-2" />
+                    Todos los mensajes
+                    <span class="badge bg-secondary ms-auto">4</span>
+                </button>
+                <button class="btn btn-light d-flex align-items-center text-start notification-btn" data-section="observacion">
+                    <img src="~/images/reloj.png" alt="reloj" width="20" class="me-2" />
+                    En Observación
+                    <span class="badge bg-secondary ms-auto">1</span>
+                </button>
+                <button class="btn btn-light d-flex align-items-center text-start notification-btn" data-section="aprobadas">
+                    <img src="~/images/comprobado.png" alt="aprobado" width="20" class="me-2" />
+                    Aprobadas
+                    <span class="badge bg-secondary ms-auto">2</span>
+                </button>
+                <button class="btn btn-light d-flex align-items-center text-start notification-btn" data-section="rechazadas">
+                    <img src="~/images/rechazado.png" alt="rechazado" width="20" class="me-2" />
+                    Rechazadas
+                    <span class="badge bg-secondary ms-auto">1</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de notificaciones -->
+        <div class="col-4 border-end p-3">
+            <h5>Notificaciones</h5>
+            <div id="notificaciones-lista">
+                <p class="text-muted">Seleccione una categoría para ver notificaciones.</p>
+            </div>
+        </div>
+
+        <!-- Detalle -->
+        <div class="col-5 p-3">
+            <h5>Detalle de la notificación</h5>
+            <div id="detalle-notificacion">
+                <p class="text-muted">Seleccione una notificación para ver sus detalles.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // JS para manejar el botón seleccionado
+        document.querySelectorAll(".notification-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                document.querySelectorAll(".notification-btn").forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+    </script>
+}
