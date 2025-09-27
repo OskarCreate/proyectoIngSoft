@@ -29,3 +29,31 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+.notification-btn.active {
+    background-color: black !important;
+    color: white !important;
+}
+
+.notification-btn img {
+    filter: brightness(0) invert(1); /* Hace que los íconos se vean blancos al seleccionar */
+}
+/* icono por defecto (no cambiar) */
+.notification-btn img.icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin-right: .5rem;
+  filter: none;               /* importante: no invertir por defecto */
+  transition: filter .12s ease, opacity .12s ease;
+}
+
+/* botón activo: fondo negro + texto blanco */
+.notification-btn.active {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+/* cuando el botón está activo, invierte el icono para que se vea en blanco */
+.notification-btn.active img.icon {
+  filter: brightness(0) invert(1);
+}
