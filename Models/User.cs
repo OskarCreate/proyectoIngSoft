@@ -57,5 +57,7 @@ namespace proyectoIngSoft.Models
         [NotNull]
         [Required, DataType(DataType.Password), Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmarPassword { get; set; }
+
+        public string Rol { get; set; }
     }
 }

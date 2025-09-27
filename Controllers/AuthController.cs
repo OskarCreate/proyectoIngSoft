@@ -31,6 +31,7 @@ namespace proyectoIngSoft.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.Rol = string.IsNullOrEmpty(user.Rol) ? null : user.Rol;
                 _context.DbSetUser.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction("Login");
@@ -49,6 +50,7 @@ namespace proyectoIngSoft.Controllers
             {
                 // Guardar sesión básica
                 HttpContext.Session.SetString("User", user.Username);
+                HttpContext.Session.SetString("Rol", user.Rol);
                 return RedirectToAction("Index", "Home");
             }
 
