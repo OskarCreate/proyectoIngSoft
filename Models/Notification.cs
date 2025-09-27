@@ -1,20 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace proyectoIngSoft.Models
 {
     public class Notification
     {
-        public int Id { get; set; }
-        public string UserId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }              // PK
+        public string UserId { get; set; }       // Usuario destino (puede ser el Id de Identity)
         public string Titulo { get; set; }
         public string Mensaje { get; set; }
-        public string Estado { get; set; } // En Observación, Aprobada, Rechazada
+        public string Estado { get; set; }       // En Observación, Aprobada, Rechazada
         public DateTime Fecha { get; set; }
 
-        // 🔹 Para detalle
+        // Opcional - detalles extra
         public string Detalle { get; set; }
         public List<string> DocumentoAdjuntos { get; set; } = new List<string>();
     }

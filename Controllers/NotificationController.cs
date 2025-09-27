@@ -1,35 +1,55 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using proyectoIngSoft.Data;
 using proyectoIngSoft.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace proyectoIngSoft.Controllers
 {
     public class NotificationController : Controller
     {
-        // 🔹 Simulación (luego reemplazas con EF y SQL)
-        private static List<Notification> _notificaciones = new List<Notification>
-        {
-            new Notification { Id=1, UserId="juan", Titulo="Solicitud de incapacidad laboral", Mensaje="Incapacidad temporal por lesión en el trabajo", Fecha=DateTime.Now.AddMonths(-8), Estado="En Observación", Detalle="Solicitud enviada el 08 de enero de 2025", DocumentoAdjuntos = new List<string>{"certificado_medico.pdf", "reporte_accidente.pdf"} },
-            new Notification { Id=2, UserId="juan", Titulo="Licencia de maternidad", Mensaje="Preparto y postparto", Fecha=DateTime.Now.AddMonths(-11), Estado="Aprobada" },
-            new Notification { Id=3, UserId="juan", Titulo="Licencia de paternidad", Mensaje="Nacimiento de hijo", Fecha=DateTime.Now.AddMonths(-12), Estado="Rechazada" },
-            new Notification { Id=4, UserId="juan", Titulo="Licencia por muerte de familiar directo", Mensaje="Duelo", Fecha=DateTime.Now.AddYears(-1), Estado="Aprobada" }
-        };
+        private readonly ApplicationDbContext _context;
 
-        public IActionResult Index()
+        public NotificationController(ApplicationDbContext context)
         {
-            return View(_notificaciones);
+            _context = context;
         }
 
+        // 🔹 Lista todas las notificaciones del usuario actual (ejemplo con User.Identity.Name)
+        public IActionResult Index()
+        {
+            var userId = User.Identity?.Name; // O usa Id real de Identity
+            var notificaciones = _context.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.Fecha)
+                .ToList();
+
+            return View(notificaciones);
+        }
+        
+        
+
+        // 🔹 Detalles de una notificación
         public IActionResult Details(int id)
         {
-            var notificacion = _notificaciones.FirstOrDefault(n => n.Id == id);
+            var notificacion = _context.Notifications.FirstOrDefault(n => n.Id == id);
             if (notificacion == null)
                 return NotFound();
 
             return PartialView("_NotificationDetail", notificacion);
+        }
+
+        // 🔹 Crear (cuando admin envía notificación a un usuario)
+        [HttpPost]
+        public IActionResult Create(Notification model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.Fecha = DateTime.Now;
+                _context.Notifications.Add(model);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
     }
 }
