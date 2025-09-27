@@ -43,13 +43,14 @@ namespace proyectoIngSoft.Controllers
         public IActionResult Login() => View();
 
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(string dni, string password)
         {
-            var user = _context.DbSetUser.FirstOrDefault(u => u.Email == email && u.Password == password);
-            if (user != null)
+            var user = _context.DbSetUser.FirstOrDefault(u => u.Dni == dni && u.Password == password);
+    if (user != null)
             {
                 // Guardar sesión básica
                 HttpContext.Session.SetString("User", user.Username);
+                 HttpContext.Session.SetString("UserId", user.IdUser.ToString());
                 HttpContext.Session.SetString("Rol", user.Rol);
                 return RedirectToAction("Index", "Home");
             }
