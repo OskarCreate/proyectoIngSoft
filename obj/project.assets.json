@@ -7087,11 +7087,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\Desktop\\TRABAJO DE PAGA\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\PAGAS\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "projectName": "proyectoIngSoft",
-      "projectPath": "C:\\Users\\user\\Desktop\\TRABAJO DE PAGA\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectPath": "C:\\Users\\user\\Desktop\\PAGAS\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\Desktop\\TRABAJO DE PAGA\\proyectoIngSoft\\obj\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\PAGAS\\proyectoIngSoft\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
