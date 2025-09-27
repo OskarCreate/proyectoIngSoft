@@ -102,30 +102,14 @@
 
 
 </div>
-
-
-<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-custom">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5>Ver Detalles</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            
-        </div>
-        <div  id="detalleContenido">
-            <!-- Aquí se cargan los datos con AJAX -->
-        </div>
-    </div>
-  </div>
-</div>
-
 <div class="solicitudes-container">
-    
 
     <div class="tabs">
         <span class="tab active">Solicitudes Procesadas <span class="badge">@Model.Count solicitudes</span></span>
     </div>
-        <p>Filtros para Solicitudes Procesadas </p>
+
+    <p>Filtros para Solicitudes Procesadas </p>
+
     <div class="filters">
         <div class="filter-item">
             <label>Buscar Empleado</label>
@@ -154,85 +138,78 @@
                 <option value="Paternidad">Paternidad</option>
                 <option value="Fallecimiento Familiar">Fallecimiento Familiar</option>
                 <option value="Enfermedad">Enfermedad</option>
-                <!-- Puedes agregar más -->
             </select>
         </div>
     </div>
 
     <div class="table-container">
-    <!-- Cabecera fija -->
-    <table class="solicitudes-table">
-        <thead>
-            <tr>
-                <th>Empleado</th>
-                <th>Razón del Descanso</th>
-                <th>Fecha de Registro</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-    </table>
-
-    <!-- Solo el body con scroll -->
-    <div class="table-body-scroll">
+        <!-- Cabecera fija -->
         <table class="solicitudes-table">
-            <tbody id="tablaSolicitudes">
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            <strong>@item.Username @item.Apellidos</strong><br />
-                            <span class="dni">DNI: @item.Dni</span>
-                        </td>
-                        <td>@item.Observaciones</td>
-                        <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
-                        <td>
-                            @if (item.Estado == "En Proceso")
-                            {
-                                <span class="estado estado-proceso">En Proceso</span>
-                            }
-                            else if (item.Estado == "En Observación")
-                            {
-                                <span class="estado estado-observacion">En Observación</span>
-                            }
-                            else
-                            {
-                                <span class="estado">@item.Estado</span>
-                            }
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)"
-                               class="btn-detalles"
-                               data-descanso-id="@item.IdDescanso"
-                               onclick="abrirModal(@item.IdDescanso)">
-                                Ver Detalles
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
+            <thead>
+                <tr>
+                    <th>Empleado</th>
+                    <th>Razón del Descanso</th>
+                    <th>Fecha de Registro</th>
+                    <th>Edsalus</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
         </table>
+
+        <!-- Solo el body con scroll -->
+        <div class="table-body-scroll">
+            <table class="solicitudes-table">
+                <tbody id="tablaSolicitudes">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.Username @item.Apellidos</strong><br />
+                                <span class="dni">DNI: @item.Dni</span>
+                            </td>
+                            <td>@item.Observaciones</td>
+                            <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                            <!-- Columna Edsalus con divs de color -->
+                            <td>
+                                <div class="badge-color verde">Aprobado</div>
+                            </td>
+                            <!-- Columna Estado con divs de color -->
+                            <td>
+                                <div class="badge-color morado">En Proceso</div>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)"
+                                   class="btn-detalles"
+                                   data-descanso-id="@item.IdDescanso"
+                                   onclick="abrirModal(@item.IdDescanso)">
+                                    Ver Detalles
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-
-</div>
-
-
+<!-- MODAL -->
 <div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-custom">
     <div class="modal-content">
         <div class="modal-header">
             <h5>Ver Detalles</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            
         </div>
-        <div  id="detalleContenido">
+        <div id="detalleContenido">
             <!-- Aquí se cargan los datos con AJAX -->
         </div>
     </div>
   </div>
 </div>
+
+
 
 
 
@@ -417,6 +394,31 @@ function filtrarTabla() {
 .table-body-scroll::-webkit-scrollbar-thumb {
     background-color: #c1c1c1;
     border-radius: 4px;
+}
+
+.badge-color {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 90px;
+}
+
+.badge-color.verde {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-color.morado {
+    background-color: #e0d4f7;
+    color: #5b2fa0;
+}
+
+.badge-color.rojo {
+    background-color: #f8d7da;
+    color: #721c24;
 }
 
 
