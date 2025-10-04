@@ -7082,19 +7082,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {}
+    "C:\\Users\\USUARIO\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\Desktop\\PAGAS\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectUniqueName": "C:\\Users\\USUARIO\\Downloads\\Esp_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "projectName": "proyectoIngSoft",
-      "projectPath": "C:\\Users\\user\\Desktop\\PAGAS\\proyectoIngSoft\\proyectoIngSoft.csproj",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\Desktop\\PAGAS\\proyectoIngSoft\\obj\\",
+      "projectPath": "C:\\Users\\USUARIO\\Downloads\\Esp_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "packagesPath": "C:\\Users\\USUARIO\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\USUARIO\\Downloads\\Esp_proy\\proyectoIngSoft\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\USUARIO\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

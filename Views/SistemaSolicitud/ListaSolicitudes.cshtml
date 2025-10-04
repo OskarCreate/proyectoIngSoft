@@ -102,7 +102,7 @@
             </div>
 
             <!-- HU-07 modal (simulado) -->
-            <div class="modal fade" id="hu07Modal" tabindex="-1" aria-hidden="true">
+            @* <div class="modal fade" id="hu07Modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -124,7 +124,29 @@
                         </div>
                     </div>
                 </div>
+            </div> *@
+
+            <!-- Modal para HU-07 real (carga vista Lista/Index.cshtml) -->
+            <div class="modal fade" id="modalLista" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">HU-07 Revisión de Solicitudes</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body" id="modalListaBody">
+                            <div class="text-center text-muted py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                                <p class="mt-2">Cargando contenido...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
 
             @section Scripts {
                 <script>
@@ -200,8 +222,43 @@
                             selectAllTop.checked = false; updateUI();
 
                             // show HU-07 modal
+                            @* const hm = new bootstrap.Modal(document.getElementById('hu07Modal'));
+                            hm.show(); *@
                             const hm = new bootstrap.Modal(document.getElementById('hu07Modal'));
                             hm.show();
+
+                            // luego de 1 segundo, mostrar el modal real que carga la vista Lista/Index.cshtml
+                            setTimeout(() => {
+                                hm.hide();
+
+                                // Cargar la vista Index de ListaController dentro del nuevo modal
+                                const modalBody = document.getElementById("modalListaBody");
+                                modalBody.innerHTML = `
+                                    <div class="text-center text-muted py-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                        <p class="mt-2">Cargando interfaz de revisión...</p>
+                                    </div>
+                                `;
+
+                                // Llamar al controlador ListaController.Index
+                                fetch("/Lista/Index.cshtml")
+                                    .then(res => {
+                                        if (!res.ok) throw new Error("Error al cargar la vista Lista/Index");
+                                        return res.text();
+                                    })
+                                    .then(html => {
+                                        modalBody.innerHTML = html;
+                                    })
+                                    .catch(err => {
+                                        modalBody.innerHTML = `
+                                            <div class="alert alert-danger text-center">⚠️ No se pudo cargar la vista de revisión.<br>${err.message}</div>
+                                        `;
+                                    });
+
+                                const modalLista = new bootstrap.Modal(document.getElementById('modalLista'));
+                                modalLista.show();
+                            }, 1000);
+
                         });
 
                         // inicializar contador
