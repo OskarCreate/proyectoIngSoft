@@ -23,7 +23,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Descanso> DbSetDescanso { get; set; }
     
     public DbSet<TipoDescanso> DbSetTipoDescanso { get; set; }
-     public DbSet<ValidarDatos> ValidarDatos { get; set; }
+    public DbSet<ValidarDatos> ValidarDatos { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

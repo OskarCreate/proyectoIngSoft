@@ -47,7 +47,7 @@
                                         <th>Archivos</th>
                                         <th>Fecha Registro</th>
                                         <th>Estado</th>
-                                      <!--  <th>ESSALUD</th> -->
+                                    <!--  <th>ESSALUD</th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="tabla-body">
@@ -55,7 +55,7 @@
                                     {
                                             foreach (var item in Model)
                                             {
-                                                    <tr data-id="@item.IdDescanso">
+                                                    <tr data-id="@item.IdDescanso" data-estado="@item.Estado">
                                                         <td style="width:48px">
                                                             <input type="checkbox" class="row-select" data-id="@item.IdDescanso" />
                                                         </td>
@@ -67,9 +67,22 @@
                                                         <td class="text-center"><i class="bi bi-file-earmark-text"></i> 0</td>
                                                         <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
                                                         
-                                                          <td class="estado-cell"><span class="badge bg-light text-dark">En Proceso</span></td>
-                                                          <td class="essalud-cell"><span class="pill-essalud">En Proceso</span></td>
-                                                    </tr>
+                                                        <td class="estado-cell">
+                                                        @if (item.Estado == "Válido")
+                                                            {
+                                                                <span class="badge bg-success">Válido</span>
+                                                            }
+                                                            else if (item.Estado == "No válido")
+                                                            {
+                                                                <span class="badge bg-danger">No válido</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-light text-dark">En Proceso</span>
+                                                            }
+                                                        </td>
+                                                        <td class="essalud-cell"><span class="pill-essalud">En Proceso</span></td>
+                                                    </tr>                                                    
                                             }
                                     }
                                     else
@@ -102,7 +115,7 @@
             </div>
 
             <!-- HU-07 modal (simulado) -->
-            @* <div class="modal fade" id="hu07Modal" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="hu07Modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -124,29 +137,7 @@
                         </div>
                     </div>
                 </div>
-            </div> *@
-
-            <!-- Modal para HU-07 real (carga vista Lista/Index.cshtml) -->
-            <div class="modal fade" id="modalLista" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">HU-07 Revisión de Solicitudes</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                        </div>
-                        <div class="modal-body" id="modalListaBody">
-                            <div class="text-center text-muted py-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Cargando...</span>
-                                </div>
-                                <p class="mt-2">Cargando contenido...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-
-
 
             @section Scripts {
                 <script>
@@ -192,7 +183,7 @@
                         });
 
                         // confirm processing
-                          document.getElementById('confirm-process-btn')?.addEventListener('click', function(){
+                            document.getElementById('confirm-process-btn')?.addEventListener('click', function(){
                             const confirmModalEl = document.getElementById('confirmProcessModal');
                             const inst = bootstrap.Modal.getInstance(confirmModalEl);
                             if(inst) inst.hide();
@@ -200,23 +191,37 @@
                             const selected = rows().filter(r=>r.checked && !r.disabled);
                             const hu07Body = document.getElementById('hu07-summary-body'); hu07Body.innerHTML = '';
 
-                              selected.forEach(cb=>{
+                            // simulate processing each selected
+                                const updates = [];
+
+                                selected.forEach(cb => {
                                 const id = cb.dataset.id;
                                 const tr = document.querySelector(`tr[data-id="${id}"]`);
-                                if(!tr) return;
+                                if (!tr) return;
                                 const valido = Math.random() < 0.7;
+                                const estadoTexto = valido ? "Válido" : "No válido";
                                 const ess = valido ? '<span class="badge bg-success">Válido</span>' : '<span class="badge bg-danger">No válido</span>';
-                                // update estado & essalud pill
-                              const estadoCell = tr.querySelector('.estado-cell'); if(estadoCell) estadoCell.innerHTML = ess;
-                              const essCell = tr.querySelector('.essalud-cell'); if(essCell) essCell.innerHTML = ess;
-                                // disable checkbox
+
+                                const estadoCell = tr.querySelector('.estado-cell');
+                                if (estadoCell) estadoCell.innerHTML = ess;
                                 cb.checked = false; cb.disabled = true;
-                                // add to hu07
+                                updates.push({ idDescanso: parseInt(id), estado: estadoTexto });
+
                                 const empleado = tr.children[1]?.innerText?.trim() || '';
                                 const row = document.createElement('tr');
-                                row.innerHTML = `<td>${id}</td><td>${empleado}</td><td>${valido? 'Válido':'No válido'}</td><td>${valido? 'Solicitud validada':'Solicitud no válida'}</td>`;
-                                hu07Body.appendChild(row);
+                                row.innerHTML = `<td>${id}</td><td>${empleado}</td><td>${estadoTexto}</td><td>${estadoTexto === "Válido" ? "Solicitud validada" : "Solicitud no válida"}</td>`;
+                                document.getElementById('hu07-summary-body').appendChild(row);
                             });
+                            // 🔥 Guardar cambios en BD
+                            fetch('/SistemaSolicitud/ActualizarEstadosESSALUD', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(updates)
+                            })
+                            .then(res => res.ok ? res.json() : Promise.reject("Error al guardar estados"))
+                            .then(resp => console.log("Estados guardados:", resp))
+                            .catch(err => console.error(err));
+
 
                             // reset
                             selectAllTop.checked = false; updateUI();
@@ -241,7 +246,7 @@
                                 `;
 
                                 // Llamar al controlador ListaController.Index
-                                fetch("/Lista/Index.cshtml")
+                                fetch("/Lista/Index")
                                     .then(res => {
                                         if (!res.ok) throw new Error("Error al cargar la vista Lista/Index");
                                         return res.text();
