@@ -11,11 +11,19 @@ using proyectoIngSoft.Models;
 
 namespace proyectoIngSoft.Controllers
 {
+<<<<<<< HEAD
    
     public class SistemaSolicitudController : Controller
     {
         private readonly ILogger<SistemaSolicitudController> _logger;
         
+=======
+
+    public class SistemaSolicitudController : Controller
+    {
+        private readonly ILogger<SistemaSolicitudController> _logger;
+
+>>>>>>> origin/main
         private readonly ApplicationDbContext _context;
 
         public SistemaSolicitudController(ILogger<SistemaSolicitudController> logger, ApplicationDbContext context)
@@ -23,7 +31,11 @@ namespace proyectoIngSoft.Controllers
             _logger = logger;
             _context = context;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/main
 
         public IActionResult Index()
         {
@@ -31,6 +43,7 @@ namespace proyectoIngSoft.Controllers
             return View();
         }
 
+<<<<<<< HEAD
          public IActionResult ListaSolicitudes()
         {
             var lista = _context.DbSetDescanso
@@ -51,6 +64,28 @@ namespace proyectoIngSoft.Controllers
 
             return View("ListaSolicitudes", lista);
  
+=======
+        public IActionResult ListaSolicitudes()
+        {
+            var lista = _context.DbSetDescanso
+            .Include(d => d.User)
+            .Include(d => d.TipoDescanso)
+            .Select(d => new Lista
+            {
+                Username = d.User.Username,
+                Apellidos = d.User.Apellidos,
+                Dni = d.User.Dni,
+                Observaciones = d.TipoDescanso.Nombre,
+                FechaSolicitud = d.FechaSolicitud,
+                Estado = d.EstadoESSALUD ?? "En Proceso",
+                IdUser = d.User.IdUser,
+                IdDescanso = d.IdDescanso
+            })
+            .ToList();
+
+            return View("ListaSolicitudes", lista);
+
+>>>>>>> origin/main
         }
 
         public IActionResult DetalleDescanso(int descansoId)
@@ -91,5 +126,35 @@ namespace proyectoIngSoft.Controllers
         {
             return View("Error!");
         }
+<<<<<<< HEAD
+=======
+        
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarEstadosESSALUD([FromBody] List<EstadoUpdateDto> solicitudes)
+        {
+            if (solicitudes == null || !solicitudes.Any())
+                return BadRequest("No hay solicitudes para actualizar.");
+
+            foreach (var item in solicitudes)
+            {
+                var descanso = await _context.DbSetDescanso.FindAsync(item.IdDescanso);
+                if (descanso != null)
+                {
+                    descanso.EstadoESSALUD = item.Estado;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(new { success = true, message = "Estados actualizados correctamente." });
+        }
+
+        public class EstadoUpdateDto
+        {
+            public int IdDescanso { get; set; }
+            public string Estado { get; set; } = "";
+        }
+
+>>>>>>> origin/main
     }
 }

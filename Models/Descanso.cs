@@ -50,7 +50,12 @@ namespace proyectoIngSoft.Models
         public ICollection<DocumentoMedico> DocumentosMedicos { get; set; } = new List<DocumentoMedico>();
 
 
+<<<<<<< HEAD
         
+=======
+        [StringLength(50)]
+        public string EstadoESSALUD { get; set; } = "En Proceso"; // En Proceso | Válido | No válido
+>>>>>>> origin/main
 
 
 

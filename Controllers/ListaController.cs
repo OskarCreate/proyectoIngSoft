@@ -11,9 +11,17 @@ using proyectoIngSoft.Models;
 
 namespace proyectoIngSoft.Controllers
 {
+<<<<<<< HEAD
     public class ListaController : Controller
     {
         private readonly ILogger<ListaController> _logger;
+=======
+    
+    public class ListaController : Controller
+    {
+        private readonly ILogger<ListaController> _logger;
+
+>>>>>>> origin/main
         private readonly ApplicationDbContext _context;
 
         public ListaController(ILogger<ListaController> logger, ApplicationDbContext context)
@@ -21,10 +29,17 @@ namespace proyectoIngSoft.Controllers
             _logger = logger;
             _context = context;
         }
+<<<<<<< HEAD
 
         // ============================
         // LISTA GENERAL DE SOLICITUDES
         // ============================
+=======
+        
+
+        
+
+>>>>>>> origin/main
         public IActionResult Index()
         {
             var lista = _context.DbSetDescanso
@@ -37,18 +52,28 @@ namespace proyectoIngSoft.Controllers
                     Dni = d.User.Dni,
                     Observaciones = d.TipoDescanso.Nombre,
                     FechaSolicitud = d.FechaSolicitud,
+<<<<<<< HEAD
                     Estado = "En Proceso",
+=======
+                    Estado = "En Proceso", // Puedes mapear según tu lógica
+>>>>>>> origin/main
                     IdUser = d.User.IdUser,
                     IdDescanso = d.IdDescanso
                 })
                 .ToList();
 
             return View("Index", lista);
+<<<<<<< HEAD
         }
 
         // =======================================
         // DETALLE DE UNA SOLICITUD DE DESCANSO
         // =======================================
+=======
+ 
+        }
+
+>>>>>>> origin/main
         public IActionResult DetalleDescanso(int descansoId)
         {
             var descanso = _context.DbSetDescanso
@@ -68,6 +93,7 @@ namespace proyectoIngSoft.Controllers
             return PartialView("_DetalleDescanso", descanso);
         }
 
+<<<<<<< HEAD
         // ==========================================
         // ENVIAR OBSERVACIÓN Y MOSTRAR CONFIRMACIÓN
         // ==========================================
@@ -149,6 +175,8 @@ namespace proyectoIngSoft.Controllers
         // ======================
         // VER DOCUMENTO EN IFRAME
         // ======================
+=======
+>>>>>>> origin/main
         public IActionResult VerDocumento(int id)
         {
             var documento = _context.DocumentosMedicos
@@ -158,17 +186,28 @@ namespace proyectoIngSoft.Controllers
             if (documento == null || documento.Archivo == null || documento.Archivo.Length == 0)
                 return NotFound();
 
+<<<<<<< HEAD
+=======
+            // Forzar inline para que se vea en el iframe
+>>>>>>> origin/main
             Response.Headers["Content-Disposition"] = $"inline; filename=\"{documento.Nombre}\"";
             return File(documento.Archivo, "application/pdf");
         }
 
+<<<<<<< HEAD
         // ======================
         // MANEJO DE ERRORES
         // ======================
+=======
+>>>>>>> origin/main
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View("Error!");
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/main

@@ -1,6 +1,14 @@
 @{
     ViewData["Title"] = "Sistema de Solicitudes Médicas";
 }
+<<<<<<< HEAD
+=======
+@inject IHttpContextAccessor HttpContextAccessor
+@{ 
+    var user = HttpContextAccessor.HttpContext?.Session.GetString("User");   
+    var rol = HttpContextAccessor.HttpContext?.Session.GetString("Rol");
+}
+>>>>>>> origin/main
 
 <div class="main-wrapper">
     <div class="card-container">
@@ -15,10 +23,32 @@
         <div class="card-buttons">
             <a asp-controller="SistemaSolicitud" asp-action="ListaSolicitudes" class="btn btn-outline">
                 <i class="bi bi-list"></i> Ver Lista de Solicitudes
+<<<<<<< HEAD
             </a>
             <a asp-controller="TipoSolicitud" asp-action="Index" class="btn btn-primary">
                 <i class="bi bi-plus"></i> Registrar Nueva Solicitud
             </a>
+=======
+            </a>        
+                
+            
+                @* <a asp-controller="TipoSolicitud" asp-action="Index" class="btn btn-primary" disabled>
+                <i class="bi bi-plus"></i> Registrar Nueva Solicitud
+                </a> *@
+            @if (rol == "Bienestar")
+            {
+                <a class="btn btn-primary disabled" aria-disabled="true" tabindex="-1">
+                    <i class="bi bi-plus"></i> Registrar Nueva Solicitud
+                </a>
+            }
+            else
+            {
+                <a asp-controller="TipoSolicitud" asp-action="Index" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Registrar Nueva Solicitud
+                </a>
+            }          
+            
+>>>>>>> origin/main
         </div>
 
         <div class="info-box">

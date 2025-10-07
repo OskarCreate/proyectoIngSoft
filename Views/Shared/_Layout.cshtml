@@ -1,4 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
+<<<<<<< HEAD
+=======
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+>>>>>>> origin/main
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
@@ -35,6 +39,15 @@
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Lista" asp-action="Index">Lista</a>
+<<<<<<< HEAD
+=======
+                                </li>                                
+                            }
+                            if (rol == "Bienestar")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="SistemaSolicitud" asp-action="Index">Solicitudes</a>
+>>>>>>> origin/main
                                 </li>
                             }
                             else
@@ -43,7 +56,11 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="SistemaSolicitud" asp-action="Index">Solicitudes</a>
                                 </li>
                             }
+<<<<<<< HEAD
                         }
+=======
+                        } 
+>>>>>>> origin/main
                     </ul>
 
                     <partial name="_LoginPartial" />
