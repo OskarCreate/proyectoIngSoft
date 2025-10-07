@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-main\\proyectoIngSoft.csproj": {}
+    "C:\\Users\\Miguel Cabrera\\Downloads\\proyectoSoft3\\proyectoIngSoft\\proyectoIngSoft.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-main\\proyectoIngSoft.csproj": {
+    "C:\\Users\\Miguel Cabrera\\Downloads\\proyectoSoft3\\proyectoIngSoft\\proyectoIngSoft.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-main\\proyectoIngSoft.csproj",
+        "projectUniqueName": "C:\\Users\\Miguel Cabrera\\Downloads\\proyectoSoft3\\proyectoIngSoft\\proyectoIngSoft.csproj",
         "projectName": "proyectoIngSoft",
-        "projectPath": "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-main\\proyectoIngSoft.csproj",
+        "projectPath": "C:\\Users\\Miguel Cabrera\\Downloads\\proyectoSoft3\\proyectoIngSoft\\proyectoIngSoft.csproj",
         "packagesPath": "C:\\Users\\Miguel Cabrera\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-main\\obj\\",
+        "outputPath": "C:\\Users\\Miguel Cabrera\\Downloads\\proyectoSoft3\\proyectoIngSoft\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Miguel Cabrera\\AppData\\Roaming\\NuGet\\NuGet.Config"
