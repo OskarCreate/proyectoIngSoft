@@ -1,7 +1,9 @@
 @model List<proyectoIngSoft.Models.Lista>
 <div class="header">
         <h2>Control de solicitudes</h2>
-        <button class="btn-consulta">Consulta con ESSALUD</button>
+        <a asp-controller="SistemaSolicitud" asp-action="Index" class="btn-consulta">
+        Consulta con ESSALUD
+        </a>
     </div>
 
 <div class="solicitudes-container">
