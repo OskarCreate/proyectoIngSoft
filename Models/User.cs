@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace proyectoIngSoft.Models
 {

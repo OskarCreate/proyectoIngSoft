@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("proyectoIngSoft")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+90b647ccaaf650440d8588b1ef2c6a20e6b457e9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+123f9e4fe841d47db299ca0488cb9ab21a9be692")]
 [assembly: System.Reflection.AssemblyProductAttribute("proyectoIngSoft")]
 [assembly: System.Reflection.AssemblyTitleAttribute("proyectoIngSoft")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
