@@ -24,9 +24,15 @@ namespace proyectoIngSoft.Models
         [Required]
         public int TipoDescansoId { get; set; }
         public TipoDescanso TipoDescanso { get; set; }
+
+
         [Required]
+        public DateTime FechaIni { get; set; }
 
+        [Required]
+        public DateTime FechaFin { get; set; } 
 
+        [Required]
         public DateTime FechaSolicitud { get; set; }
 
 

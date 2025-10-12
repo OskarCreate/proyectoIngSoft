@@ -1,0 +1,105 @@
+@model IEnumerable<dynamic>
+
+<div class="page-wrapper p-4">
+    <div class="topbar d-flex align-items-center justify-content-between mb-3">
+        <h3>Usuarios con Descanso Médico Prolongado (&gt; 30 días)</h3>
+
+        <div class="search-box">
+            <input type="text" id="buscar" placeholder="🔍 Buscar por DNI, nombre o motivo..." onkeyup="filtrarTabla()" />
+        </div>
+    </div>
+
+    <div class="table-container shadow-sm rounded-3 bg-white p-3">
+        <table class="table table-hover align-middle" id="tablaDescansos">
+            <thead class="table-light">
+                <tr>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Motivo</th>
+                    <th>Documentos</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Días de Descanso</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var d in Model)
+                    {
+                        <tr>
+                            <td>@d.Dni</td>
+                            <td>@d.Nombre</td>
+                            <td>
+                                <span class="badge motivo">@d.Motivo</span>
+                            </td>
+                            <td>
+                                <a href="/Lista/DetalleDescanso?descansoId=@d.IdDescanso" class="text-primary">Ver Documentos</a>
+                            </td>
+                            <td>@d.FechaIni.ToString("dd/MM/yyyy")</td>
+                            <td>@d.FechaFin.ToString("dd/MM/yyyy")</td>
+                            <td>@d.Dias días</td>
+                            <td>
+                                @if (d.Estado == "Subsidio")
+                                {
+                                    <span class="badge bg-success">Subsidio</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@d.Estado</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/Lista/DetalleDescanso?descansoId=@d.IdDescanso" class="btn btn-outline-primary btn-sm">Ver Detalles</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-3">
+                            No se encontraron descansos prolongados.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .page-wrapper { background: #f8f9fa; border-radius: 10px; }
+    .search-box input {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 6px 12px;
+        min-width: 260px;
+    }
+    .badge.motivo {
+        background-color: #f3f3f3;
+        color: #333;
+        padding: 4px 8px;
+        border-radius: 10px;
+        font-size: 0.9em;
+        border: 1px solid #ddd;
+    }
+    .badge.bg-success {
+        background-color: #b1f1c5 !important;
+        color: #116b2b;
+    }
+</style>
+
+<script>
+function filtrarTabla() {
+    const texto = document.getElementById("buscar").value.toLowerCase();
+    const filas = document.querySelectorAll("#tablaDescansos tbody tr");
+
+    filas.forEach(f => {
+        const contenido = f.innerText.toLowerCase();
+        f.style.display = contenido.includes(texto) ? "" : "none";
+    });
+}
+</script>
