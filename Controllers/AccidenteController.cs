@@ -25,8 +25,7 @@ namespace proyectoIngSoft.Controllers
         // GET: /Accidente/Index
         public IActionResult Index()
         {
-            var documentos = _context.DocumentosMedicos.ToList();
-
+           
             return View();
         }
 
