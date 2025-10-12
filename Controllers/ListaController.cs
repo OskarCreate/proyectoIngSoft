@@ -162,6 +162,38 @@ namespace proyectoIngSoft.Controllers
             return File(documento.Archivo, "application/pdf");
         }
 
+
+        public IActionResult DescansosProlongados()
+        {
+            var descansos = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.TipoDescanso)
+                .ToList()
+                .Where(d =>
+                {
+                    // Cálculo en días entre FechaInicio y FechaFin
+                    var dias = (d.FechaFin - d.FechaIni).TotalDays;
+                    return dias > 30;
+                })
+                .Select(d => new
+                {
+                    d.IdDescanso,
+                    d.User.Dni,
+                    Nombre = $"{d.User.Username} {d.User.Apellidos}",
+                    Motivo = d.TipoDescanso.Nombre,
+                    d.FechaIni,
+                    d.FechaFin,
+                    Dias = (d.FechaFin - d.FechaIni).TotalDays,
+                    Estado = d.EstadoESSALUD ?? "Descanso Activo"
+                })
+                .ToList();
+
+            return View("DescansosProlongados", descansos);
+        }
+
+
+        
+
         // ======================
         // MANEJO DE ERRORES
         // ======================

@@ -60,6 +60,8 @@ namespace proyectoIngSoft.Controllers
                         UserId = user.IdUser,               // FK a T_Usuarios
                         TipoDescansoId = 3,                 // 1 = Accidente
                         FechaSolicitud = DateTime.UtcNow,
+                        FechaIni = DateTime.SpecifyKind(model.FechaIni.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
+                        FechaFin = DateTime.SpecifyKind(model.FechaFin.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
                         PaternidadId = model.IdPater    // FK al Accidente recién creado
                     };
 
