@@ -1,48 +1,188 @@
 @model proyectoIngSoft.Models.Descanso
 
-<div class="container-fluid">
-    <h5 class="mb-3 text-primary">👤 Datos del trabajador</h5>
-    <p><strong>Nombre:</strong> @Model.User.Username @Model.User.Apellidos</p>
-    <p><strong>DNI:</strong> @Model.User.Dni</p>
 
-    <h5 class="mt-4 mb-3 text-primary">🩺 Detalles del descanso médico</h5>
-    <p><strong>Motivo:</strong> @Model.TipoDescanso.Nombre</p>
-    <p><strong>Fecha inicio:</strong> @Model.FechaIni.ToString("dd/MM/yyyy")</p>
-    <p><strong>Fecha fin:</strong> @Model.FechaFin.ToString("dd/MM/yyyy")</p>
-    <p><strong>Días totales:</strong> @((Model.FechaFin - Model.FechaIni).TotalDays)</p>
 
-    <h5 class="mt-4 mb-3 text-primary">📄 Documentos médicos</h5>
-    @if (Model.DocumentosMedicos != null && Model.DocumentosMedicos.Any())
+<div class="modal-body">
+    <p class="text-muted mb-4">
+        Información completa del usuario <strong>@Model.User.Username @Model.User.Apellidos</strong>
+    </p>
+
+    <div class="border-bottom pb-3 mb-3">
+        <h6 class="fw-bold text-primary mb-2">🪪 Información Personal</h6>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>DNI:</strong> @Model.User.Dni</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Nombre Completo:</strong> @Model.User.Username @Model.User.Apellidos</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-bottom pb-3 mb-3">
+        <h6 class="fw-bold text-primary mb-2">🏢 Ubicación Laboral</h6>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Sede:</strong> San Isidro</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Departamento:</strong> Lima Metropolitana</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Distrito:</strong> @Model.User.Distrito</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Puesto:</strong> @(Model.User.CargoLaboral ?? "No especificado")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-bottom pb-3 mb-3">
+        <h6 class="fw-bold text-primary mb-2">🩺 Información de Descanso Médico</h6>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Motivo:</strong> @Model.TipoDescanso.Nombre</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Estado:</strong> @Model.EstadoSubsidioA</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Fecha Inicio:</strong> @Model.FechaIni.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Fecha Fin:</strong> @Model.FechaFin.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Días de Descanso:</strong> @((Model.FechaFin - Model.FechaIni).TotalDays) días</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer d-flex justify-content-between">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+    @if (Model.EstadoSubsidioA != "Subsidio")
     {
-        <ul class="list-group">
-            @foreach (var doc in Model.DocumentosMedicos)
-            {
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>@doc.Nombre</span>
-                    <a href="/Lista/VerDocumento?id=@doc.IdDocumento" target="_blank" class="btn btn-sm btn-outline-primary">
-                        Ver PDF
-                    </a>
-                </li>
-            }
-        </ul>
+        <button class="btn btn-primary" onclick="validarSubsidioProlongado(@Model.IdDescanso)">
+            Validar con PCA
+        </button>
     }
     else
     {
-        <p class="text-muted">No hay documentos disponibles.</p>
+        <div class="alert alert-success py-2 mb-0">
+            ✅ Ya validado como Subsidio
+        </div>
     }
-
-    <div class="mt-4 text-center">
-        @if (Model.EstadoSubsidioA != "Subsidio")
-        {
-            <button class="btn btn-success px-4" onclick="validarSubsidioProlongado(@Model.IdDescanso)">
-                ✅ Validar con PCA
-            </button>
-        }
-        else
-        {
-            <div class="alert alert-success text-center">
-                <strong>✅ Ya validado como Subsidio</strong>
-            </div>
-        }
-    </div>
 </div>
+
+<style>
+/* === Modal Detalles del Usuario === */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #ffffff;
+}
+
+.modal-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 1rem 1.5rem;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: #3a3b45;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    color: #4e4e4e;
+}
+
+.modal-body h6 {
+    color: #0069d9;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.modal-body p {
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.modal-body strong {
+    color: #2c3e50;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e3e6f0 !important;
+}
+
+.modal-footer {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding: 1rem 1.5rem;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0062cc;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Estado validado */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: 8px;
+    border: 1px solid #c3e6cb;
+    padding: 8px 12px;
+    font-weight: 500;
+}
+
+/* Efecto visual de secciones */
+.modal-body .row {
+    margin-bottom: 0.8rem;
+}
+
+.modal-body .row p {
+    margin: 0.2rem 0;
+}
+
+.text-primary {
+    color: #0069d9 !important;
+}
+
+
+</style>
+    
