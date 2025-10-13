@@ -5,13 +5,13 @@
 namespace proyectoIngSoft.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class DescansoComplement : Migration
+    public partial class Subsidio2Migracion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "EstadoESSALUD",
+                name: "EstadoSubsidioJ",
                 table: "t_Descanso",
                 type: "character varying(50)",
                 maxLength: 50,
@@ -23,7 +23,7 @@ namespace proyectoIngSoft.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "EstadoESSALUD",
+                name: "EstadoSubsidioJ",
                 table: "t_Descanso");
         }
     }

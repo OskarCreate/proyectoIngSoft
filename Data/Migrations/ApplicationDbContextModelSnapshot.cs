@@ -284,6 +284,11 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("EstadoSubsidioJ")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<int?>("FallecimientoId")
                         .HasColumnType("integer");
 
