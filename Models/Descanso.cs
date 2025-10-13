@@ -61,5 +61,8 @@ namespace proyectoIngSoft.Models
 
         [StringLength(50)]
         public string EstadoSubsidioA { get; set; } = "Descanso Activo"; 
+
+        [StringLength(50)]
+        public string EstadoSubsidioJ { get; set; } = "Pendiente"; 
     }
 }

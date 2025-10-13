@@ -232,6 +232,61 @@ namespace proyectoIngSoft.Controllers
             return PartialView("_DetalleProlongado", descanso);
         }
 
+
+        public IActionResult SubsidiosJefe()
+        {
+            var descansos = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.TipoDescanso)
+                .Where(d => d.EstadoSubsidioA == "Subsidio")
+                .Select(d => new
+                {
+                    d.IdDescanso,
+                    d.User.Dni,
+                    Nombre = $"{d.User.Username} {d.User.Apellidos}",
+                    Motivo = d.TipoDescanso.Nombre,
+                    d.FechaIni,
+                    d.FechaFin,
+                    Dias = (d.FechaFin - d.FechaIni).TotalDays,
+                    d.EstadoSubsidioA,
+                    d.EstadoSubsidioJ
+                })
+                .ToList();
+
+                ViewBag.Total = descansos.Count;
+                ViewBag.Pendientes = descansos.Count(d => d.EstadoSubsidioJ == "Pendiente" || d.EstadoSubsidioJ == null);
+                ViewBag.Aprobados = descansos.Count(d => d.EstadoSubsidioJ == "Aprobado");
+                ViewBag.Rechazados = descansos.Count(d => d.EstadoSubsidioJ == "Rechazado");
+
+            return View("SubsidiosJefe", descansos);
+        }
+
+        [HttpPost]
+        public IActionResult AprobarSubsidioJ(int id)
+        {
+            var descanso = _context.DbSetDescanso.FirstOrDefault(d => d.IdDescanso == id);
+            if (descanso == null)
+                return Json(new { success = false, message = "No se encontró el descanso." });
+
+            descanso.EstadoSubsidioJ = "Aprobado";
+            _context.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult RechazarSubsidioJ(int id)
+        {
+            var descanso = _context.DbSetDescanso.FirstOrDefault(d => d.IdDescanso == id);
+            if (descanso == null)
+                return Json(new { success = false, message = "No se encontró el descanso." });
+
+            descanso.EstadoSubsidioJ = "Rechazado";
+            _context.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
         // ======================
         // MANEJO DE ERRORES
         // ======================
