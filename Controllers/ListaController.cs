@@ -286,7 +286,61 @@ namespace proyectoIngSoft.Controllers
 
             return Json(new { success = true });
         }
+// ============================
+// SUPERVISIÓN Y VALIDACIÓN
+// ============================
+public IActionResult SupervisionSubsidios()
+{
+    var descansos = _context.DbSetDescanso
+        .Include(d => d.User)
+        .Include(d => d.TipoDescanso)
+        .Where(d => d.EstadoSubsidioA == "Subsidio" &&
+                    (d.EstadoSubsidioJ == "Aprobado" || d.EstadoSubsidioJ == "Rechazado"))
+        .Select(d => new SupervisionSubsidioViewModel
+        {
+            IdDescanso = d.IdDescanso,
+            Dni = d.User.Dni,
+            Nombre = $"{d.User.Username} {d.User.Apellidos}",
+            Motivo = d.TipoDescanso.Nombre,
+            FechaIni = d.FechaIni,
+            FechaFin = d.FechaFin,
+            Dias = (d.FechaFin - d.FechaIni).TotalDays,
+            EstadoSubsidioA = d.EstadoSubsidioA,
+            EstadoSubsidioJ = d.EstadoSubsidioJ
+        })
+        .ToList();
 
+    return View("SupervisionSubsidios", descansos);
+}
+
+
+[HttpPost]
+public IActionResult EnviarSeleccionados([FromBody] List<int> idsSeleccionados)
+{
+    if (idsSeleccionados == null || !idsSeleccionados.Any())
+        return BadRequest("No se seleccionaron registros.");
+
+    var seleccionados = _context.DbSetDescanso
+        .Include(d => d.User)
+        .Include(d => d.TipoDescanso)
+        .Where(d => idsSeleccionados.Contains(d.IdDescanso))
+        .Select(d => new TrabajadorSeleccionadoViewModel
+        {
+            IdDescanso = d.IdDescanso,
+            Dni = d.User.Dni,
+            Nombre = $"{d.User.Username} {d.User.Apellidos}",
+            Motivo = d.TipoDescanso.Nombre,
+            FechaIni = d.FechaIni,
+            FechaFin = d.FechaFin,
+            Dias = (d.FechaFin - d.FechaIni).TotalDays,
+            EstadoSubsidioA = d.EstadoSubsidioA,
+            EstadoSubsidioJ = d.EstadoSubsidioJ
+        })
+        .ToList();
+
+    TempData["Seleccionados"] = System.Text.Json.JsonSerializer.Serialize(seleccionados);
+    return Ok();
+}
         // ======================
         // MANEJO DE ERRORES
         // ======================
