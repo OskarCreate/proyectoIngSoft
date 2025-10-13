@@ -12,6 +12,7 @@ namespace proyectoIngSoft.Models
     public class User
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdUser { get; set; }
 
         [NotNull]
@@ -58,6 +59,6 @@ namespace proyectoIngSoft.Models
         [Required, DataType(DataType.Password), Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmarPassword { get; set; }
 
-        public string Rol { get; set; }
+        public string Rol { get; set; } = "Trabajador";
     }
 }
