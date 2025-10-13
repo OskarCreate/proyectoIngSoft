@@ -1,0 +1,48 @@
+@model proyectoIngSoft.Models.Descanso
+
+<div class="container-fluid">
+    <h5 class="mb-3 text-primary">👤 Datos del trabajador</h5>
+    <p><strong>Nombre:</strong> @Model.User.Username @Model.User.Apellidos</p>
+    <p><strong>DNI:</strong> @Model.User.Dni</p>
+
+    <h5 class="mt-4 mb-3 text-primary">🩺 Detalles del descanso médico</h5>
+    <p><strong>Motivo:</strong> @Model.TipoDescanso.Nombre</p>
+    <p><strong>Fecha inicio:</strong> @Model.FechaIni.ToString("dd/MM/yyyy")</p>
+    <p><strong>Fecha fin:</strong> @Model.FechaFin.ToString("dd/MM/yyyy")</p>
+    <p><strong>Días totales:</strong> @((Model.FechaFin - Model.FechaIni).TotalDays)</p>
+
+    <h5 class="mt-4 mb-3 text-primary">📄 Documentos médicos</h5>
+    @if (Model.DocumentosMedicos != null && Model.DocumentosMedicos.Any())
+    {
+        <ul class="list-group">
+            @foreach (var doc in Model.DocumentosMedicos)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>@doc.Nombre</span>
+                    <a href="/Lista/VerDocumento?id=@doc.IdDocumento" target="_blank" class="btn btn-sm btn-outline-primary">
+                        Ver PDF
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted">No hay documentos disponibles.</p>
+    }
+
+    <div class="mt-4 text-center">
+        @if (Model.EstadoSubsidioA != "Subsidio")
+        {
+            <button class="btn btn-success px-4" onclick="validarSubsidioProlongado(@Model.IdDescanso)">
+                ✅ Validar con PCA
+            </button>
+        }
+        else
+        {
+            <div class="alert alert-success text-center">
+                <strong>✅ Ya validado como Subsidio</strong>
+            </div>
+        }
+    </div>
+</div>
