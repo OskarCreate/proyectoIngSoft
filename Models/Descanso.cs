@@ -58,5 +58,8 @@ namespace proyectoIngSoft.Models
 
         [StringLength(50)]
         public string EstadoESSALUD { get; set; } = "En Proceso"; // En Proceso | Válido | No válido
+
+        [StringLength(50)]
+        public string EstadoSubsidioA { get; set; } = "Descanso Activo"; 
     }
 }

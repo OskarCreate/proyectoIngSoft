@@ -16,10 +16,9 @@
                     <th>DNI</th>
                     <th>Nombre</th>
                     <th>Motivo</th>
-                    <th>Documentos</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
-                    <th>Días de Descanso</th>
+                    <th>Días</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -32,27 +31,25 @@
                         <tr>
                             <td>@d.Dni</td>
                             <td>@d.Nombre</td>
-                            <td>
-                                <span class="badge motivo">@d.Motivo</span>
-                            </td>
-                            <td>
-                                <a href="/Lista/DetalleDescanso?descansoId=@d.IdDescanso" class="text-primary">Ver Documentos</a>
-                            </td>
+                            <td><span class="badge motivo">@d.Motivo</span></td>
                             <td>@d.FechaIni.ToString("dd/MM/yyyy")</td>
                             <td>@d.FechaFin.ToString("dd/MM/yyyy")</td>
                             <td>@d.Dias días</td>
                             <td>
-                                @if (d.Estado == "Subsidio")
+                                @if (d.EstadoSubsidioA == "Subsidio")
                                 {
                                     <span class="badge bg-success">Subsidio</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">@d.Estado</span>
+                                    <span class="badge bg-secondary">@d.EstadoSubsidioA</span>
                                 }
                             </td>
                             <td>
-                                <a href="/Lista/DetalleDescanso?descansoId=@d.IdDescanso" class="btn btn-outline-primary btn-sm">Ver Detalles</a>
+                                <button class="btn btn-outline-primary btn-sm"
+                                        onclick="verDetalleProlongado(@d.IdDescanso)">
+                                    Ver Detalles
+                                </button>
                             </td>
                         </tr>
                     }
@@ -60,7 +57,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="9" class="text-center text-muted py-3">
+                        <td colspan="8" class="text-center text-muted py-3">
                             No se encontraron descansos prolongados.
                         </td>
                     </tr>
@@ -70,36 +67,102 @@
     </div>
 </div>
 
+<!-- MODAL DETALLE PROLONGADO -->
+<div class="modal fade" id="detalleModal" tabindex="-1" aria-labelledby="detalleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="detalleLabel">Detalles del Descanso Médico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="detalleContenido">
+                <div class="text-center text-muted p-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Cargando detalles...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    .page-wrapper { background: #f8f9fa; border-radius: 10px; }
-    .search-box input {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 6px 12px;
-        min-width: 260px;
-    }
-    .badge.motivo {
-        background-color: #f3f3f3;
-        color: #333;
-        padding: 4px 8px;
-        border-radius: 10px;
-        font-size: 0.9em;
-        border: 1px solid #ddd;
-    }
-    .badge.bg-success {
-        background-color: #b1f1c5 !important;
-        color: #116b2b;
-    }
+.page-wrapper { background: #f8f9fa; border-radius: 10px; }
+.search-box input {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 6px 12px;
+    min-width: 260px;
+}
+.badge.motivo {
+    background-color: #f3f3f3;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 0.9em;
+    border: 1px solid #ddd;
+}
+.badge.bg-success {
+    background-color: #b1f1c5 !important;
+    color: #116b2b;
+}
 </style>
 
 <script>
 function filtrarTabla() {
     const texto = document.getElementById("buscar").value.toLowerCase();
     const filas = document.querySelectorAll("#tablaDescansos tbody tr");
-
     filas.forEach(f => {
         const contenido = f.innerText.toLowerCase();
         f.style.display = contenido.includes(texto) ? "" : "none";
+    });
+}
+
+// =============================
+// Cargar detalle en modal
+// =============================
+function verDetalleProlongado(id) {
+    const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
+    document.getElementById('detalleContenido').innerHTML = `
+        <div class='text-center text-muted p-4'>
+            <div class='spinner-border text-primary'></div>
+            <p class='mt-2'>Cargando detalles...</p>
+        </div>`;
+
+    modal.show();
+
+    $.ajax({
+        url: '/Lista/DetalleProlongado',
+        type: 'GET',
+        data: { descansoId: id },
+        success: function (html) {
+            $('#detalleContenido').html(html);
+        },
+        error: function () {
+            $('#detalleContenido').html("<p class='text-danger text-center'>Error al cargar los detalles.</p>");
+        }
+    });
+}
+
+// =============================
+// Validar subsidio (dentro modal)
+// =============================
+function validarSubsidioProlongado(id) {
+    if (!confirm("¿Confirmar validación de subsidio para este descanso?")) return;
+    $.ajax({
+        type: "POST",
+        url: "/Lista/ValidarSubsidioA",
+        data: { id: id },
+        success: function (response) {
+            if (response.success) {
+                alert("Descanso validado correctamente como Subsidio ✅");
+                location.reload();
+            } else {
+                alert("Error: " + response.message);
+            }
+        },
+        error: function () {
+            alert("Error al validar el descanso.");
+        }
     });
 }
 </script>

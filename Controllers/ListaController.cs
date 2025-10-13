@@ -184,6 +184,7 @@ namespace proyectoIngSoft.Controllers
                     d.FechaIni,
                     d.FechaFin,
                     Dias = (d.FechaFin - d.FechaIni).TotalDays,
+                    d.EstadoSubsidioA,
                     Estado = d.EstadoESSALUD ?? "Descanso Activo"
                 })
                 .ToList();
@@ -191,8 +192,45 @@ namespace proyectoIngSoft.Controllers
             return View("DescansosProlongados", descansos);
         }
 
+      
+        [HttpPost]
+        public IActionResult ValidarSubsidioA(int id)
+        {
+            try
+            {
+                // Usa la DbSet correcta en tu ApplicationDbContext
+                var descanso = _context.DbSetDescanso.FirstOrDefault(d => d.IdDescanso == id);
+                if (descanso == null)
+                    return Json(new { success = false, message = "Descanso no encontrado." });
 
-        
+                // Cambiamos su estado a "Subsidio"
+                descanso.EstadoSubsidioA = "Subsidio";
+
+                _context.Update(descanso);
+                _context.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Devuelve el mensaje del error para debug en el frontend (temporal)
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+        public IActionResult DetalleProlongado(int descansoId)
+        {
+            var descanso = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.TipoDescanso)
+                .Include(d => d.DocumentosMedicos)
+                .FirstOrDefault(d => d.IdDescanso == descansoId);
+
+            if (descanso == null) return NotFound();
+
+            return PartialView("_DetalleProlongado", descanso);
+        }
 
         // ======================
         // MANEJO DE ERRORES
