@@ -24,7 +24,6 @@ namespace proyectoIngSoft.Controllers
 
         public IActionResult Index()
         {
-            var documentos = _context.DocumentosMedicos.ToList();
             return View();
         }
         [HttpPost]

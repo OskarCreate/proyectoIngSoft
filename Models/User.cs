@@ -51,7 +51,13 @@ namespace proyectoIngSoft.Models
         [Required]
         public string Distrito { get; set; }
 
-        public string? RazonSocial { get; set; }  // opcional
+        [Required, MaxLength(6)]
+        public string RazonSocial { get; set; }
+
+        [ForeignKey("CodigoSocial")]
+        public int? IdCodigo { get; set; }
+
+        public CodigoSocial? CodigoSocial { get; set; }
 
         public string? CargoLaboral { get; set; } // opcional
 
