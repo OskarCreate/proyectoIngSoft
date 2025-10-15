@@ -13,7 +13,7 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251015155749_migracióntotal")]
+    [Migration("20251015170315_migracióntotal")]
     partial class migracióntotal
     {
         /// <inheritdoc />
@@ -720,7 +720,7 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.ToTable("T_Usuarios");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.ValidarDatos", b =>
