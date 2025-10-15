@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace proyectoIngSoft.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class DescansoMigracion : Migration
+    public partial class migracióntotal : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -81,8 +81,8 @@ namespace proyectoIngSoft.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     NombreComp = table.Column<string>(type: "text", nullable: false),
                     DNI = table.Column<int>(type: "integer", nullable: false),
-                    FechaIni = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FechaFin = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FechaIni = table.Column<DateOnly>(type: "date", nullable: false),
+                    FechaFin = table.Column<DateOnly>(type: "date", nullable: false),
                     Observaciones = table.Column<string>(type: "text", nullable: false),
                     TipoDM = table.Column<string>(type: "text", nullable: false)
                 },
@@ -205,7 +205,7 @@ namespace proyectoIngSoft.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "T_Usuarios",
+                name: "Usuarios",
                 columns: table => new
                 {
                     IdUser = table.Column<int>(type: "integer", nullable: false)
@@ -226,7 +226,7 @@ namespace proyectoIngSoft.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_T_Usuarios", x => x.IdUser);
+                    table.PrimaryKey("PK_Usuarios", x => x.IdUser);
                 });
 
             migrationBuilder.CreateTable(
@@ -367,15 +367,16 @@ namespace proyectoIngSoft.Data.Migrations
                     EnfermedadId = table.Column<int>(type: "integer", nullable: true),
                     FallecimientoId = table.Column<int>(type: "integer", nullable: true),
                     EnfermedadFamId = table.Column<int>(type: "integer", nullable: true),
-                    EstadoESSALUD = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    EstadoESSALUD = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    EstadoSubsidioA = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_Descanso", x => x.IdDescanso);
                     table.ForeignKey(
-                        name: "FK_t_Descanso_T_Usuarios_UserId",
+                        name: "FK_t_Descanso_Usuarios_UserId",
                         column: x => x.UserId,
-                        principalTable: "T_Usuarios",
+                        principalTable: "Usuarios",
                         principalColumn: "IdUser",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -572,7 +573,7 @@ namespace proyectoIngSoft.Data.Migrations
                 name: "t_Descanso");
 
             migrationBuilder.DropTable(
-                name: "T_Usuarios");
+                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "t_Accidente");
