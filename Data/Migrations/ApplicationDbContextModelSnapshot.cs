@@ -717,7 +717,7 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.ToTable("T_Usuarios");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.ValidarDatos", b =>

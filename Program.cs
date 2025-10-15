@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using proyectoIngSoft.Data;
-using proyectoIngSoft.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
@@ -21,11 +18,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddControllersWithViews();
 
-// 👇 Aquí se registran las sesiones (ANTES de builder.Build)
+// 👇 Configurar sesiones antes del builder.Build()
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // tiempo de vida de la sesión
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -51,7 +48,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 👇 Aquí se habilita la sesión (DESPUÉS de UseRouting y ANTES de MapControllerRoute)
+// 👇 Habilitar sesión
 app.UseSession();
 
 app.MapControllerRoute(

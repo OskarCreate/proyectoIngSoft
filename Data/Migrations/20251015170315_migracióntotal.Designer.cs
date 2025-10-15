@@ -13,8 +13,8 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251009023915_DescansoComplement")]
-    partial class DescansoComplement
+    [Migration("20251015170315_migracióntotal")]
+    partial class migracióntotal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,8 +282,19 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("EstadoSubsidioA")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<int?>("FallecimientoId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("FechaIni")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("FechaSolicitud")
                         .HasColumnType("timestamp with time zone");
@@ -413,6 +424,12 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<DateOnly>("FechaDiag")
                         .HasColumnType("date");
 
+                    b.Property<DateOnly>("FechaFin")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaIni")
+                        .HasColumnType("date");
+
                     b.Property<string>("Medico")
                         .IsRequired()
                         .HasColumnType("text");
@@ -443,6 +460,12 @@ namespace proyectoIngSoft.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdFallec"));
 
                     b.Property<DateOnly>("FechaComun")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaFin")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaIni")
                         .HasColumnType("date");
 
                     b.Property<string>("LugarSep")
@@ -481,6 +504,12 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateOnly>("FechaFin")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaIni")
+                        .HasColumnType("date");
 
                     b.Property<DateOnly>("FechaParto")
                         .HasColumnType("date");
@@ -557,6 +586,12 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateOnly>("FechaComun")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaFin")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaIni")
                         .HasColumnType("date");
 
                     b.Property<DateOnly>("FechaParto")
@@ -685,7 +720,7 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.ToTable("T_Usuarios");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.ValidarDatos", b =>
