@@ -6718,23 +6718,22 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\OSKAR MORALES\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\proyecto software II\\ProyectIngSoft9\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (4)\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "projectName": "proyectoIngSoft",
-      "projectPath": "C:\\proyecto software II\\ProyectIngSoft9\\proyectoIngSoft\\proyectoIngSoft.csproj",
-      "packagesPath": "C:\\Users\\OSKAR MORALES\\.nuget\\packages\\",
-      "outputPath": "C:\\proyecto software II\\ProyectIngSoft9\\proyectoIngSoft\\obj\\",
+      "projectPath": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (4)\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ADMIN\\Desktop\\Nueva carpeta (4)\\proyectoIngSoft\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\OSKAR MORALES\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -6811,7 +6810,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
