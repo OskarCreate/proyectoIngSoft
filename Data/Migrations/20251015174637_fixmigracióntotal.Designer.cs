@@ -13,8 +13,8 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251013023559_Subsidio2Migracion")]
-    partial class Subsidio2Migracion
+    [Migration("20251015174637_fixmigracióntotal")]
+    partial class fixmigracióntotal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -258,6 +258,28 @@ namespace proyectoIngSoft.Data.Migrations
                     b.HasKey("IdAccidente");
 
                     b.ToTable("t_Accidente");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.CodigoSocial", b =>
+                {
+                    b.Property<int>("IdCodigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdCodigo"));
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("IdCodigo");
+
+                    b.ToTable("DbSetCodigoSocial");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>
@@ -699,12 +721,17 @@ namespace proyectoIngSoft.Data.Migrations
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int?>("IdCodigo")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RazonSocial")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
 
                     b.Property<string>("Rol")
                         .IsRequired()
@@ -724,6 +751,8 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("IdUser");
+
+                    b.HasIndex("IdCodigo");
 
                     b.ToTable("T_Usuarios");
                 });
@@ -870,6 +899,15 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Descanso");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.User", b =>
+                {
+                    b.HasOne("proyectoIngSoft.Models.CodigoSocial", "CodigoSocial")
+                        .WithMany()
+                        .HasForeignKey("IdCodigo");
+
+                    b.Navigation("CodigoSocial");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace proyectoIngSoft.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class migracióntotal : Migration
+    public partial class fixmigracióntotal : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,20 @@ namespace proyectoIngSoft.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DbSetCodigoSocial",
+                columns: table => new
+                {
+                    IdCodigo = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Codigo = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false),
+                    Rol = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DbSetCodigoSocial", x => x.IdCodigo);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,31 +219,6 @@ namespace proyectoIngSoft.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    IdUser = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    Apellidos = table.Column<string>(type: "text", nullable: false),
-                    Dni = table.Column<string>(type: "text", nullable: false),
-                    FechaNacimiento = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Telefono = table.Column<string>(type: "text", nullable: false),
-                    Ubigeo = table.Column<string>(type: "text", nullable: false),
-                    Distrito = table.Column<string>(type: "text", nullable: false),
-                    RazonSocial = table.Column<string>(type: "text", nullable: true),
-                    CargoLaboral = table.Column<string>(type: "text", nullable: true),
-                    ConfirmarPassword = table.Column<string>(type: "text", nullable: false),
-                    Rol = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.IdUser);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ValidarDatos",
                 columns: table => new
                 {
@@ -351,6 +340,37 @@ namespace proyectoIngSoft.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "T_Usuarios",
+                columns: table => new
+                {
+                    IdUser = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                    Apellidos = table.Column<string>(type: "text", nullable: false),
+                    Dni = table.Column<string>(type: "text", nullable: false),
+                    FechaNacimiento = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Telefono = table.Column<string>(type: "text", nullable: false),
+                    Ubigeo = table.Column<string>(type: "text", nullable: false),
+                    Distrito = table.Column<string>(type: "text", nullable: false),
+                    RazonSocial = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false),
+                    IdCodigo = table.Column<int>(type: "integer", nullable: true),
+                    CargoLaboral = table.Column<string>(type: "text", nullable: true),
+                    ConfirmarPassword = table.Column<string>(type: "text", nullable: false),
+                    Rol = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_T_Usuarios", x => x.IdUser);
+                    table.ForeignKey(
+                        name: "FK_T_Usuarios_DbSetCodigoSocial_IdCodigo",
+                        column: x => x.IdCodigo,
+                        principalTable: "DbSetCodigoSocial",
+                        principalColumn: "IdCodigo");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "t_Descanso",
                 columns: table => new
                 {
@@ -368,15 +388,16 @@ namespace proyectoIngSoft.Data.Migrations
                     FallecimientoId = table.Column<int>(type: "integer", nullable: true),
                     EnfermedadFamId = table.Column<int>(type: "integer", nullable: true),
                     EstadoESSALUD = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    EstadoSubsidioA = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    EstadoSubsidioA = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    EstadoSubsidioJ = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_Descanso", x => x.IdDescanso);
                     table.ForeignKey(
-                        name: "FK_t_Descanso_Usuarios_UserId",
+                        name: "FK_t_Descanso_T_Usuarios_UserId",
                         column: x => x.UserId,
-                        principalTable: "Usuarios",
+                        principalTable: "T_Usuarios",
                         principalColumn: "IdUser",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -534,6 +555,11 @@ namespace proyectoIngSoft.Data.Migrations
                 name: "IX_t_Descanso_UserId",
                 table: "t_Descanso",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_T_Usuarios_IdCodigo",
+                table: "T_Usuarios",
+                column: "IdCodigo");
         }
 
         /// <inheritdoc />
@@ -573,7 +599,7 @@ namespace proyectoIngSoft.Data.Migrations
                 name: "t_Descanso");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "T_Usuarios");
 
             migrationBuilder.DropTable(
                 name: "t_Accidente");
@@ -595,6 +621,9 @@ namespace proyectoIngSoft.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "t_TiposDescanso");
+
+            migrationBuilder.DropTable(
+                name: "DbSetCodigoSocial");
         }
     }
 }

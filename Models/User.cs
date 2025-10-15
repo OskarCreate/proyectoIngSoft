@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace proyectoIngSoft.Models
 {
-    [Table("Usuarios")]
+    [Table("T_Usuarios")]
     public class User
     {
         [Key]
