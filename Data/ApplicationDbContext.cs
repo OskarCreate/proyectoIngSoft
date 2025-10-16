@@ -25,6 +25,7 @@ namespace proyectoIngSoft.Data
         public DbSet<ValidarDatos> ValidarDatos { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<CodigoSocial> DbSetCodigoSocial { get; set; }
+        public DbSet<NotificacionSimulada> DbSetNotificacionSimulada { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
