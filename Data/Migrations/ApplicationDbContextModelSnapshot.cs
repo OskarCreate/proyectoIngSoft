@@ -557,6 +557,38 @@ namespace proyectoIngSoft.Data.Migrations
                     b.ToTable("t_Maternidad");
                 });
 
+            modelBuilder.Entity("proyectoIngSoft.Models.NotificacionSimulada", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("De")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Mensaje")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Para")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DbSetNotificacionSimulada");
+                });
+
             modelBuilder.Entity("proyectoIngSoft.Models.Notification", b =>
                 {
                     b.Property<int>("Id")
