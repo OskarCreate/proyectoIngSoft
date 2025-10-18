@@ -22,7 +22,7 @@ namespace proyectoIngSoft.Models
 
         [Display(Name = "Mensaje de notificación")]
         public string Mensaje { get; set; }
-<<<<<<< HEAD
+
 
         // 🔥 Nueva propiedad: lista completa de empleados
         public List<EmpleadoViewModel> Empleados { get; set; } = new List<EmpleadoViewModel>();
@@ -35,7 +35,7 @@ namespace proyectoIngSoft.Models
         public string Cargo { get; set; }
         public string Dni { get; set; }
         public string Email { get; set; }
-=======
->>>>>>> origin/main
+
+
     }
 }
