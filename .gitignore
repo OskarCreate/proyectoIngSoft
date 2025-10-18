@@ -1,1 +1,11 @@
 /.qodo
+# .gitignore para proyectos ASP.NET Core
+bin/
+obj/
+*.gz
+*.dll
+*.exe
+*.pdb
+*.cache
+*.json.cache
+*.FileListAbsolute.txt
