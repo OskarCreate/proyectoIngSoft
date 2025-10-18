@@ -1,6 +1,22 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
+    "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-correccion-hu25\\proyectoIngSoft.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-correccion-hu25\\proyectoIngSoft.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-correccion-hu25\\proyectoIngSoft.csproj",
+        "projectName": "proyectoIngSoft",
+        "projectPath": "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-correccion-hu25\\proyectoIngSoft.csproj",
+        "packagesPath": "C:\\Users\\Miguel Cabrera\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Miguel Cabrera\\Desktop\\proyectoIngSoft-correccion-hu25\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Miguel Cabrera\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
     "C:\\Users\\USUARIO\\Downloads\\Esp_soft\\proyectoIngSoft\\proyectoIngSoft.csproj": {}
   },
   "projects": {
@@ -16,13 +32,17 @@
         "configFilePaths": [
           "C:\\Users\\USUARIO\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+>>>>>>> origin/main
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+<<<<<<< HEAD
+=======
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
+>>>>>>> origin/main
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
