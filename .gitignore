@@ -1,11 +1,9 @@
 /.qodo
-# .gitignore para proyectos ASP.NET Core
+*.sourcelink.json
+# Archivos y carpetas de compilación de .NET
 bin/
 obj/
-*.gz
 *.dll
 *.exe
 *.pdb
 *.cache
-*.json.cache
-*.FileListAbsolute.txt

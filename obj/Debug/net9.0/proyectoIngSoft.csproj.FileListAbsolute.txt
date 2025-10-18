@@ -389,6 +389,7 @@ C:\Users\USUARIO\Downloads\Esp_soft\proyectoIngSoft\obj\Debug\net9.0\refint\proy
 C:\Users\USUARIO\Downloads\Esp_soft\proyectoIngSoft\obj\Debug\net9.0\proyectoIngSoft.pdb
 C:\Users\USUARIO\Downloads\Esp_soft\proyectoIngSoft\obj\Debug\net9.0\proyectoIngSoft.genruntimeconfig.cache
 C:\Users\USUARIO\Downloads\Esp_soft\proyectoIngSoft\obj\Debug\net9.0\ref\proyectoIngSoft.dll
+<<<<<<< HEAD
 C:\Users\Miguel Cabrera\Downloads\ACTAS27.09\proyectoIngSoft-main\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\Miguel Cabrera\Downloads\ACTAS27.09\proyectoIngSoft-main\bin\Debug\net9.0\appsettings.json
 C:\Users\Miguel Cabrera\Downloads\ACTAS27.09\proyectoIngSoft-main\bin\Debug\net9.0\app.db
@@ -1560,3 +1561,5 @@ C:\Users\Miguel Cabrera\Desktop\proyectoIngSoft-correccion-hu25\obj\Debug\net9.0
 C:\Users\Miguel Cabrera\Desktop\proyectoIngSoft-correccion-hu25\obj\Debug\net9.0\proyectoIngSoft.pdb
 C:\Users\Miguel Cabrera\Desktop\proyectoIngSoft-correccion-hu25\obj\Debug\net9.0\proyectoIngSoft.genruntimeconfig.cache
 C:\Users\Miguel Cabrera\Desktop\proyectoIngSoft-correccion-hu25\obj\Debug\net9.0\ref\proyectoIngSoft.dll
+=======
+>>>>>>> origin/main
