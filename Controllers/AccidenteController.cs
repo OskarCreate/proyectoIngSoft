@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using proyectoIngSoft.Data;
 using proyectoIngSoft.Models;
-using proyectoIngSoft.Helpers;
 
 namespace proyectoIngSoft.Controllers
 {
@@ -41,22 +40,30 @@ namespace proyectoIngSoft.Controllers
 
             try
             {
-                // 1. Obtener usuario actual
-                var user = UserHelper.GetCurrentUser(HttpContext, _context);
-                if (user == null)
-                {
-                    ViewData["Message"] = "No hay usuario autenticado. Por favor inicie sesión.";
-                    return RedirectToAction("Login", "Auth");
-                }
-
-                // 2. Guardar Accidente
+                // 1. Guardar Accidente
                 _context.DbSetAccidente.Add(model);
                 _context.SaveChanges();
+
+                // 2. Obtener usuario logueado (simulado)
+                var username = HttpContext.Session.GetString("User");
+                if (string.IsNullOrEmpty(username))
+                {
+                    ViewData["Message"] = "No hay usuario logueado";
+                    return View("Index", model);
+                }
+
+                // 3. Buscar el usuario en la base de datos
+                var user = _context.DbSetUser.FirstOrDefault(u => u.Username == username);
+                if (user == null)
+                {
+                    ViewData["Message"] = "Usuario no encontrado";
+                    return View("Index", model);
+                }
                 // 3. Crear Descanso
                 var descanso = new Descanso
                 {
                     UserId = user.IdUser,               // FK a T_Usuarios
-                    TipoDescansoId = 6,                 // 6 = Accidente
+                    TipoDescansoId = 6,                 // 1 = Accidente
                     FechaSolicitud = DateTime.UtcNow,
                     FechaIni = DateTime.SpecifyKind(model.FechaIni.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
                     FechaFin = DateTime.SpecifyKind(model.FechaFin.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),

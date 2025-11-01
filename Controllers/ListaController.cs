@@ -30,7 +30,6 @@ namespace proyectoIngSoft.Controllers
             var lista = _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
-                .Where(d => d.EstadoESSALUD == "En Proceso") // Solo mostrar los que aún están en proceso
                 .Select(d => new Lista
                 {
                     Username = d.User.Username,
@@ -90,7 +89,7 @@ namespace proyectoIngSoft.Controllers
                 Mensaje = string.IsNullOrEmpty(mensaje)
                     ? "Tu solicitud de descanso médico está en observación. Por favor revisa los detalles."
                     : mensaje,
-                Estado = "Observacion",
+                Estado = "En Observación",
                 Fecha = DateTime.UtcNow,
                 Detalle = $"Solicitud con ID {descanso.IdDescanso} requiere revisión.",
                 DocumentoAdjuntos = new List<string>()

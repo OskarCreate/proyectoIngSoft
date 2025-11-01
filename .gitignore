@@ -1,9 +1,3 @@
 /.qodo
-*.sourcelink.json
-# Archivos y carpetas de compilación de .NET
 bin/
 obj/
-*.dll
-*.exe
-*.pdb
-*.cache
