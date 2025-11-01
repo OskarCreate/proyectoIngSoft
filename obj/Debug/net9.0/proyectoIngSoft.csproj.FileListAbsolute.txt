@@ -1604,3 +1604,4 @@ C:\Users\Miguel Cabrera\Desktop\ARQUI\proyectoIngSoft-main\obj\Debug\net9.0\refi
 C:\Users\Miguel Cabrera\Desktop\ARQUI\proyectoIngSoft-main\obj\Debug\net9.0\proyectoIngSoft.pdb
 C:\Users\Miguel Cabrera\Desktop\ARQUI\proyectoIngSoft-main\obj\Debug\net9.0\proyectoIngSoft.genruntimeconfig.cache
 C:\Users\Miguel Cabrera\Desktop\ARQUI\proyectoIngSoft-main\obj\Debug\net9.0\ref\proyectoIngSoft.dll
+C:\Users\Miguel Cabrera\Desktop\ARQUI\proyectoIngSoft-main\obj\Debug\net9.0\proyectoIngSoft.sourcelink.json
