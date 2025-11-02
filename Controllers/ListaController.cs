@@ -25,12 +25,13 @@ namespace proyectoIngSoft.Controllers
         // ============================
         // LISTA GENERAL DE SOLICITUDES
         // ============================
-        public IActionResult Index()
-        {
-            var lista = _context.DbSetDescanso
+        // ============================
+            public IActionResult Index()
+            {
+                var lista = _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
-                .Where(d => d.EstadoESSALUD == "En Proceso") // Solo mostrar los que aún están en proceso
+                .Where(d => d.EstadoESSALUD == "En Proceso" || d.EstadoESSALUD == "En Observación")
                 .Select(d => new Lista
                 {
                     Username = d.User.Username,
@@ -38,15 +39,35 @@ namespace proyectoIngSoft.Controllers
                     Dni = d.User.Dni,
                     Observaciones = d.TipoDescanso.Nombre,
                     FechaSolicitud = d.FechaSolicitud,
-                    Estado = "En Proceso",
+                    Estado = d.EstadoESSALUD,
                     IdUser = d.User.IdUser,
                     IdDescanso = d.IdDescanso
                 })
                 .ToList();
 
-            return View("Index", lista);
-        }
+            // Solicitudes procesadas - nueva consulta
+                var solicitudesProcesadas = _context.DbSetDescanso
+                    .Include(d => d.User)
+                    .Include(d => d.TipoDescanso)
+                    .Where(d => d.EstadoESSALUD == "Válido" || d.EstadoESSALUD == "No válido")
+                    .Select(d => new Lista
+                    {
+                        Username = d.User.Username,
+                        Apellidos = d.User.Apellidos,
+                        Dni = d.User.Dni,
+                        Observaciones = d.TipoDescanso.Nombre,
+                        FechaSolicitud = d.FechaSolicitud,
+                        Estado = d.EstadoESSALUD, // Resultado ESSALUD
+                        EstadoProcesado = d.EstadoProcesado ?? "Procesado", // NUEVO: Estado de la base de datos
+                        IdDescanso = d.IdDescanso
+                    })
+                    .ToList();
 
+                ViewBag.SolicitudesProcesadas = solicitudesProcesadas;
+                ViewBag.CountProcesadas = solicitudesProcesadas.Count;
+
+                return View("Index", lista);
+        }
         // =======================================
         // DETALLE DE UNA SOLICITUD DE DESCANSO
         // =======================================
@@ -69,6 +90,54 @@ namespace proyectoIngSoft.Controllers
             return PartialView("_DetalleDescanso", descanso);
         }
 
+        public IActionResult DetalleDescansoProcesadas(int descansoId)
+        {
+            var descanso = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.TipoDescanso)
+                .Include(d => d.Accidente)
+                .Include(d => d.Enfermedad)
+                .Include(d => d.EnfermedadFam)
+                .Include(d => d.Fallecimiento)
+                .Include(d => d.Maternidad)
+                .Include(d => d.Paternidad)
+                .Include(d => d.DocumentosMedicos)
+                .FirstOrDefault(d => d.IdDescanso == descansoId);
+
+            if (descanso == null) return NotFound();
+
+            return PartialView("_DetalleDescansoProcesadas", descanso);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult CambiarEstadoProcesada(int descansoId, string nuevoEstado)
+        {
+            try
+            {
+                var descanso = _context.DbSetDescanso.FirstOrDefault(d => d.IdDescanso == descansoId);
+                if (descanso == null)
+                    return Json(new { success = false, message = "No se encontró la solicitud." });
+
+                // Validar que el estado sea correcto
+                if (nuevoEstado != "Aceptado" && nuevoEstado != "Rechazado")
+                    return Json(new { success = false, message = "Estado no válido." });
+
+                // USAR LA NUEVA PROPIEDAD EstadoProcesado
+                descanso.EstadoProcesado = nuevoEstado;
+
+                _context.DbSetDescanso.Update(descanso);
+                _context.SaveChanges();
+
+                return Json(new { success = true, message = $"Estado cambiado a: {nuevoEstado}" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
         // ==========================================
         // ENVIAR OBSERVACIÓN Y MOSTRAR CONFIRMACIÓN
         // ==========================================
@@ -81,6 +150,10 @@ namespace proyectoIngSoft.Controllers
 
             if (descanso == null)
                 return NotFound("No se encontró la solicitud de descanso.");
+
+            // ✅ CAMBIAR EL ESTADO A "En Observación"
+            descanso.EstadoESSALUD = "En Observación";
+            _context.DbSetDescanso.Update(descanso);
 
             // Crear la notificación
             var notificacion = new Notification
@@ -146,6 +219,11 @@ namespace proyectoIngSoft.Controllers
 
             return Content(html, "text/html");
         }
+
+     
+
+    
+
 
         // ======================
         // VER DOCUMENTO EN IFRAME
