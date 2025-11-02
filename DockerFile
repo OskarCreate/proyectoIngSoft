@@ -2,16 +2,18 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 WORKDIR /app
 
-# Copiar el archivo del proyecto y restaurar dependencias
-COPY *.csproj ./
-RUN dotnet restore
+# Copiar solo los archivos del proyecto principal
+COPY proyectoIngSoft.csproj ./
+RUN dotnet restore proyectoIngSoft.csproj
 
-# Instalar el paquete iTextSharp (para generar PDFs)
-RUN dotnet add package iTextSharp --version 5.5.13.3
+# Instalar iTextSharp directamente en el proyecto
+RUN dotnet add proyectoIngSoft.csproj package iTextSharp --version 5.5.13.3
 
-# Copiar todo el contenido y publicar la aplicación
+# Copiar el resto de los archivos del proyecto
 COPY . ./
-RUN dotnet publish -c Release -o out
+
+# Publicar la aplicación (indicando explícitamente el .csproj)
+RUN dotnet publish proyectoIngSoft.csproj -c Release -o out
 
 # Etapa de ejecución
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
@@ -23,3 +25,4 @@ ENV APP_NET_CORE proyectoIngSoft.dll
 
 # Ejecutar la aplicación
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet $APP_NET_CORE
+
