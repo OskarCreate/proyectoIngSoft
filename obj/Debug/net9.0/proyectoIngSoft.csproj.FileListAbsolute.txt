@@ -780,3 +780,8 @@ C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\obj\Debug\net9.0\refint
 C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\obj\Debug\net9.0\proyectoIngSoft.pdb
 C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\obj\Debug\net9.0\proyectoIngSoft.genruntimeconfig.cache
 C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\obj\Debug\net9.0\ref\proyectoIngSoft.dll
+C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\bin\Debug\net9.0\PdfSharpCore.dll
+C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\bin\Debug\net9.0\ICSharpCode.SharpZipLib.dll
+C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\bin\Debug\net9.0\SixLabors.Fonts.dll
+C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\bin\Debug\net9.0\SixLabors.ImageSharp.dll
+C:\Users\USUARIO\Downloads\Proyecto_soft\proyectoIngSoft\bin\Debug\net9.0\de\PdfSharpCore.resources.dll
