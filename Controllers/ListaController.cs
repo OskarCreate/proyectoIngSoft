@@ -193,6 +193,40 @@ namespace proyectoIngSoft.Controllers
             return View("DescansosProlongados", descansos);
         }
 
+
+
+        public IActionResult VerDocumentos(int descansoId)
+        {
+            var descanso = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.DocumentosMedicos)
+                .FirstOrDefault(d => d.IdDescanso == descansoId);
+
+            if (descanso == null)
+                return NotFound();
+
+            return View("VerDocumentos", descanso);
+        }
+        
+        [HttpPost]
+        public IActionResult EliminarDocumentos(int descansoId, List<int> documentosIds)
+        {
+            if (documentosIds == null || documentosIds.Count == 0)
+                return RedirectToAction("VerDocumentos", new { descansoId });
+
+            var documentos = _context.DocumentosMedicos
+                .Where(d => documentosIds.Contains(d.IdDocumento))
+                .ToList();
+
+            if (documentos.Any())
+            {
+                _context.DocumentosMedicos.RemoveRange(documentos);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("VerDocumentos", new { descansoId });
+        }
+
       
         [HttpPost]
         public IActionResult ValidarSubsidioA(int id)
