@@ -6,6 +6,9 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore
 
+# Instalar el paquete iTextSharp (para generar PDFs)
+RUN dotnet add package iTextSharp --version 5.5.13.3
+
 # Copiar todo el contenido y publicar la aplicación
 COPY . ./
 RUN dotnet publish -c Release -o out
@@ -16,7 +19,6 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Nombre del archivo principal a ejecutar
-# Asegúrate de que coincida con el nombre del .dll generado en la publicación
 ENV APP_NET_CORE proyectoIngSoft.dll
 
 # Ejecutar la aplicación
