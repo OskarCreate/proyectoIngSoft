@@ -49,14 +49,17 @@
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="monitoreoDropdown" role="button" data-bs-toggle="dropdown">
-                                        Monitoreo
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Monitoreo" asp-action="Index">Monitoreo de Subsidios</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Trabajadores" asp-action="Index">Días acumulados</a></li>
-                                    </ul>
-                                </li>
+    <a class="nav-link dropdown-toggle text-dark" href="#" id="monitoreoDropdown" role="button" data-bs-toggle="dropdown">
+        Monitoreo
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" asp-controller="Monitoreo" asp-action="Index">Monitoreo de Subsidios</a></li>
+        <li><a class="dropdown-item" asp-controller="Trabajadores" asp-action="Index">Lista trabajadores </a></li>
+        <li><a class="dropdown-item" asp-controller="Monitoreo" asp-action="HU16">💰 Historial de Pago de Subsidios 2025</a></li>
+        <li><a class="dropdown-item" asp-controller="Resoluciones" asp-action="Index">Reporte de Subsidios y Descansos Médicos</a></li>
+        
+    </ul>
+</li>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle text-dark" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown">
