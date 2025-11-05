@@ -5,6 +5,9 @@
 }
 <div class="header">
     <h2>Control de solicitudes</h2>
+    <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalReportar">
+            <i class="bi bi-exclamation-octagon"></i> Reportar Trabajador
+    </button>
     <a asp-controller="SistemaSolicitud" asp-action="ListaSolicitudes" class="btn-consulta">
         Consulta con ESSALUD
     </a>
@@ -258,6 +261,52 @@
   </div>
 </div>
 
+
+<!-- MODAL: Reportar Trabajador -->
+<div class="modal fade" id="modalReportar" tabindex="-1" aria-labelledby="modalReportarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalReportarLabel">Reportar Trabajador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <form id="formReportar">
+                <div class="mb-3">
+                    <label for="trabajadorSelect" class="form-label">Trabajador</label>
+                    <select id="trabajadorSelect" class="form-select" required>
+                        <option value="">Seleccionar trabajador</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.IdDescanso">@item.Username @item.Apellidos - DNI: @item.Dni</option>
+                        }
+                        @if (ViewBag.SolicitudesProcesadas != null)
+                        {
+                            foreach (var item in ViewBag.SolicitudesProcesadas)
+                            {
+                                <option value="@item.IdDescanso">@item.Username @item.Apellidos - DNI: @item.Dni</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="descripcionReporte" class="form-label">Descripción del Informe</label>
+                    <textarea id="descripcionReporte" class="form-control" rows="3" placeholder="Describe el motivo del reporte..." required></textarea>
+                </div>
+
+                <div class="text-end">
+                    <button type="button" id="btnEnviarReporte" class="btn btn-primary" disabled>
+                        <i class="bi bi-send"></i> Mandar Informe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 function abrirModal(descansoId) {
     $.get("/Lista/DetalleDescanso", { descansoId: descansoId }, function (data) {
@@ -334,6 +383,65 @@ function filtrarTablaProcesadas() {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const descripcionInput = document.getElementById("descripcionReporte");
+    const trabajadorSelect = document.getElementById("trabajadorSelect");
+    const btnEnviar = document.getElementById("btnEnviarReporte");
+
+    function validarFormulario() {
+        if (descripcionInput.value.trim() !== "" && trabajadorSelect.value !== "") {
+            btnEnviar.removeAttribute("disabled");
+        } else {
+            btnEnviar.setAttribute("disabled", "true");
+        }
+    }
+
+    descripcionInput.addEventListener("input", validarFormulario);
+    trabajadorSelect.addEventListener("change", validarFormulario);
+
+    btnEnviar.addEventListener("click", function () {
+        const trabajadorId = trabajadorSelect.value;
+        const descripcion = descripcionInput.value.trim();
+
+        if (!trabajadorId || !descripcion) {
+            alert("Por favor, complete todos los campos antes de enviar.");
+            return;
+        }
+
+        // Simulación de envío (puedes reemplazar con llamada AJAX real)
+        fetch('/Lista/EnviarReporte', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trabajadorId, descripcion })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Error al enviar el reporte.");
+            return response.json();
+        })
+        .then(data => {
+            // Cierra el modal y muestra confirmación
+            const modal = bootstrap.Modal.getInstance(document.getElementById("modalReportar"));
+            modal.hide();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Informe enviado',
+                text: 'El reporte se ha registrado correctamente.',
+                confirmButtonColor: '#2c5aa0'
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo enviar el informe. Intente nuevamente.'
+            });
+        });
+    });
+});
+
+
 </script>
 
 <style>
@@ -636,3 +744,4 @@ function filtrarTablaProcesadas() {
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="~/css/Modal.css" asp-append-version="true">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

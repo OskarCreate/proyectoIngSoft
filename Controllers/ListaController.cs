@@ -623,7 +623,7 @@ namespace proyectoIngSoft.Controllers
             else
                 return descanso.TipoDescanso?.Nombre ?? "No Especificado";
         }
-    
+
 
 
 
@@ -634,6 +634,28 @@ namespace proyectoIngSoft.Controllers
         public IActionResult Error()
         {
             return View("Error!");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult EnviarReporte([FromBody] ReporteViewModel reporte)
+        {
+            if (string.IsNullOrWhiteSpace(reporte.Descripcion) || reporte.TrabajadorId <= 0)
+                return BadRequest("Datos incompletos");
+
+            // Aquí puedes guardar el reporte en una tabla 'ReportesTrabajadores' si existe
+            // o simular el guardado:
+            // Ejemplo de simulación de registro
+            Console.WriteLine($"Reporte enviado para trabajador {reporte.TrabajadorId}: {reporte.Descripcion}");
+
+            return Json(new { success = true });
+        }
+        
+        public class ReporteViewModel
+        {
+            public int TrabajadorId { get; set; }
+            public string Descripcion { get; set; }
         }
     }
 }
