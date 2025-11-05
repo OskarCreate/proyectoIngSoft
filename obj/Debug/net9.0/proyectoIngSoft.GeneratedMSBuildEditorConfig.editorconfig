@@ -236,6 +236,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSFUxMVxfRWRpdGFyRGVzY2Fuc29Nb2RhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/app/proyectoIngSoft-HU08/Views/HU15/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSFUxNVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/app/proyectoIngSoft-HU08/Views/HU15/VerDocumentos.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSFUxNVxWZXJEb2N1bWVudG9zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/app/proyectoIngSoft-HU08/Views/HU15/_DocumentosModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSFUxNVxfRG9jdW1lbnRvc01vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/app/proyectoIngSoft-HU08/Views/HU8/IndexHu.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSFU4XEluZGV4SHUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

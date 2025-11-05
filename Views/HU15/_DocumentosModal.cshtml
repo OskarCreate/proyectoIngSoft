@@ -1,0 +1,144 @@
+@model List<proyectoIngSoft.Models.DocumentoMedico>
+
+<div class="modal-header">
+    <h5 class="modal-title">Documentos del trabajador</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+</div>
+
+<div class="modal-body">
+    @if (Model != null && Model.Any())
+    {
+        var descanso = Model.FirstOrDefault()?.Descanso;
+
+        <div class="mb-3">
+            <strong>DNI:</strong> @descanso?.User?.Dni ?? "N/A" <br />
+            <strong>Nombre:</strong> @(descanso?.User != null ? $"{descanso.User.Username} {descanso.User.Apellidos}" : "N/A")
+        </div>
+
+        <div class="mb-3">
+            <strong>Total documentos:</strong> @Model.Count <br />
+            <strong>Documentos subidos:</strong> @Model.Where(d => d.Archivo != null).Count()
+        </div>
+
+        <div class="mb-3">
+            <button class="btn btn-sm btn-warning" onclick="detectarIncompletos(@descanso?.IdDescanso)">
+                Detectar documentos incompletos
+            </button>
+            <button class="btn btn-sm btn-info" onclick="controlarDuplicados(@descanso?.IdDescanso)">
+                Controlar duplicados
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="eliminarSeleccionados()">
+                Eliminar seleccionados
+            </button>
+        </div>
+
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="selectTodos" onchange="seleccionarTodos(this)">
+            <label class="form-check-label" for="selectTodos">Seleccionar todos</label>
+        </div>
+
+        <table class="table table-sm table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Seleccionar</th>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Tamaño</th>
+                    <th>Fecha subida</th>
+                    <th>Duplicado</th>
+                    <th>Faltante</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var doc = Model[i];
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="docSeleccionado" value="@doc.IdDocumento" />
+                        </td>
+                        <td>@(i + 1)</td>
+                        <td>@doc.Nombre</td>
+                        <td>@doc.TamañoKB</td>
+                        <td>@doc.FechaSubida.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@(doc.EstaDuplicado ? "Sí" : "No")</td>
+                        <td>@(doc.EstaFaltante ? "Sí" : "No")</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="verDocumento('@Url.Action("VerDocumento", "HU15", new { id = doc.IdDocumento })')">
+                                Ver
+                            </button>
+                            <a href="@Url.Action("DownloadDocumento", "HU15", new { id = doc.IdDocumento })"
+                               class="btn btn-sm btn-success">
+                                Descargar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay documentos para este descanso.</p>
+    }
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+</div>
+
+<script>
+    function seleccionarTodos(checkbox) {
+        $('.docSeleccionado').prop('checked', checkbox.checked);
+    }
+
+    function verDocumento(url) {
+        if (url) {
+            window.open(url, '_blank');
+        } else {
+            alert("Ruta del documento no disponible.");
+        }
+    }
+
+    function eliminarSeleccionados() {
+        var seleccionados = $('.docSeleccionado:checked').map(function () { return $(this).val(); }).get();
+        if (!seleccionados.length) {
+            alert("No se seleccionaron documentos.");
+            return;
+        }
+
+        $.post('/HU15/EliminarDocumentos', { documentosSeleccionados: seleccionados }, function (data) {
+            alert(data.message);
+            if (data.success) location.reload();
+        });
+    }
+
+    function detectarIncompletos(descansoId) {
+        $.get('/HU15/DetectarIncompletos', { descansoId: descansoId }, function (response) {
+            if (response.success) {
+                if (response.documentosFaltantes.length) {
+                    alert("Documentos faltantes: " + response.documentosFaltantes.join(", "));
+                } else {
+                    alert("Todos los documentos requeridos están completos.");
+                }
+            } else {
+                alert(response.message);
+            }
+        });
+    }
+
+    function controlarDuplicados(descansoId) {
+        $.get('/HU15/ControlarDuplicados', { descansoId: descansoId }, function (response) {
+            if (response.success) {
+                if (response.documentosDuplicados.length) {
+                    alert("Documentos duplicados: " + response.documentosDuplicados.join(", "));
+                } else {
+                    alert("No hay documentos duplicados.");
+                }
+            } else {
+                alert(response.message);
+            }
+        });
+    }
+</script>

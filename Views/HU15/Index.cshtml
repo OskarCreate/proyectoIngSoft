@@ -1,0 +1,95 @@
+@model List<proyectoIngSoft.Models.DescansoViewModel>
+@using proyectoIngSoft.Models
+
+@{
+    ViewData["Title"] = "Gestión de usuarios con descanso médico prolongado";
+    var totalUsuarios = Model.Count();
+    var enDescansoActivo = Model.Count(d => d.EstadoSubsidioA == "Descanso Activo");
+    var convertidosSubsidio = Model.Count(d => d.EstadoSubsidioA == "Subsidio");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-2">
+            <div class="card-body">
+                <h5 class="card-title">TOTAL DE USUARIOS</h5>
+                <p class="card-text fs-3">@totalUsuarios</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-2">
+            <div class="card-body">
+                <h5 class="card-title">En Descanso Activo</h5>
+                <p class="card-text fs-3">@enDescansoActivo</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Convertidos en Subsidios</h5>
+                <p class="card-text fs-3">@convertidosSubsidio</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Motivo</th>
+            <th>Documentos</th>
+            <th>F.INICIO</th>
+            <th>F.FIN</th>
+            <th>Días de Descanso</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var descanso in Model)
+        {
+            <tr>
+                <td>@descanso.DNI</td>
+                <td>@descanso.NombreCompleto</td>
+                <td>@descanso.RazonDescanso</td>
+                <td>@descanso.TotalDocumentos</td>
+                <td>@descanso.FechaIni.ToString("dd/MM/yyyy")</td>
+                <td>@descanso.FechaFin.ToString("dd/MM/yyyy")</td>
+                <td>@descanso.DiasTotales</td>
+                <td>@descanso.EstadoSubsidioA</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalDocumentos" 
+                            onclick="cargarDocumentos(@descanso.IdDescanso)">
+                        <i class="bi bi-eye"></i> Ver Detalles
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal para documentos -->
+<div class="modal fade" id="modalDocumentos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- El contenido será cargado por AJAX -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function cargarDocumentos(descansoId) {
+        $.get('/HU15/VerDocumentosTrabajador', { descansoId: descansoId }, function (data) {
+            $('#modalDocumentos .modal-content').html(data);
+            $('#modalDocumentos').modal('show');
+        });
+    }
+</script>
