@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // Necesario para Include
 using proyectoIngSoft.Data;
 using proyectoIngSoft.Models;
 using System;
@@ -16,24 +15,14 @@ namespace proyectoIngSoft.Controllers
             _context = context;
         }
 
-        // GET: Modal de edición
+        // GET: Obtener modal parcial
         [HttpGet]
         public IActionResult EditarDescanso(int id)
         {
-            var descanso = _context.DbSetDescanso
-    .Include(d => d.User)
-    .Include(d => d.Accidente)
-    .Include(d => d.Maternidad)
-    .Include(d => d.Paternidad)
-    .Include(d => d.Enfermedad)
-    .Include(d => d.Fallecimiento)
-    .Include(d => d.EnfermedadFam)
-    .Include(d => d.TipoDescanso)
-    .FirstOrDefault(d => d.IdDescanso == id);
-
+            var descanso = _context.DbSetDescanso.FirstOrDefault(d => d.IdDescanso == id);
 
             if (descanso == null)
-                return NotFound();
+                return Content("Descanso no encontrado.");
 
             return PartialView("_EditarDescansoModal", descanso);
         }
@@ -41,30 +30,27 @@ namespace proyectoIngSoft.Controllers
         // POST: Guardar cambios
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditarDescanso(Descanso model)
+        public IActionResult EditarDescanso(int IdDescanso, DateTime FechaIni, DateTime FechaFin)
         {
-            if (!ModelState.IsValid)
-                return PartialView("_EditarDescansoModal", model);
-
-            var descansoDb = _context.DbSetDescanso
-                .FirstOrDefault(d => d.IdDescanso == model.IdDescanso);
-
+            var descansoDb = _context.DbSetDescanso.FirstOrDefault(d => d.IdDescanso == IdDescanso);
             if (descansoDb == null)
-                return NotFound();
+                return Json(new { success = false, message = "Descanso no encontrado." });
 
-            // Actualizar campos editables
-            descansoDb.FechaIni = model.FechaIni;
-            descansoDb.FechaFin = model.FechaFin;
-            descansoDb.EstadoESSALUD = model.EstadoESSALUD;
-            descansoDb.EstadoSubsidioA = model.EstadoSubsidioA;
-            descansoDb.EstadoSubsidioJ = model.EstadoSubsidioJ;
+            try
+            {
+                // Convertir fechas a UTC para PostgreSQL
+                descansoDb.FechaIni = DateTime.SpecifyKind(FechaIni, DateTimeKind.Utc);
+                descansoDb.FechaFin = DateTime.SpecifyKind(FechaFin, DateTimeKind.Utc);
 
-            // Registrar fecha de modificación
-            descansoDb.FechaSolicitud = DateTime.Now;
+                _context.SaveChanges();
 
-            _context.SaveChanges();
-
-            return Json(new { success = true, message = "Descanso médico actualizado correctamente." });
+                return Json(new { success = true, message = "Descanso médico actualizado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                // Captura de errores detallados
+                return Json(new { success = false, message = "Error al guardar: " + ex.Message });
+            }
         }
     }
 }

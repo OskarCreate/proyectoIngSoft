@@ -26,19 +26,23 @@
 
                 <!-- FORMULARIO PARA EDITAR FECHAS -->
                 <form id="formEditarDescanso">
-                    <input type="hidden" asp-for="IdDescanso" />
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="IdDescanso" value="@Model.IdDescanso" />
 
                     <div class="mb-3">
-                        <label asp-for="FechaIni" class="form-label">Fecha Inicio</label>
-                        <input asp-for="FechaIni" class="form-control" type="date" />
+                        <label for="FechaIni" class="form-label">Fecha Inicio</label>
+                        <input id="FechaIni" name="FechaIni" type="date" class="form-control"
+                               value="@Model.FechaIni.ToString("yyyy-MM-dd")" required />
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="FechaFin" class="form-label">Fecha Fin</label>
-                        <input asp-for="FechaFin" class="form-control" type="date" />
+                        <label for="FechaFin" class="form-label">Fecha Fin</label>
+                        <input id="FechaFin" name="FechaFin" type="date" class="form-control"
+                               value="@Model.FechaFin.ToString("yyyy-MM-dd")" required />
                     </div>
                 </form>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btnGuardarCambios">Guardar Cambios</button>
@@ -51,6 +55,7 @@
     $(document).ready(function () {
         $("#btnGuardarCambios").click(function () {
             var form = $("#formEditarDescanso");
+
             $.ajax({
                 url: '@Url.Action("EditarDescanso", "HU11")',
                 type: 'POST',
@@ -58,14 +63,16 @@
                 success: function (response) {
                     if (response.success) {
                         alert(response.message);
-                        $("#modalEditar").modal("hide"); // Cierra el modal
-                        location.reload(); // Refresca la lista
+                        $("#modalEditar").modal("hide");
+                        location.reload();
                     } else {
-                        alert("Error al guardar los cambios.");
+                        let msg = response.message || "Revise los datos.";
+                        alert("Error: " + msg);
                     }
                 },
-                error: function() {
-                    alert("Error al enviar los datos.");
+                error: function (xhr) {
+                    let msg = xhr.responseJSON?.message || "Error al enviar los datos.";
+                    alert("Error: " + msg);
                 }
             });
         });
