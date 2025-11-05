@@ -37,7 +37,7 @@ namespace proyectoIngSoft.Models
         [NotNull]
         [Required]
         public string DescEnfe { get; set; }
-        
+         public string CodigoEssalud { get; set; }
         
 
 

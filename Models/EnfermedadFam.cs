@@ -39,5 +39,7 @@ namespace proyectoIngSoft.Models
         public int DiaSoli { get; set; }
 
 
+        public string CodigoEssalud { get; set; }
+
     }
 }
