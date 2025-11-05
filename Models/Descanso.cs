@@ -72,11 +72,19 @@ namespace proyectoIngSoft.Models
         [NotMapped]
         public int DiasTranscurridos => (DateTime.Now - FechaIni).Days;
 
-        public string RazonDescanso =>
-    Enfermedad?.DescEnfe
-    ?? Accidente?.Observaciones
+        [NotMapped]
+        
+public string RazonDescanso =>
+    Accidente?.Observaciones
+    ?? Maternidad?.Descripcion  // propiedad correcta de tu modelo Maternidad
+ // propiedad correcta de tu modelo Paternidad
+    ?? Enfermedad?.DescEnfe
+   // propiedad correcta de Fallecimiento
     ?? EnfermedadFam?.NombreFamiliar
-    ?? string.Empty;
+    ?? "N/A";
+
+    
+
 
         [NotMapped]
         public string DiagnosticoDescanso =>
@@ -84,13 +92,16 @@ namespace proyectoIngSoft.Models
             ?? Accidente?.TipoDM
             ?? EnfermedadFam?.FechaDiag.ToString("dd/MM/yyyy")
             ?? string.Empty;
+
+
+        [NotMapped]
+        public string CodigoEssalud =>
+            Enfermedad?.CodigoEssalud
+            ?? EnfermedadFam?.CodigoEssalud
+            ?? string.Empty;
     
 
-[NotMapped]
-public string CodigoEssalud => 
-    Enfermedad?.CodigoEssalud 
-    ?? EnfermedadFam?.CodigoEssalud 
-    ?? string.Empty;
+
 
 
         // Información médica adicional (solo propiedades reales)

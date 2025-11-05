@@ -95,6 +95,13 @@
                                    onclick="abrirModal(@item.IdDescanso)">
                                     Ver Detalles
                                 </a>
+
+                                <a href="javascript:void(0)"
+       class="btn-editar"
+       data-descanso-id="@item.IdDescanso"
+       onclick="abrirModalEditar(@item.IdDescanso)">
+        Editar
+    </a>
                             </td>
                         </tr>
                     }
@@ -209,6 +216,13 @@
                                        onclick="abrirModalProcesadas(@item.IdDescanso)">
                                         Ver Detalles
                                     </a>
+
+                                     <a href="javascript:void(0)"
+       class="btn-editar"
+       data-descanso-id="@item.IdDescanso"
+       onclick="abrirModalEditar(@item.IdDescanso)">
+        Editar
+    </a>
                                 </td>
                             </tr>
                         }
@@ -258,6 +272,12 @@
   </div>
 </div>
 
+<!-- CONTENEDOR PARA EL MODAL DE EDICIÓN -->
+<div id="modalEditarContainer"></div>
+
+
+
+
 <script>
 function abrirModal(descansoId) {
     $.get("/Lista/DetalleDescanso", { descansoId: descansoId }, function (data) {
@@ -276,7 +296,6 @@ function abrirModalProcesadas(descansoId) {
         alert("No se pudo cargar el detalle del descanso.");
     });
 }
-
 
 function filtrarTabla() {
     const filtroEmpleado = document.getElementById("filtroEmpleado").value.toLowerCase();
@@ -334,7 +353,20 @@ function filtrarTablaProcesadas() {
         }
     });
 }
+
+// NUEVA FUNCIÓN PARA ABRIR MODAL DE EDICIÓN
+function abrirModalEditar(descansoId) {
+    $.get("/HU11/EditarDescanso", { id: descansoId }, function(modalHtml) {
+        $("#modalEditarContainer").html(modalHtml);
+        $("#modalEditarContainer .modal").modal("show");
+    }).fail(function () {
+        alert("No se pudo cargar el modal de edición.");
+    });
+}
 </script>
+
+
+
 
 <style>
 /* ESTILOS GENERALES */
