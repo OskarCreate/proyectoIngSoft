@@ -19,5 +19,9 @@ namespace proyectoIngSoft.Models
         public string Estado { get; set; }
         public int IdUser { get; set; }
         public string EstadoProcesado { get; set; }
+         public string Diagnostico { get; set; }
+    public string CentroMedico { get; set; }
+    public string MedicoTratante { get; set; }
+    public string CMP { get; set; }
     }
 }
