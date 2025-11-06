@@ -29,7 +29,7 @@ namespace proyectoIngSoft.Controllers
         }
         [HttpPost]
        
-        public IActionResult Registrar(Fallecimiento model)
+        public IActionResult Registrar(Fallecimiento model, List<IFormFile> archivos)
         {
             // Debug: Log all form values
             _logger.LogInformation("=== INICIO REGISTRO FALLECIMIENTO ===");
@@ -81,8 +81,33 @@ namespace proyectoIngSoft.Controllers
                 _context.DbSetDescanso.Add(descanso);
                 _context.SaveChanges();
 
-                _logger.LogInformation("Fallecimiento registrado exitosamente. Descanso ID: {DescansoId}", descanso.IdDescanso);
-                return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
+                // 4. Guardar archivos adjuntos
+                if (archivos != null && archivos.Any())
+                {
+                    foreach (var archivo in archivos)
+                    {
+                        if (archivo.Length > 0)
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                archivo.CopyTo(stream);
+                                var doc = new DocumentoMedico
+                                {
+                                    Nombre = archivo.FileName,
+                                    Tamaño = archivo.Length,
+                                    FechaSubida = DateTime.UtcNow,
+                                    Archivo = stream.ToArray(),
+                                    DescansoId = descanso.IdDescanso
+                                };
+                                _context.DocumentosMedicos.Add(doc);
+                            }
+                        }
+                    }
+                    _context.SaveChanges();
+                }
+
+                _logger.LogInformation("Fallecimiento registrado exitosamente con {Count} archivos. Descanso ID: {DescansoId}", archivos?.Count ?? 0, descanso.IdDescanso);
+                return RedirectToAction("Index", "ValidarDatos");
             }
             catch (Exception ex)
             {

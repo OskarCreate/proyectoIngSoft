@@ -29,7 +29,7 @@ namespace proyectoIngSoft.Controllers
         }
         [HttpPost]
        
-        public IActionResult Registrar(EnfermedadFam model)
+        public IActionResult Registrar(EnfermedadFam model, List<IFormFile> archivos)
         {
             if (!ModelState.IsValid)
             {
@@ -70,8 +70,33 @@ namespace proyectoIngSoft.Controllers
                 _context.DbSetDescanso.Add(descanso);
                 _context.SaveChanges();
 
-                _logger.LogInformation("EnfermedadFam registrada exitosamente. Descanso ID: {DescansoId}", descanso.IdDescanso);
-                return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
+                // 4. Guardar archivos adjuntos
+                if (archivos != null && archivos.Any())
+                {
+                    foreach (var archivo in archivos)
+                    {
+                        if (archivo.Length > 0)
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                archivo.CopyTo(stream);
+                                var doc = new DocumentoMedico
+                                {
+                                    Nombre = archivo.FileName,
+                                    Tamaño = archivo.Length,
+                                    FechaSubida = DateTime.UtcNow,
+                                    Archivo = stream.ToArray(),
+                                    DescansoId = descanso.IdDescanso
+                                };
+                                _context.DocumentosMedicos.Add(doc);
+                            }
+                        }
+                    }
+                    _context.SaveChanges();
+                }
+
+                _logger.LogInformation("EnfermedadFam registrada exitosamente con {Count} archivos. Descanso ID: {DescansoId}", archivos?.Count ?? 0, descanso.IdDescanso);
+                return RedirectToAction("Index", "ValidarDatos");
             }
             catch (Exception ex)
             {
