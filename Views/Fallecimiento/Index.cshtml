@@ -24,6 +24,13 @@
     </div>
 </div>
 
+    @if (ViewData["Message"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["Message"]
+        </div>
+    }
+
     <form method="post" asp-action="Registrar" class="solicitud-form">
 
         <!-- Fila 1 -->
@@ -90,40 +97,29 @@
                 <span asp-validation-for="Traslado" class="text-danger"></span>
             </div>
         </div>
-    <div class="documentos-section">
-            <h4>Documentos Finales</h4>
-            <div class="form-row">
-                <div class="upload-box">
-                    <label>Partida de Defunción</label>
-                    <div class="upload-area">
-                        
-                        <input type="file" name="archivo" class="form-control" />
-                        <p>Subir partida<br><span>PDF, JPG, PNG</span></p>
-                    </div>
-                </div>
-
-                <div class="upload-box">
-                    <label>DNI del Fallecido</label>
-                    <div class="upload-area">
-                        
-                        <input type="file" name="archivo" class="form-control" />
-                        <p>Subir DNI<br><span>PDF, JPG, PNG</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <br />
    <div class="form-actions">
             <button type="submit" class="btn-submit">Registrar Solicitud</button>
     </div>
 </form>
-<script>
-    document.getElementById("tipoSolicitud").addEventListener("change", function () {
-        if (this.value) {
-            window.location.href = this.value;
-        }
-    });
-</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("tipoSolicitud").addEventListener("change", function () {
+            if (this.value) {
+                window.location.href = this.value;
+            }
+        });
+        
+        // Debug: Log form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log('Formulario enviado');
+            const formData = new FormData(this);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        });
+    </script>
+}
 <style>
 .header-bar {
   display: flex;

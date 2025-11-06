@@ -31,52 +31,54 @@ namespace proyectoIngSoft.Controllers
        
         public IActionResult Registrar(EnfermedadFam model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    // 1. Obtener usuario actual
-                    var user = UserHelper.GetCurrentUser(HttpContext, _context);
-                    if (user == null)
-                    {
-                        ViewData["Message"] = "No hay usuario autenticado. Por favor inicie sesión.";
-                        return RedirectToAction("Login", "Auth");
-                    }
-
-                    // 2. Guardar Enfermedad Familiar
-                    _context.DbSetEnfermedadF.Add(model);
-                    _context.SaveChanges();
-
-                    // 3. Crear Descanso
-                    var descanso = new Descanso
-                    {
-                        UserId = user.IdUser,               // FK a T_Usuarios
-                        TipoDescansoId = 5,                 // 5 = Enfermedad Familiar
-                        FechaSolicitud = DateTime.UtcNow,
-                        FechaIni = DateTime.SpecifyKind(model.FechaIni.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
-                        FechaFin = DateTime.SpecifyKind(model.FechaFin.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
-                        EnfermedadFamId = model.IdEnfermedadFam
-                    };
-
-                    _context.DbSetDescanso.Add(descanso);
-                    _context.SaveChanges();
-
-                    ViewData["Message"] = "Accidente registrado con éxito";
-                    return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
+                var errors = string.Join("; ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                _logger.LogWarning("ModelState inválido en EnfermedadFam: {Errors}", errors);
+                ViewData["Message"] = "Datos de entrada no válidos: " + errors;
+                return View("Index", model);
             }
-                catch (Exception ex)
+
+            try
+            {
+                // 1. Obtener usuario actual
+                var user = UserHelper.GetCurrentUser(HttpContext, _context);
+                if (user == null)
                 {
-                    _logger.LogError(ex, "Error al registrar el descanso.");
-                    ViewData["Message"] = "Error al registrar el descanso: " + ex.Message;
+                    ViewData["Message"] = "No hay usuario autenticado. Por favor inicie sesión.";
+                    return RedirectToAction("Login", "Auth");
                 }
-            }
-            else
-            {
-                ViewData["Message"] = "Datos de entrada no válidos";
-            }
-            return View("Index");
-            
 
+                // 2. Guardar Enfermedad Familiar
+                _context.DbSetEnfermedadF.Add(model);
+                _context.SaveChanges();
+
+                // 3. Crear Descanso
+                var descanso = new Descanso
+                {
+                    UserId = user.IdUser,               // FK a T_Usuarios
+                    TipoDescansoId = 5,                 // 5 = Enfermedad Familiar
+                    FechaSolicitud = DateTime.UtcNow,
+                    FechaIni = DateTime.SpecifyKind(model.FechaIni.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
+                    FechaFin = DateTime.SpecifyKind(model.FechaFin.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
+                    EnfermedadFamId = model.IdEnfermedadFam,
+                    EstadoProcesado = "Pendiente"       // Inicializar EstadoProcesado
+                };
+
+                _context.DbSetDescanso.Add(descanso);
+                _context.SaveChanges();
+
+                _logger.LogInformation("EnfermedadFam registrada exitosamente. Descanso ID: {DescansoId}", descanso.IdDescanso);
+                return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al registrar enfermedad familiar");
+                ViewData["Message"] = "Error al registrar: " + ex.Message;
+                return View("Index", model);
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
