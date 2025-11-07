@@ -159,9 +159,23 @@
 .grid .cell.selected .num { color:var(--purple-1); font-size:17px; }
 
 /* events in cell */
-.grid .cell .events { position:absolute; bottom:10px; left:10px; right:10px; display:flex; gap:6px; align-items:center; }
-.grid .cell .dot { width:8px; height:8px; border-radius:50%; box-shadow: 0 1px 0 rgba(0,0,0,0.06) inset; }
-.grid .cell .more { font-size:11px; color:#6c6a7a; margin-left:4px; }
+.grid .cell .events { position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; }
+.grid .cell .dot { width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06) inset;
+    flex-shrink: 0; }
+.grid .cell .more { font-size: 10px;
+    color: #6c6a7a;
+    margin-left: 2px; }
 
 /* detail bar below calendar */
 .detail-bar {
@@ -217,12 +231,35 @@
 
 /* event item */
 .side-body .evento-item {
-  padding:12px;
-  margin-bottom:12px;
-  border-radius:10px;
-  border-left:4px solid var(--purple-1);
-  background: #fff;
-  box-shadow: 0 6px 20px rgba(84,64,237,0.03);
+  padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border-left: 4px solid;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(84,64,237,0.03);
+    transition: transform 0.2s ease;
+}
+
+.side-body .evento-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(84,64,237,0.08);
+}
+
+/* Estilos específicos para tipos de eventos */
+.evento-feriado {
+    border-left-color: #4A90E2 !important;
+}
+
+.evento-cumpleanos {
+    border-left-color: #FF6B6B !important;
+}
+
+/* Badges para tipos de eventos */
+.badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 600;
 }
 
 /* footer small note */
@@ -456,53 +493,57 @@
 
           <!-- Grid -->
           <div class="grid" id="grid" role="grid" aria-label="Días del mes" style="padding: 0 22px 12px 22px;">
-            @{
-                var primerDiaMes = new DateTime(año, mes, 1);
-                var ultimoDiaMes = primerDiaMes.AddMonths(1).AddDays(-1);
-                var primerDiaCalendario = primerDiaMes.AddDays(-((int)primerDiaMes.DayOfWeek + 6) % 7);
-                for (int semana = 0; semana < 6; semana++)
-                {
-                    for (int diaSemana = 0; diaSemana < 7; diaSemana++)
-                    {
-                        var fechaActualCalendario = primerDiaCalendario.AddDays(semana * 7 + diaSemana);
-                        var esMesActual = fechaActualCalendario.Month == mes;
-                        var esHoy = fechaActualCalendario.Date == fechaActual.Date;
-                        var eventosDia = eventos
-                            .Where(e => e.FechaInicio.Date <= fechaActualCalendario.Date && 
-                                       (e.FechaFin == null || e.FechaFin.Value.Date >= fechaActualCalendario.Date))
-                            .ToList();
+    @{
+        var primerDiaMes = new DateTime(año, mes, 1);
+        var ultimoDiaMes = primerDiaMes.AddMonths(1).AddDays(-1);
+        var primerDiaCalendario = primerDiaMes.AddDays(-((int)primerDiaMes.DayOfWeek + 6) % 7);
+        for (int semana = 0; semana < 6; semana++)
+        {
+            for (int diaSemana = 0; diaSemana < 7; diaSemana++)
+            {
+                var fechaActualCalendario = primerDiaCalendario.AddDays(semana * 7 + diaSemana);
+                var esMesActual = fechaActualCalendario.Month == mes;
+                var esHoy = fechaActualCalendario.Date == fechaActual.Date;
+                
+                // SOLO eventos que ocurren exactamente en este día
+                var eventosDia = eventos
+                    .Where(e => e.FechaInicio.Date == fechaActualCalendario.Date)
+                    .ToList();
 
-                        if (esMesActual)
+                if (esMesActual)
+                {
+                    <div class="cell @(esHoy ? "today" : "")"
+                         data-fecha="@fechaActualCalendario.ToString("yyyy-MM-dd")"
+                         data-año="@fechaActualCalendario.Year"
+                         data-mes="@fechaActualCalendario.Month"
+                         data-dia="@fechaActualCalendario.Day"
+                         role="gridcell">
+                        <div class="num">@fechaActualCalendario.Day</div>
+                        @if (eventosDia.Any())
                         {
-                            <div class="cell @(esHoy ? "today" : "")"
-                                 data-fecha="@fechaActualCalendario.ToString("yyyy-MM-dd")"
-                                 data-año="@fechaActualCalendario.Year"
-                                 data-mes="@fechaActualCalendario.Month"
-                                 data-dia="@fechaActualCalendario.Day"
-                                 role="gridcell">
-                                <div class="num">@fechaActualCalendario.Day</div>
-                                <div class="events">
-                                    @foreach (var evento in eventosDia.Take(3))
-                                    {
-                                        <div class="dot" style="background-color:@evento.Color" title="@evento.Titulo"></div>
-                                    }
-                                    @if (eventosDia.Count > 3)
-                                    {
-                                        <div class="more">+@(eventosDia.Count - 3)</div>
-                                    }
-                                </div>
+                            <div class="events">
+                                @foreach (var evento in eventosDia.Take(3))
+                                {
+                                    <div class="dot" style="background-color:@evento.Color" title="@evento.Titulo"></div>
+                                }
+                                @if (eventosDia.Count > 3)
+                                {
+                                    <div class="more">+@(eventosDia.Count - 3)</div>
+                                }
                             </div>
                         }
-                        else
-                        {
-                            <div class="cell empty">
-                                <div class="num text-muted">@fechaActualCalendario.Day</div>
-                            </div>
-                        }
-                    }
+                    </div>
+                }
+                else
+                {
+                    <div class="cell empty">
+                        <div class="num text-muted">@fechaActualCalendario.Day</div>
+                    </div>
                 }
             }
-          </div>
+        }
+    }
+</div>
 
           <!-- detalle inferior -->
           <div style="padding: 0 22px 22px 22px;">
@@ -657,10 +698,68 @@
     </div>
 </div>
 
+
+<div class="modal fade modal-cumpleanos" id="modalAgregarFestivo" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <!-- Header del Modal -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" style="color: #2d3748; font-size: 18px;">
+                    <i class="fas fa-calendar-day me-2" style="color: #4A90E2;"></i>
+                    Agregar Día Festivo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Fecha del Festivo -->
+                <div class="modal-section">
+                    <label class="form-label fw-semibold" style="color: #2d3748; margin-bottom: 10px; display: block;">
+                        Fecha del Festivo
+                    </label>
+                    <input type="date" class="form-control" id="fechaFestivo" required 
+                           style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px;">
+                </div>
+
+                <!-- Título del Festivo -->
+                <div class="modal-section">
+                    <label class="form-label fw-semibold" style="color: #2d3748; margin-bottom: 10px; display: block;">
+                        Título del Festivo
+                    </label>
+                    <input type="text" class="form-control" id="tituloFestivo" 
+                           placeholder="Ej: Combate de Angamos, Día del Trabajo..."
+                           style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px;">
+                </div>
+
+                <!-- Descripción -->
+                <div class="modal-section">
+                    <label class="form-label fw-semibold" style="color: #2d3748; margin-bottom: 10px; display: block;">
+                        Descripción (Opcional)
+                    </label>
+                    <textarea class="form-control" id="descripcionFestivo" rows="3"
+                              placeholder="Descripción adicional del festivo..."
+                              style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px; font-size: 14px;"></textarea>
+                </div>
+            </div>
+
+            <!-- Footer del Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="btnGuardarFestivo"
+                        style="background: linear-gradient(135deg, #4A90E2, #357ABD); border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-calendar-plus me-2"></i>Guardar Festivo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(document).ready(function() {
-            console.log('Documento listo - calendario con modal de cumpleaños');
+            console.log('Documento listo - calendario con múltiples eventos');
 
             let empleadosSeleccionados = [];
             let todosEmpleados = [];
@@ -699,46 +798,126 @@
                 $(this).addClass('selected');
             });
 
-            // Botón agregar evento (dentro del panel)
+            // Botón agregar evento (dentro del panel) - Ahora muestra opciones
             $(document).on('click', '#btnAgregarEvento', function () {
-                console.log('Botón agregar evento clickeado (desde panel)');
+                console.log('Botón agregar evento clickeado - mostrando opciones');
                 
-                // Mostrar modal
-                var modalElement = document.getElementById('modalAgregarEvento');
-                var modal = new bootstrap.Modal(modalElement);
-                modal.show();
+                // Crear menú de opciones
+                const opcionesHtml = `
+                    <div class="text-center p-4">
+                        <h6 class="mb-3">¿Qué tipo de evento deseas agregar?</h6>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-primary btn-agregar-tipo" data-tipo="cumpleanos">
+                                <i class="fas fa-birthday-cake me-2"></i>Agregar Cumpleaños
+                            </button>
+                            <button type="button" class="btn btn-outline-info btn-agregar-tipo" data-tipo="festivo">
+                                <i class="fas fa-calendar-day me-2"></i>Agregar Día Festivo
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                $('#detalleDiaContent').html(opcionesHtml);
+            });
+
+            // Manejar selección de tipo de evento
+            $(document).on('click', '.btn-agregar-tipo', function() {
+                const tipo = $(this).data('tipo');
+                
+                if (tipo === 'cumpleanos') {
+                    // Mostrar modal de cumpleaños
+                    const modalElement = document.getElementById('modalAgregarEvento');
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                } else if (tipo === 'festivo') {
+                    // Mostrar modal de festivo
+                    const modalElement = document.getElementById('modalAgregarFestivo');
+                    const modal = new bootstrap.Modal(modalElement);
+                    
+                    // Si hay un día seleccionado, establecer esa fecha
+                    const celdaSeleccionada = $('.grid .cell.selected');
+                    if (celdaSeleccionada.length > 0) {
+                        const fechaSeleccionada = celdaSeleccionada.data('fecha');
+                        $('#fechaFestivo').val(fechaSeleccionada);
+                    } else {
+                        // Establecer fecha actual por defecto
+                        const hoy = new Date().toISOString().split('T')[0];
+                        $('#fechaFestivo').val(hoy);
+                    }
+                    
+                    modal.show();
+                }
             });
 
             // ========== FUNCIONALIDAD DEL MODAL DE CUMPLEAÑOS ==========
+            inicializarModalCumpleanos();
 
-            // Inicializar el modal de cumpleaños
-            function inicializarModalCumpleanos() {
-                console.log('Inicializando modal de cumpleaños...');
-                
-                // Configurar búsqueda en tiempo real
-                $('#buscarEmpleadoInput').on('input', function() {
-                    const termino = $(this).val().trim();
-                    if (termino.length >= 2) {
-                        buscarEmpleados(termino);
-                    } else {
-                        $('#resultadosEmpleados').hide().empty();
-                    }
+            // ========== FUNCIONALIDAD DEL MODAL DE FESTIVOS ==========
+            function inicializarModalFestivos() {
+                // Guardar evento festivo
+                $('#btnGuardarFestivo').click(function() {
+                    guardarEventoFestivo();
                 });
-
-                // Seleccionar todos los empleados
-                $('#seleccionarTodos').click(function(e) {
-                    e.preventDefault();
-                    if (todosEmpleados.length > 0) {
-                        empleadosSeleccionados = [...todosEmpleados];
-                        actualizarEmpleadosSeleccionados();
-                        $('#resultadosEmpleados').hide();
-                        $('#buscarEmpleadoInput').val('');
-                    }
-                });
-
-                // Guardar cumpleaños
-                $('#btnGuardarCumpleanos').click(guardarCumpleanos);
             }
+
+            function guardarEventoFestivo() {
+                const fechaFestivo = $('#fechaFestivo').val();
+                const tituloFestivo = $('#tituloFestivo').val().trim();
+                const descripcionFestivo = $('#descripcionFestivo').val().trim();
+
+                if (!fechaFestivo) {
+                    alert('❌ Por favor seleccione una fecha para el festivo');
+                    return;
+                }
+
+                if (!tituloFestivo) {
+                    alert('❌ Por favor ingrese un título para el festivo');
+                    return;
+                }
+
+                // Mostrar loading
+                const $btnGuardar = $('#btnGuardarFestivo');
+                const originalText = $btnGuardar.html();
+                $btnGuardar.html('<i class="fas fa-spinner fa-spin me-2"></i>Guardando...');
+                $btnGuardar.prop('disabled', true);
+
+                const eventoData = {
+                    Titulo: tituloFestivo,
+                    Descripcion: descripcionFestivo,
+                    TipoEvento: 'Feriado',
+                    Color: '#4A90E2', // Azul para festivos
+                    FechaInicio: fechaFestivo,
+                    FechaFin: null,
+                    IdUser: null // Los festivos no están asociados a un usuario
+                };
+
+                $.ajax({
+                    url: '@Url.Action("AgregarEventoFestivo", "Calendario")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(eventoData),
+                    success: function(response) {
+                        if (response.success) {
+                            alert('✅ Evento festivo agregado correctamente');
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarFestivo'));
+                            modal.hide();
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            alert('❌ Error: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error guardando evento festivo:', error);
+                        alert('❌ Error al guardar el evento festivo');
+                    },
+                    complete: function() {
+                        $btnGuardar.html(originalText);
+                        $btnGuardar.prop('disabled', false);
+                    }
+                });
+            }
+
+            // ========== FUNCIONES COMPARTIDAS ==========
 
             // Buscar empleados
             function buscarEmpleados(termino) {
@@ -853,7 +1032,7 @@
                         Titulo: `Cumpleaños de ${empleado.nombre} ${empleado.apellidos}`,
                         Descripcion: mensajeSeleccionado,
                         TipoEvento: 'Cumpleaños',
-                        Color: '#FF6B6B',
+                        Color: '#FF6B6B', // Rosado para cumpleaños
                         FechaInicio: fechaCumpleanos,
                         FechaFin: null,
                         IdUser: empleado.id
@@ -892,33 +1071,55 @@
 
             // Cargar eventos del día
             function cargarEventosDia(año, mes, dia) {
-                $('#detalleDiaContent').html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando eventos...</p></div>');
+    $('#detalleDiaContent').html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando eventos...</p></div>');
 
-                $.getJSON('@Url.Action("GetEventosDia", "Calendario")', { año: año, mes: mes, dia: dia })
-                    .done(function(eventos) {
-                        var contenido = '';
-                        if (eventos.length === 0) {
-                            contenido = '<div class="text-center text-muted py-4"><i class="fas fa-calendar-times fa-3x mb-3"></i><p>No hay eventos programados para este día.</p></div>';
-                        } else {
-                            eventos.forEach(function(evento) {
-                                contenido += `
-                                    <div class="evento-item" style="border-left-color: ${evento.Color}">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div class="fw-bold text-dark">${evento.Titulo}</div>
-                                            <span class="badge" style="background-color: ${evento.Color}">${evento.TipoEvento}</span>
-                                        </div>
-                                        ${evento.Descripcion ? `<div class="small text-muted mt-1">${evento.Descripcion}</div>` : ''}
-                                        ${evento.Empleado ? `<div class="small mt-2"><i class="fas fa-user me-1"></i><strong>Empleado:</strong> ${evento.Empleado} <span class="text-muted">(${evento.Dni})</span></div>` : ''}
-                                    </div>
-                                `;
-                            });
-                        }
-                        $('#detalleDiaContent').html(contenido);
-                    })
-                    .fail(function(xhr, status, error) {
-                        $('#detalleDiaContent').html('<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error al cargar los eventos</div>');
-                    });
+    $.getJSON('@Url.Action("GetEventosDia", "Calendario")', { año: año, mes: mes, dia: dia })
+        .done(function(eventos) {
+            console.log('Eventos recibidos del servidor:', eventos); // DEBUG
+            
+            var contenido = '';
+            if (eventos.length === 0) {
+                contenido = '<div class="text-center text-muted py-4"><i class="fas fa-calendar-times fa-3x mb-3"></i><p>No hay eventos programados para este día.</p></div>';
+            } else {
+                eventos.forEach(function(evento) {
+                    console.log('Procesando evento:', evento); // DEBUG individual
+                    
+                    // Verificar y asignar valores con fallbacks
+                    var tituloMostrar = evento.Titulo || evento.titulo || 'Sin título';
+                    var descripcionMostrar = evento.Descripcion || evento.descripcion || '';
+                    var tipoEvento = evento.TipoEvento || evento.tipoEvento || 'Evento';
+                    var color = evento.Color || evento.color || '#007bff';
+                    
+                    // Debug de cada propiedad
+                    console.log('Titulo:', tituloMostrar, 'Descripcion:', descripcionMostrar);
+                    
+                    var empleadoInfo = '';
+                    if (evento.Empleado || evento.empleado) {
+                        var empleadoNombre = evento.Empleado || evento.empleado;
+                        var empleadoDni = evento.Dni || evento.dni || '';
+                        empleadoInfo = `<div class="small mt-2"><i class="fas fa-user me-1"></i><strong>Empleado:</strong> ${empleadoNombre} <span class="text-muted">(${empleadoDni})</span></div>`;
+                    }
+                    
+                    contenido += `
+                        <div class="evento-item" style="border-left-color: ${color}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="fw-bold text-dark">${tituloMostrar}</div>
+                                <span class="badge" style="background-color: ${color}">${tipoEvento}</span>
+                            </div>
+                            ${descripcionMostrar ? `<div class="small text-muted mt-1">${descripcionMostrar}</div>` : ''}
+                            ${empleadoInfo}
+                        </div>
+                    `;
+                });
             }
+            $('#detalleDiaContent').html(contenido);
+        })
+        .fail(function(xhr, status, error) {
+            console.error('Error cargando eventos:', error);
+            console.log('Respuesta del servidor:', xhr.responseText);
+            $('#detalleDenidoContent').html('<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error al cargar los eventos</div>');
+        });
+}
 
             // Formato fechas
             function formatFechaShort(fechaStr) {
@@ -929,7 +1130,7 @@
                 return dias[d.getDay()] + ', ' + d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
             }
 
-            // Reinicializar cuando se muestra el modal
+            // Reinicializar cuando se muestra el modal de cumpleaños
             $('#modalAgregarEvento').on('show.bs.modal', function() {
                 empleadosSeleccionados = [];
                 actualizarEmpleadosSeleccionados();
@@ -941,8 +1142,64 @@
                 $('#fechaCumpleanos').val(hoy);
             });
 
+            // Reinicializar cuando se muestra el modal de festivos
+            $('#modalAgregarFestivo').on('show.bs.modal', function() {
+                $('#tituloFestivo').val('');
+                $('#descripcionFestivo').val('');
+            });
+
             // Inicialización
-            inicializarModalCumpleanos();
+            inicializarModalFestivos();
+
+            function inicializarModalCumpleanos() {
+                // Configurar búsqueda en tiempo real
+                $('#buscarEmpleadoInput').on('input', function() {
+                    const termino = $(this).val().trim();
+                    if (termino.length >= 2) {
+                        buscarEmpleados(termino);
+                    } else {
+                        $('#resultadosEmpleados').hide().empty();
+                    }
+                });
+
+                // Seleccionar todos los empleados
+                $('#seleccionarTodos').click(function(e) {
+                    e.preventDefault();
+                    if (todosEmpleados.length > 0) {
+                        empleadosSeleccionados = [...todosEmpleados];
+                        actualizarEmpleadosSeleccionados();
+                        $('#resultadosEmpleados').hide();
+                        $('#buscarEmpleadoInput').val('');
+                    }
+                });
+
+                // Guardar cumpleaños
+                $('#btnGuardarCumpleanos').click(guardarCumpleanos);
+            }
         });
+
+
+        function debugEventos() {
+    var año = 2024;
+    var mes = 11;
+    var dia = 7;
+    
+    $.getJSON('@Url.Action("GetEventosDia", "Calendario")', { año: año, mes: mes, dia: dia })
+        .done(function(eventos) {
+            console.log('=== DEBUG EVENTOS ===');
+            console.log('Eventos crudos:', eventos);
+            eventos.forEach(function(evento, index) {
+                console.log(`Evento ${index + 1}:`, {
+                    IdEvento: evento.IdEvento,
+                    Titulo: evento.Titulo,
+                    Descripcion: evento.Descripcion,
+                    TipoEvento: evento.TipoEvento,
+                    Color: evento.Color,
+                    Empleado: evento.Empleado,
+                    Dni: evento.Dni
+                });
+            });
+        });
+}
     </script>
 }
