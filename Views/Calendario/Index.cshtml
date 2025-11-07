@@ -141,9 +141,10 @@
 .grid .cell {
   background: var(--tile-bg);
   min-height: 96px;
+    padding: 12px;
+    position: relative;
   border-radius: 12px;
-  padding: 12px;
-  position:relative;
+  
   border: 1px solid var(--tile-border);
   transition: transform .12s ease, box-shadow .14s ease;
   display:flex;
@@ -160,22 +161,25 @@
 
 /* events in cell */
 .grid .cell .events { position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
     display: flex;
     gap: 4px;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap; }
-.grid .cell .dot { width: 8px;
+    flex-wrap: wrap;
+    max-width: calc(100% - 16px);}
+.grid .cell .dot {width: 8px;
     height: 8px;
     border-radius: 50%;
     box-shadow: 0 1px 0 rgba(0,0,0,0.06) inset;
-    flex-shrink: 0; }
+    flex-shrink: 0;
+    display: inline-block;}
 .grid .cell .more { font-size: 10px;
     color: #6c6a7a;
-    margin-left: 2px; }
+    margin-left: 2px;
+    flex-shrink: 0; }
 
 /* detail bar below calendar */
 .detail-bar {
@@ -1007,67 +1011,76 @@
 
             // Guardar cumpleaños
             function guardarCumpleanos() {
-                const fechaCumpleanos = $('#fechaCumpleanos').val();
-                const mensajeSeleccionado = $('input[name="mensajeCumpleanos"]:checked').val();
+    const fechaCumpleanos = $('#fechaCumpleanos').val();
+    const mensajeSeleccionado = $('input[name="mensajeCumpleanos"]:checked').val();
 
-                if (!fechaCumpleanos) {
-                    alert('❌ Por favor seleccione una fecha de cumpleaños');
-                    return;
-                }
+    if (!fechaCumpleanos) {
+        alert('❌ Por favor seleccione una fecha de cumpleaños');
+        return;
+    }
 
-                if (empleadosSeleccionados.length === 0) {
-                    alert('❌ Por favor seleccione al menos un trabajador');
-                    return;
-                }
+    if (empleadosSeleccionados.length === 0) {
+        alert('❌ Por favor seleccione al menos un trabajador');
+        return;
+    }
 
-                // Mostrar loading
-                const $btnGuardar = $('#btnGuardarCumpleanos');
-                const originalText = $btnGuardar.html();
-                $btnGuardar.html('<i class="fas fa-spinner fa-spin me-2"></i>Guardando...');
-                $btnGuardar.prop('disabled', true);
+    // Mostrar loading
+    const $btnGuardar = $('#btnGuardarCumpleanos');
+    const originalText = $btnGuardar.html();
+    $btnGuardar.html('<i class="fas fa-spinner fa-spin me-2"></i>Guardando...');
+    $btnGuardar.prop('disabled', true);
 
-                // Crear eventos de cumpleaños para cada empleado seleccionado
-                const promesas = empleadosSeleccionados.map(empleado => {
-                    const eventoData = {
-                        Titulo: `Cumpleaños de ${empleado.nombre} ${empleado.apellidos}`,
-                        Descripcion: mensajeSeleccionado,
-                        TipoEvento: 'Cumpleaños',
-                        Color: '#FF6B6B', // Rosado para cumpleaños
-                        FechaInicio: fechaCumpleanos,
-                        FechaFin: null,
-                        IdUser: empleado.id
-                    };
+    // Crear eventos de cumpleaños para cada empleado seleccionado
+    const promesas = empleadosSeleccionados.map(empleado => {
+        const eventoData = {
+            Titulo: `Cumpleaños de ${empleado.nombre} ${empleado.apellidos}`,
+            Descripcion: mensajeSeleccionado,
+            TipoEvento: 'Cumpleaños',
+            Color: '#FF6B6B', // Color rojo para cumpleaños
+            FechaInicio: fechaCumpleanos,
+            FechaFin: null,
+            IdUser: empleado.id
+        };
 
-                    return $.ajax({
-                        url: '@Url.Action("AgregarEvento", "Calendario")',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(eventoData)
-                    });
-                });
+        return $.ajax({
+            url: '@Url.Action("AgregarEvento", "Calendario")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(eventoData)
+        });
+    });
 
-                // Ejecutar todas las promesas
-                Promise.all(promesas)
-                    .then(responses => {
-                        const errores = responses.filter(r => !r.success);
-                        if (errores.length === 0) {
-                            alert('✅ Cumpleaños agregados correctamente');
-                            const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarEvento'));
-                            modal.hide();
-                            setTimeout(() => location.reload(), 1000);
-                        } else {
-                            alert('⚠ Algunos cumpleaños no se pudieron guardar');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error guardando cumpleaños:', error);
-                        alert('❌ Error al guardar los cumpleaños');
-                    })
-                    .finally(() => {
-                        $btnGuardar.html(originalText);
-                        $btnGuardar.prop('disabled', false);
-                    });
+    // Ejecutar todas las promesas
+    Promise.all(promesas)
+        .then(responses => {
+            const todosExitosos = responses.every(r => r.success);
+            const algunosErrores = responses.some(r => !r.success);
+            
+            if (todosExitosos) {
+                alert('✅ Cumpleaños agregados correctamente');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarEvento'));
+                modal.hide();
+                
+                // Recargar la página para mostrar los nuevos puntos en el calendario
+                setTimeout(() => location.reload(), 1000);
+            } else if (algunosErrores) {
+                alert('⚠ Algunos cumpleaños no se pudieron guardar, pero otros sí.');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgregarEvento'));
+                modal.hide();
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                alert('❌ Error al guardar los cumpleaños');
             }
+        })
+        .catch(error => {
+            console.error('Error guardando cumpleaños:', error);
+            alert('❌ Error al guardar los cumpleaños');
+        })
+        .finally(() => {
+            $btnGuardar.html(originalText);
+            $btnGuardar.prop('disabled', false);
+        });
+}
 
             // Cargar eventos del día
             function cargarEventosDia(año, mes, dia) {
