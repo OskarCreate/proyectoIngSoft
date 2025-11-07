@@ -20,8 +20,10 @@ namespace proyectoIngSoft.Models
         public string? Descripcion { get; set; }
 
         [Required(ErrorMessage = "La fecha de inicio es obligatoria")]
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime FechaInicio { get; set; }
 
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime? FechaFin { get; set; }
 
         [Required(ErrorMessage = "El tipo de evento es obligatorio")]
@@ -35,6 +37,7 @@ namespace proyectoIngSoft.Models
         [ForeignKey("IdUser")]
         public User? User { get; set; }
 
+        [Column(TypeName = "timestamp without time zone")]
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
     }
 }

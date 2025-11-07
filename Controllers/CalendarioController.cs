@@ -34,13 +34,13 @@ namespace proyectoIngSoft.Controllers
             ViewBag.MesNombre = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(mesSeleccionado);
             ViewBag.FechaActual = fechaActual;
 
-            // Obtener eventos del mes
+            // Obtener eventos del mes - SOLO eventos que ocurren en días específicos
             var primerDiaMes = new DateTime(añoSeleccionado, mesSeleccionado, 1);
             var ultimoDiaMes = primerDiaMes.AddMonths(1).AddDays(-1);
 
             var eventos = _context.DbSetCalendarioEvento
-                .Where(e => e.FechaInicio.Date <= ultimoDiaMes.Date && 
-                           (e.FechaFin == null || e.FechaFin.Value.Date >= primerDiaMes.Date))
+                .Where(e => e.FechaInicio.Date >= primerDiaMes.Date && 
+                           e.FechaInicio.Date <= ultimoDiaMes.Date)
                 .Include(e => e.User)
                 .ToList();
 
@@ -50,27 +50,44 @@ namespace proyectoIngSoft.Controllers
         }
 
         // GET: /Calendario/GetEventosDia
-        public JsonResult GetEventosDia(int año, int mes, int dia)
-        {
-            var fecha = new DateTime(año, mes, dia);
-            var eventos = _context.DbSetCalendarioEvento
-                .Where(e => e.FechaInicio.Date <= fecha.Date && 
-                           (e.FechaFin == null || e.FechaFin.Value.Date >= fecha.Date))
-                .Include(e => e.User)
-                .Select(e => new
-                {
-                    e.IdEvento,
-                    e.Titulo,
-                    e.Descripcion,
-                    e.TipoEvento,
-                    e.Color,
-                    Empleado = e.User != null ? $"{e.User.Username} {e.User.Apellidos}" : null,
-                    Dni = e.User != null ? e.User.Dni : null
-                })
-                .ToList();
+       public JsonResult GetEventosDia(int año, int mes, int dia)
+{
+    try
+    {
+        var fecha = new DateTime(año, mes, dia);
+        
+        Console.WriteLine($"Buscando eventos para: {fecha:yyyy-MM-dd}"); // DEBUG
 
-            return Json(eventos);
+        var eventos = _context.DbSetCalendarioEvento
+            .Where(e => e.FechaInicio.Date == fecha.Date)
+            .Include(e => e.User)
+            .Select(e => new 
+            {
+                e.IdEvento,
+                e.Titulo,
+                e.Descripcion,
+                e.TipoEvento,
+                e.Color,
+                Empleado = e.User != null ? $"{e.User.Username} {e.User.Apellidos}" : null,
+                Dni = e.User != null ? e.User.Dni : null
+            })
+            .ToList();
+
+        Console.WriteLine($"Se encontraron {eventos.Count} eventos"); // DEBUG
+        foreach (var evento in eventos)
+        {
+            Console.WriteLine($"Evento: ID={evento.IdEvento}, Titulo='{evento.Titulo}', Descripcion='{evento.Descripcion}'"); // DEBUG
         }
+
+        return Json(eventos);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error en GetEventosDia: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        return Json(new List<object>());
+    }
+}
 
         // GET: /Calendario/BuscarEmpleados
         public JsonResult BuscarEmpleados(string termino)
@@ -83,7 +100,7 @@ namespace proyectoIngSoft.Controllers
                            u.Apellidos != null && u.Apellidos.Contains(termino) || 
                            u.Dni != null && u.Dni.Contains(termino) ||
                            u.CargoLaboral != null && u.CargoLaboral.Contains(termino))
-                .Take(10) // Máximo 10 resultados para el scroll
+                .Take(10)
                 .Select(u => new
                 {
                     id = u.IdUser,
@@ -100,27 +117,97 @@ namespace proyectoIngSoft.Controllers
         }
 
         // POST: /Calendario/AgregarEvento
-        [HttpPost]
-        public async Task<IActionResult> AgregarEvento([FromBody] CalendarioEvento evento)
+       [HttpPost]
+public async Task<IActionResult> AgregarEvento([FromBody] CalendarioEvento evento)
+{
+    if (ModelState.IsValid)
+    {
+        try
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    evento.FechaCreacion = DateTime.Now;
-                    
-                    _context.DbSetCalendarioEvento.Add(evento);
-                    await _context.SaveChangesAsync();
+            Console.WriteLine($"Datos recibidos para evento:");
+            Console.WriteLine($"Titulo: '{evento.Titulo}'");
+            Console.WriteLine($"Descripcion: '{evento.Descripcion}'");
+            Console.WriteLine($"TipoEvento: '{evento.TipoEvento}'");
+            Console.WriteLine($"FechaInicio: '{evento.FechaInicio}'");
+            Console.WriteLine($"IdUser: '{evento.IdUser}'");
 
-                    return Json(new { success = true, message = "Evento agregado correctamente", id = evento.IdEvento });
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { success = false, message = $"Error al guardar: {ex.Message}" });
-                }
+            // Validar que el título no esté vacío
+            if (string.IsNullOrWhiteSpace(evento.Titulo))
+            {
+                return Json(new { success = false, message = "El título es obligatorio" });
             }
 
-            return Json(new { success = false, message = "Datos del evento no válidos" });
+            // Asegurar que las fechas estén en formato correcto para PostgreSQL
+            evento.FechaCreacion = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            evento.FechaInicio = DateTime.SpecifyKind(evento.FechaInicio, DateTimeKind.Unspecified);
+            
+            if (evento.FechaFin.HasValue)
+            {
+                evento.FechaFin = DateTime.SpecifyKind(evento.FechaFin.Value, DateTimeKind.Unspecified);
+            }
+
+            _context.DbSetCalendarioEvento.Add(evento);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine($"Evento guardado correctamente - ID: {evento.IdEvento}");
+
+            return Json(new { success = true, message = "Evento agregado correctamente", id = evento.IdEvento });
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al guardar evento: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            return Json(new { success = false, message = $"Error al guardar: {ex.Message}" });
+        }
+    }
+
+    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+    Console.WriteLine($"Errores de validación: {string.Join(", ", errors)}");
+    return Json(new { success = false, message = "Datos del evento no válidos" });
+}
+        // POST: /Calendario/AgregarEventoFestivo
+        [HttpPost]
+public async Task<IActionResult> AgregarEventoFestivo([FromBody] CalendarioEvento evento)
+{
+    if (ModelState.IsValid)
+    {
+        try
+        {
+            Console.WriteLine($"Datos recibidos - Titulo: '{evento.Titulo}', Descripcion: '{evento.Descripcion}'");
+
+            // Validar que el título no esté vacío
+            if (string.IsNullOrWhiteSpace(evento.Titulo))
+            {
+                return Json(new { success = false, message = "El título es obligatorio" });
+            }
+
+            // Configurar como evento festivo
+            evento.TipoEvento = "Feriado";
+            evento.Color = "#4A90E2";
+            evento.FechaCreacion = DateTime.Now;
+            evento.IdUser = null;
+            evento.FechaFin = null;
+
+            // Asegurar que solo sea la fecha
+            evento.FechaInicio = evento.FechaInicio.Date;
+
+            _context.DbSetCalendarioEvento.Add(evento);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine($"Evento guardado - ID: {evento.IdEvento}, Titulo: '{evento.Titulo}'");
+
+            return Json(new { success = true, message = "Evento festivo agregado correctamente", id = evento.IdEvento });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error guardando evento: {ex.Message}");
+            return Json(new { success = false, message = $"Error al guardar: {ex.Message}" });
+        }
+    }
+
+    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+    Console.WriteLine($"Errores de validación: {string.Join(", ", errors)}");
+    return Json(new { success = false, message = "Datos del evento no válidos" });
+}
     }
 }
