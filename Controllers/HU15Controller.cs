@@ -34,7 +34,8 @@ namespace proyectoIngSoft.Controllers
                 FechaFin = d.FechaFin,
                 EstadoSubsidioA = d.EstadoSubsidioA,
                 TipoDescansoId = d.TipoDescansoId,
-                DocumentosMedicos = d.DocumentosMedicos.ToList()
+                DocumentosMedicos = d.DocumentosMedicos?.ToList() ?? new List<DocumentoMedico>()
+
             }).ToList();
 
             return View("~/Views/HU15/Index.cshtml", model);

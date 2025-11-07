@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace proyectoIngSoft.Models
+
 {
     // ViewModel para la vista principal HU15
     public class DescansoViewModel
