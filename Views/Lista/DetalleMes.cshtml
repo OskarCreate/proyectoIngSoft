@@ -7,18 +7,26 @@
     var descansosCount = Model.Solicitudes.Count(s => s.Tipo == "Descanso Médico");
 }
 
-<div class="container-fluid py-4">
-    <!-- HEADER CON BOTÓN VOLVER -->
+<!-- CONTENEDOR PRINCIPAL (se exportará todo su contenido) -->
+<div class="container-fluid py-4" id="contenedorCompleto">
+    <!-- HEADER CON BOTONES -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+        <div class="d-flex align-items-start gap-2">
+            <!-- Botón para volver -->
             <a href="@Url.Action("ReporteMensual", "Lista", new { año = Model.Año })" 
                class="btn btn-outline-secondary btn-sm mb-2">
                 ← Volver al Reporte Mensual
             </a>
+
+            <!-- BOTÓN DE EXPORTAR PDF -->
+            <button class="btn btn-success btn-sm mb-2" onclick="exportarPDF()">
+                📄 Exportar PDF
+            </button>
+        </div>
+
+        <div class="text-end">
             <h4 class="fw-bold text-primary mb-1">Total de Solicitudes Revisadas</h4>
             <p class="text-muted mb-0">@Model.NombreMes @Model.Año - Detalle completo de todas las solicitudes</p>
-        </div>
-        <div class="text-end">
             <span class="badge bg-primary fs-6">@totalSolicitudes solicitudes</span>
         </div>
     </div>
@@ -65,11 +73,9 @@
                         <tr>
                             <th class="fw-semibold">ID</th>
                             <th class="fw-semibold">Empleado</th>
-                            
                             <th class="fw-semibold">Tipo</th>
                             <th class="fw-semibold">Estado</th>
                             <th class="fw-semibold">Fecha Solicitud</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -77,51 +83,50 @@
                         {
                             <tr>
                                 <td class="fw-mono">#@solicitud.IdUnico</td>
+                                <td><strong>@solicitud.Empleado</strong></td>
+
                                 <td>
-                                    <strong>@solicitud.Empleado</strong>
+                                    @{
+                                        var backgroundColor = "";
+                                        var textColor = "";
+
+                                        switch (solicitud.Tipo.ToLower())
+                                        {
+                                            case "accidente":
+                                                backgroundColor = "bg-danger bg-opacity-10";
+                                                textColor = "text-danger";
+                                                break;
+                                            case "enfermedad":
+                                                backgroundColor = "bg-warning bg-opacity-10";
+                                                textColor = "text-warning";
+                                                break;
+                                            case "maternidad":
+                                                backgroundColor = "bg-info bg-opacity-10";
+                                                textColor = "text-info";
+                                                break;
+                                            case "paternidad":
+                                                backgroundColor = "bg-primary bg-opacity-10";
+                                                textColor = "text-primary";
+                                                break;
+                                            case "enfermedad familiar":
+                                                backgroundColor = "bg-secondary bg-opacity-10";
+                                                textColor = "text-secondary";
+                                                break;
+                                            case "fallecimiento":
+                                                backgroundColor = "bg-dark bg-opacity-10";
+                                                textColor = "text-dark";
+                                                break;
+                                            default:
+                                                backgroundColor = "bg-light bg-opacity-10";
+                                                textColor = "text-muted";
+                                                break;
+                                        }
+                                    }
+                                    <span class="badge @backgroundColor @textColor border-0 fw-semibold px-3 py-2">
+                                        @solicitud.Tipo
+                                    </span>
                                 </td>
-                            
-                               <td>
-    @{
-        var backgroundColor = "";
-        var textColor = "";
-        
-        switch(solicitud.Tipo.ToLower())
-        {
-            case "accidente":
-                backgroundColor = "bg-danger bg-opacity-10"; // Fondo rojo muy claro
-                textColor = "text-danger"; // Texto rojo oscuro
-                break;
-            case "enfermedad":
-                backgroundColor = "bg-warning bg-opacity-10"; // Fondo naranja muy claro
-                textColor = "text-warning"; // Texto naranja oscuro
-                break;
-            case "maternidad":
-                backgroundColor = "bg-info bg-opacity-10"; // Fondo celeste claro
-                textColor = "text-info"; // Texto azul oscuro
-                break;
-            case "paternidad":
-                backgroundColor = "bg-primary bg-opacity-10"; // Fondo azul muy claro
-                textColor = "text-primary"; // Texto azul oscuro
-                break;
-            case "enfermedad familiar":
-                backgroundColor = "bg-secondary bg-opacity-10"; // Fondo gris muy claro
-                textColor = "text-secondary"; // Texto gris oscuro
-                break;
-            case "fallecimiento":
-                backgroundColor = "bg-dark bg-opacity-10"; // Fondo gris oscuro claro
-                textColor = "text-dark"; // Texto negro
-                break;
-            default:
-                backgroundColor = "bg-light bg-opacity-10"; // Fondo blanco
-                textColor = "text-muted"; // Texto gris
-                break;
-        }
-    }
-    <span class="badge @backgroundColor @textColor border-0 fw-semibold px-3 py-2">
-        @solicitud.Tipo
-    </span>
-</td>
+
                                 <td>
                                     @if (solicitud.Estado == "Subsidio" || solicitud.Estado == "Aceptado")
                                     {
@@ -142,8 +147,8 @@
                                         </span>
                                     }
                                 </td>
+
                                 <td>@solicitud.FechaSolicitud.ToString("dd/MM/yyyy")</td>
-                                
                             </tr>
                         }
                     </tbody>
@@ -153,21 +158,19 @@
     </div>
 </div>
 
-
-
 <!-- ESTILOS -->
 <style>
     .fw-mono {
         font-family: 'Courier New', monospace;
         font-weight: 600;
     }
-    
+
     .card {
         border-radius: 12px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         border: none;
     }
-    
+
     .table th {
         font-size: 0.9rem;
         color: #495057;
@@ -175,26 +178,26 @@
         padding: 1rem 0.75rem;
         background-color: #f8f9fa;
     }
-    
+
     .table td {
         font-size: 0.9rem;
         vertical-align: middle;
         padding: 1rem 0.75rem;
         border-bottom: 1px solid #e9ecef;
     }
-    
+
     .badge {
         font-size: 0.75rem;
         padding: 0.35rem 0.65rem;
         border-radius: 6px;
         font-weight: 500;
     }
-    
+
     .btn-sm {
         padding: 0.25rem 0.5rem;
         font-size: 0.8rem;
     }
-    
+
     .form-control-sm {
         font-size: 0.85rem;
         border-radius: 6px;
@@ -203,49 +206,88 @@
 
 <!-- SCRIPTS -->
 @section Scripts {
-    <script>
-    // Filtrar tabla
-    function filtrarTabla() {
-        const texto = document.getElementById("buscarSolicitudes").value.toLowerCase();
-        const filas = document.querySelectorAll("#tablaSolicitudes tbody tr");
-        filas.forEach(fila => {
-            const contenido = fila.innerText.toLowerCase();
-            fila.style.display = contenido.includes(texto) ? "" : "none";
-        });
-    }
+    <!-- Librerías necesarias -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-    // Ver detalle de solicitud
-    function verDetalleSolicitud(idDescanso, tipo) {
-        const modal = new bootstrap.Modal(document.getElementById('detalleSolicitudModal'));
-        
-        // Determinar qué controlador usar según el tipo
-        const url = tipo === 'Subsidio' 
-            ? '/Lista/DetalleProlongado' 
-            : '/Lista/DetalleDescansoProcesadas';
-            
-        document.getElementById('detalleSolicitudContenido').innerHTML = `
-            <div class='text-center text-muted p-4'>
-                <div class='spinner-border text-primary'></div>
-                <p class='mt-2'>Cargando detalles...</p>
-            </div>`;
-            
-        modal.show();
-        
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: { descansoId: idDescanso },
-            success: function (html) {
-                $('#detalleSolicitudContenido').html(html);
-            },
-            error: function () {
-                $('#detalleSolicitudContenido').html(`
-                    <div class='alert alert-danger text-center'>
-                        Error al cargar los detalles de la solicitud.
-                    </div>
-                `);
+    <script>
+        async function exportarPDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: "landscape",
+                    unit: "pt",
+                    format: "a4"
+                });
+
+                // Título y fecha
+                const titulo = `Detalle de Solicitudes - ${document.querySelector("h4.fw-bold").innerText}`;
+                const fecha = new Date().toLocaleDateString();
+
+                doc.setFontSize(14);
+                doc.setTextColor(40);
+                doc.text(titulo, 40, 40);
+                doc.setFontSize(10);
+                doc.text(`Fecha de exportación: ${fecha}`, 40, 60);
+
+                // Obtener la tabla HTML
+                const tabla = document.querySelector("#tablaSolicitudes");
+
+                // Extraer encabezados y filas
+                const headers = [];
+                tabla.querySelectorAll("thead th").forEach(th => {
+                    headers.push(th.innerText.trim());
+                });
+
+                const data = [];
+                tabla.querySelectorAll("tbody tr").forEach(tr => {
+                    const fila = [];
+                    tr.querySelectorAll("td").forEach(td => {
+                        fila.push(td.innerText.trim());
+                    });
+                    data.push(fila);
+                });
+
+                // Insertar la tabla en el PDF (como tabla real)
+                doc.autoTable({
+                    head: [headers],
+                    body: data,
+                    startY: 80,
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 4,
+                        halign: 'center',
+                        valign: 'middle',
+                        textColor: [33, 33, 33],
+                        lineColor: [220, 220, 220],
+                        lineWidth: 0.5
+                    },
+                    headStyles: {
+                        fillColor: [240, 240, 240],
+                        textColor: [0, 0, 0],
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [250, 250, 250]
+                    },
+                    margin: { top: 80, left: 40, right: 40 },
+                    didDrawPage: function (data) {
+                        // Pie de página con número de página
+                        const pageCount = doc.internal.getNumberOfPages();
+                        doc.setFontSize(9);
+                        doc.setTextColor(100);
+                        doc.text(`Página ${data.pageNumber} de ${pageCount}`, doc.internal.pageSize.getWidth() - 100, doc.internal.pageSize.getHeight() - 30);
+                    }
+                });
+
+                // Guardar el archivo PDF
+                const nombreArchivo = `Detalle_Solicitudes_${new Date().getFullYear()}${(new Date().getMonth()+1).toString().padStart(2,'0')}${new Date().getDate().toString().padStart(2,'0')}.pdf`;
+                doc.save(nombreArchivo);
+
+            } catch (err) {
+                console.error("❌ Error exportando PDF:", err);
+                alert("Ocurrió un error al exportar el PDF. Revisa la consola del navegador.");
             }
-        });
-    }
+        }
     </script>
 }
