@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using proyectoIngSoft.Data;
 using proyectoIngSoft.Models;
+using proyectoIngSoft.Models.proyectoIngSoft.Models;
 
 namespace proyectoIngSoft.Controllers
 {
@@ -625,6 +626,280 @@ namespace proyectoIngSoft.Controllers
         }
 
 
+
+                
+
+        public IActionResult MisSolicitudes()
+        {
+            // Obtener el ID del usuario logueado
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var misSolicitudes = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.TipoDescanso)
+                .Include(d => d.Accidente)
+                .Include(d => d.Enfermedad)
+                .Include(d => d.EnfermedadFam)
+                .Include(d => d.Fallecimiento)
+                .Include(d => d.Maternidad)
+                .Include(d => d.Paternidad)
+                .Where(d => d.User.IdUser == userId.Value)
+                .AsEnumerable()
+                .Select(d => new MisSolicitudesViewModel
+                {
+                    IdUnico = GenerarIdAleatorio(),
+                    Tipo = DeterminarTipoSolicitud(d),
+                    Motivo = ObtenerTipoEspecifico(d),
+                    FechaEnvio = d.FechaSolicitud,
+                    Estado = DeterminarEstadoGeneral(d),
+                    ProcesoActual = DeterminarProcesoActual(d),
+                    EstadoPSA = d.EstadoSubsidioA ?? "Pendiente",
+                    EstadoESSALUD = d.EstadoESSALUD ?? "Pendiente",
+                    EstadoAsistente = DeterminarEstadoAsistente(d),
+                    EstadoJefe = d.EstadoSubsidioJ ?? "Pendiente",
+                    IdDescanso = d.IdDescanso
+                })
+                .OrderByDescending(s => s.FechaEnvio)
+                .ToList();
+
+            ViewBag.TotalSolicitudes = misSolicitudes.Count;
+            
+            return View("MisSolicitudes", misSolicitudes);
+        }
+
+        // Método para determinar el estado del asistente
+        private string DeterminarEstadoAsistente(Descanso descanso)
+        {
+            if (DeterminarTipoSolicitud(descanso) == "Descanso Médico")
+            {
+                if (descanso.EstadoESSALUD == "En Proceso")
+                    return "Revisando";
+                else if (descanso.EstadoESSALUD == "En Observación")
+                    return "Observado";
+                else if (!string.IsNullOrEmpty(descanso.EstadoProcesado))
+                    return descanso.EstadoProcesado == "Aceptado" ? "Aprobado" : "Rechazado";
+                else
+                    return "Pendiente";
+            }
+            return "No aplica";
+        }
+
+        // Método actualizado para determinar estado general
+        private string DeterminarEstadoGeneral(Descanso descanso)
+        {
+            if (DeterminarTipoSolicitud(descanso) == "Subsidio")
+            {
+                // Lógica para subsidios
+                if (descanso.EstadoSubsidioA == "Rechazado")
+                    return "Rechazado por PSA";
+                else if (descanso.EstadoSubsidioA == "Subsidio" && descanso.EstadoSubsidioJ == "Aprobado")
+                    return "Aprobado";
+                else if (descanso.EstadoSubsidioA == "Subsidio" && descanso.EstadoSubsidioJ == "Rechazado")
+                    return "Rechazado por Jefe";
+                else if (descanso.EstadoSubsidioA == "Subsidio")
+                    return "En Proceso (Jefe)";
+                else
+                    return "En Proceso (PSA)";
+            }
+            else
+            {
+                // Lógica para descansos médicos
+                if (descanso.EstadoProcesado == "Aceptado")
+                    return "Aprobado";
+                else if (descanso.EstadoProcesado == "Rechazado")
+                    return "Rechazado";
+                else if (descanso.EstadoESSALUD == "En Observación")
+                    return "En Observación";
+                else
+                    return "En Proceso";
+            }
+        }
+
+        // Método actualizado para determinar proceso actual
+        private string DeterminarProcesoActual(Descanso descanso)
+        {
+            if (DeterminarTipoSolicitud(descanso) == "Subsidio")
+            {
+                if (string.IsNullOrEmpty(descanso.EstadoSubsidioA) || descanso.EstadoSubsidioA == "Pendiente")
+                    return "PSA";
+                else if (descanso.EstadoSubsidioA == "Rechazado")
+                    return "Finalizado (PSA)";
+                else if (descanso.EstadoSubsidioA == "Subsidio" && (string.IsNullOrEmpty(descanso.EstadoSubsidioJ) || descanso.EstadoSubsidioJ == "Pendiente"))
+                    return "Jefa de Bienestar";
+                else if (descanso.EstadoSubsidioA == "Subsidio" && descanso.EstadoSubsidioJ == "Aprobado")
+                    return "ESSALUD";
+                else if (descanso.EstadoSubsidioA == "Subsidio" && descanso.EstadoSubsidioJ == "Rechazado")
+                    return "Finalizado (Jefe)";
+                else
+                    return "Finalizado";
+            }
+            else
+            {
+                // Para descansos médicos
+                if (descanso.EstadoESSALUD == "En Proceso")
+                    return "Asistente de Bienestar";
+                else if (descanso.EstadoESSALUD == "En Observación")
+                    return "ESSALUD";
+                else if (!string.IsNullOrEmpty(descanso.EstadoProcesado))
+                    return "Jefa de Bienestar";
+                else
+                    return "Asistente de Bienestar";
+            }
+        }
+
+        // Método auxiliar para generar ID aleatorio
+        private string GenerarIdAleatorio()
+        {
+            var random = new Random();
+            return $"REO_{random.Next(100, 999):000}";
+        }
+
+        // Método para determinar si es Subsidio o Descanso Médico
+        private string DeterminarTipoSolicitud(Descanso descanso)
+{
+    // Calcular días del descanso
+    var dias = (descanso.FechaFin - descanso.FechaIni).TotalDays;
+    
+    // Si es mayor a 30 días, es Subsidio, sino es Descanso Médico
+    if (dias > 30)
+    {
+        return "Subsidio";
+    }
+    else
+    {
+        return "Descanso Médico";
+    }
+}
+
+        // Método para determinar el estado general
+        
+
+        public IActionResult MiSeguimiento()
+{
+    // Obtener el ID del usuario logueado
+    var userId = HttpContext.Session.GetInt32("UserId");
+    if (userId == null)
+    {
+        return RedirectToAction("Login", "Auth");
+    }
+
+    var misSolicitudes = _context.DbSetDescanso
+        .Include(d => d.User)
+        .Include(d => d.TipoDescanso)
+        .Include(d => d.Accidente)
+        .Include(d => d.Enfermedad)
+        .Include(d => d.EnfermedadFam)
+        .Include(d => d.Fallecimiento)
+        .Include(d => d.Maternidad)
+        .Include(d => d.Paternidad)
+        .Include(d => d.DocumentosMedicos)
+        .Where(d => d.User.IdUser == userId.Value)
+        .AsEnumerable()
+        .Select(d => new MiSeguimientoViewModel
+        {
+            IdUnico = GenerarIdAleatorio(),
+            Tipo = DeterminarTipoSolicitud(d),
+            Motivo = ObtenerTipoEspecifico(d),
+            FechaEnvio = d.FechaSolicitud,
+            EstadoGeneral = DeterminarEstadoGeneral(d),
+            Progreso = CalcularProgreso(d),
+            FechaInicio = d.FechaIni,
+            FechaFin = d.FechaFin,
+            DiasTotales = (d.FechaFin - d.FechaIni).TotalDays,
+            EstadoESSALUD = d.EstadoESSALUD ?? "Pendiente",
+            EstadoSubsidioA = d.EstadoSubsidioA ?? "Pendiente",
+            EstadoSubsidioJ = d.EstadoSubsidioJ ?? "Pendiente",
+            EstadoProcesado = d.EstadoProcesado ?? "Pendiente",
+            IdDescanso = d.IdDescanso,
+            PasosCompletados = ObtenerPasosCompletados(d),
+            TotalPasos = DeterminarTipoSolicitud(d) == "Descanso Médico" ? 4 : 4
+        })
+        .OrderByDescending(s => s.FechaEnvio)
+        .ToList();
+
+    ViewBag.TotalSolicitudes = misSolicitudes.Count;
+    ViewBag.SolicitudesActivas = misSolicitudes.Count(s => s.EstadoGeneral == "En Proceso" || s.EstadoGeneral == "En Observación");
+    ViewBag.SolicitudesFinalizadas = misSolicitudes.Count(s => s.EstadoGeneral == "Aprobado" || s.EstadoGeneral == "Rechazado");
+
+    return View("MiSeguimiento", misSolicitudes);
+}
+
+// Método para calcular el progreso porcentual
+private int CalcularProgreso(Descanso descanso)
+{
+    if (DeterminarTipoSolicitud(descanso) == "Descanso Médico")
+    {
+        // Flujo: Solicitud → Asistente → ESSALUD → Jefa
+        int pasosCompletados = 1; // Siempre inicia completado
+
+        if (descanso.EstadoESSALUD == "En Observación" || descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasosCompletados++;
+
+        if (descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasosCompletados++;
+
+        if (!string.IsNullOrEmpty(descanso.EstadoProcesado))
+            pasosCompletados++;
+
+        return (pasosCompletados * 100) / 4;
+    }
+    else
+    {
+        // Flujo: Solicitud → PSA → Jefa → Subsidio
+        int pasosCompletados = 1; // Siempre inicia completado
+
+        if (descanso.EstadoSubsidioA == "Subsidio" || descanso.EstadoSubsidioA == "Rechazado")
+            pasosCompletados++;
+
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasosCompletados++;
+
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasosCompletados++;
+
+        return (pasosCompletados * 100) / 4;
+    }
+}
+
+// Método para obtener pasos completados
+private int ObtenerPasosCompletados(Descanso descanso)
+{
+    if (DeterminarTipoSolicitud(descanso) == "Descanso Médico")
+    {
+        int pasos = 1; // Solicitud iniciada siempre completada
+
+        if (descanso.EstadoESSALUD == "En Observación" || descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasos++;
+
+        if (descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasos++;
+
+        if (!string.IsNullOrEmpty(descanso.EstadoProcesado))
+            pasos++;
+
+        return pasos;
+    }
+    else
+    {
+        int pasos = 1; // Solicitud iniciada siempre completada
+
+        if (descanso.EstadoSubsidioA == "Subsidio" || descanso.EstadoSubsidioA == "Rechazado")
+            pasos++;
+
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasos++;
+
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasos++;
+
+        return pasos;
+    }
+}
+       
 
 
         // ======================

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using proyectoIngSoft.Data;
+using proyectoIngSoft.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // 🔹 Registrar IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<NotificacionCumpleanosService>();
 
 // 🔹 Configurar autenticación basada en cookies (sin Identity)
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

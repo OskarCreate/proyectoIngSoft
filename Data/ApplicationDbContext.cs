@@ -24,7 +24,7 @@ namespace proyectoIngSoft.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<CodigoSocial> DbSetCodigoSocial { get; set; }
         public DbSet<NotificacionSimulada> DbSetNotificacionSimulada { get; set; }
-
+        public DbSet<CalendarioEvento> DbSetCalendarioEvento { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,6 +36,14 @@ namespace proyectoIngSoft.Data
 
             modelBuilder.Entity<User>()
                 .Property(u => u.FechaNacimiento)
+                .HasColumnType("timestamp without time zone");
+
+            modelBuilder.Entity<CalendarioEvento>()
+                .Property(c => c.FechaInicio)
+                .HasColumnType("timestamp without time zone");
+                
+            modelBuilder.Entity<CalendarioEvento>()
+                .Property(c => c.FechaFin)
                 .HasColumnType("timestamp without time zone");
 
             modelBuilder.Entity<TipoDescanso>().HasData(

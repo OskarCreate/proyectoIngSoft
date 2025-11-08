@@ -34,8 +34,12 @@ namespace proyectoIngSoft.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["Message"] = "Datos no válidos";
-                return View("Index");
+                var errors = string.Join("; ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+                _logger.LogWarning("ModelState inválido en Enfermedad: {Errors}", errors);
+                ViewData["Message"] = "Datos no válidos: " + errors;
+                return View("Index", model);
             }
 
             try
@@ -56,27 +60,26 @@ namespace proyectoIngSoft.Controllers
                 var descanso = new Descanso
                 {
                     UserId = user.IdUser,               // FK a T_Usuarios
-                    TipoDescansoId = 1,                 // 1 = Accidente
+                    TipoDescansoId = 1,                 // 1 = Enfermedad
                     FechaSolicitud = DateTime.UtcNow,
                     FechaIni = DateTime.SpecifyKind(model.FechaIni.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
                     FechaFin = DateTime.SpecifyKind(model.FechaFin.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
-
-                    EnfermedadId = model.IdEnfermedad   // FK al Accidente recién creado
+                    EnfermedadId = model.IdEnfermedad,
+                    EstadoProcesado = "Pendiente"       // Inicializar EstadoProcesado
                 };
 
                 _context.DbSetDescanso.Add(descanso);
                 _context.SaveChanges();
 
-                ViewData["Message"] = "Accidente registrado con éxito";
+                _logger.LogInformation("Enfermedad registrada exitosamente. Descanso ID: {DescansoId}", descanso.IdDescanso);
                 return RedirectToAction("Index", "DocumentoMedico", new { descansoId = descanso.IdDescanso });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al registrar Accidente");
+                _logger.LogError(ex, "Error al registrar enfermedad");
                 ViewData["Message"] = "Error al registrar: " + ex.Message;
+                return View("Index", model);
             }
-
-            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
