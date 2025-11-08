@@ -6,12 +6,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-<<<<<<< HEAD
-=======
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
->>>>>>> origin/HU15
 
 namespace proyectoIngSoft.Controllers
 {
@@ -32,19 +29,11 @@ namespace proyectoIngSoft.Controllers
                 .Include(d => d.TipoDescanso)
                 .AsQueryable();
 
-<<<<<<< HEAD
-            // 🔹 Filtro por tipo de subsidio
-=======
->>>>>>> origin/HU15
             if (!string.IsNullOrEmpty(tipo) && tipo.ToLower() == "subsidio")
             {
                 query = query.Where(d => d.EstadoSubsidioA == "Descanso Activo");
             }
 
-<<<<<<< HEAD
-            // 🔹 Filtro por búsqueda (nombre, apellidos, dni o correo)
-=======
->>>>>>> origin/HU15
             if (!string.IsNullOrEmpty(busqueda))
             {
                 busqueda = busqueda.ToLower();
@@ -55,10 +44,6 @@ namespace proyectoIngSoft.Controllers
                     d.User.Dni.ToLower().Contains(busqueda));
             }
 
-<<<<<<< HEAD
-            // 🔹 Mapeo a modelo para la vista
-=======
->>>>>>> origin/HU15
             var lista = await query
                 .Select(d => new MonitoreoViewModel
                 {
@@ -80,18 +65,10 @@ namespace proyectoIngSoft.Controllers
             return View(lista);
         }
 
-<<<<<<< HEAD
-        // ✅ NUEVA VISTA HU16 (para tu nueva historia de usuario)
-        [HttpGet]
-        public async Task<IActionResult> HU16()
-        {
-            // 🔹 Traer todos los descansos con relaciones necesarias
-=======
         // ✅ NUEVA VISTA HU16
         [HttpGet]
         public async Task<IActionResult> HU16()
         {
->>>>>>> origin/HU15
             var descansos = await _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
@@ -109,10 +86,6 @@ namespace proyectoIngSoft.Controllers
                 })
                 .ToListAsync();
 
-<<<<<<< HEAD
-            // Si no hay registros, se envía una lista vacía (evita NullReference)
-=======
->>>>>>> origin/HU15
             return View(descansos ?? new List<MonitoreoViewModel>());
         }
 
@@ -208,19 +181,6 @@ namespace proyectoIngSoft.Controllers
                 return File(archivoBytes, "application/pdf", "Informe_HU16.pdf");
             }
         }
-    }
-
-    // ✅ VIEWMODEL PARA VISTA HU16 Y INDEX
-    public class MonitoreoViewModel
-    {
-        public string Nombre { get; set; }
-        public string TipoSubsidio { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
-        public int Dias { get; set; }
-        public decimal PagoPorDia { get; set; }
-        public decimal Total { get; set; }
-        public string Estado { get; set; }
     }
 
     // ✅ VIEWMODEL PARA VISTA HU16 Y INDEX

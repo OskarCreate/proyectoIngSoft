@@ -32,10 +32,9 @@ namespace proyectoIngSoft.Controllers
                 var lista = _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
-<<<<<<< HEAD
-=======
+
                 .Where(d => d.EstadoESSALUD == "En Proceso" || d.EstadoESSALUD == "En Observación")
->>>>>>> origin/HU15
+
                 .Select(d => new Lista
                 {
                     Username = d.User.Username,
