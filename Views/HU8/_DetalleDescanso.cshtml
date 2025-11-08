@@ -1,0 +1,67 @@
+@model proyectoIngSoft.Models.Descanso
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="bi bi-file-medical"></i> Detalles del Descanso Médico
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+
+    <!-- Información Personal -->
+    <h6 class="section-title"><i class="bi bi-person-circle"></i> Información Personal</h6>
+    <div class="border rounded p-3 mb-3 bg-light">
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Empleado:</strong> @Model.NombreCompleto</div>
+            <div class="col-md-6"><strong>DNI:</strong> @Model.DNI</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Email:</strong> @Model.Email</div>
+            <div class="col-md-6"><strong>Teléfono:</strong> @Model.Telefono</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"><strong>Cargo:</strong> @Model.CargoDescanso</div>
+            <div class="col-md-6"><strong>Área:</strong> @Model.AreaDescanso</div>
+        </div>
+    </div>
+
+    <!-- Información del Descanso -->
+    <h6 class="section-title"><i class="bi bi-calendar-check"></i> Información del Descanso</h6>
+    <div class="border rounded p-3 mb-3 bg-light">
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Tipo de Descanso:</strong> @Model.TipoDescanso?.Nombre</div>
+            <div class="col-md-6"><strong>Razón del Descanso:</strong> @Model.RazonDescanso</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-4"><strong>Fecha Registro:</strong> @Model.FechaSolicitud.ToString("d/M/yyyy")</div>
+            <div class="col-md-4"><strong>Fecha Inicio:</strong> @Model.FechaIni.ToString("d/M/yyyy")</div>
+            <div class="col-md-4"><strong>Fecha Fin:</strong> @Model.FechaFin.ToString("d/M/yyyy")</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"><strong>Días Totales:</strong> @Model.DiasTotales días</div>
+            <div class="col-md-6"><strong>Días Transcurridos:</strong> @Model.DiasTranscurridos días</div>
+        </div>
+    </div>
+
+    <!-- Información Médica -->
+    <h6 class="section-title"><i class="bi bi-hospital"></i> Información Médica</h6>
+    <div class="border rounded p-3 bg-light">
+        <div class="row mb-2">
+            <div class="col-md-12"><strong>Diagnóstico:</strong> @Model.DiagnosticoDescanso</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Centro Médico:</strong> @Model.CentroMedicoDescanso</div>
+            <div class="col-md-6"><strong>Código ESSALUD:</strong> @Model.CodigoEssalud</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Médico Tratante:</strong> @Model.MedicoTratanteDescanso</div>
+            <div class="col-md-6"><strong>CMP:</strong> @Model.CMPDescanso</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+</div>

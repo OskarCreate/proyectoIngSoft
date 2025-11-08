@@ -54,33 +54,10 @@
             <div class="col-md-4"><strong>Fecha Inicio</strong><br />@Model.FechaIni.ToString("dd/MM/yyyy")</div>
             <div class="col-md-4"><strong>Fecha Fin</strong><br />@Model.FechaFin.ToString("dd/MM/yyyy")</div>
         </div>
-<<<<<<< HEAD
-
-        <!-- Mensaje para trabajador -->
-        <div>
-            <p class="label-title">Cambiar Estado de la Solicitud</p>
-            <label class="form-label">Mensaje para el trabajador</label>
-            <textarea class="form-control custom-textarea" rows="3"
-                      placeholder="Escriba el mensaje que se enviará al trabajador explicando la observación..."></textarea>
-        </div>
-
-        <!-- Botón -->
-        <form asp-action="EnviarObservacion" asp-controller="Lista" method="post">
-        <input type="hidden" name="descansoId" value="@Model.IdDescanso" />
-         <label class="form-label">Mensaje para el trabajador</label>
-         <textarea name="mensaje" class="form-control custom-textarea" rows="3"
-              placeholder="Escriba el mensaje que se enviará al trabajador explicando la observación..."></textarea>
-
-        <br />
-         <button type="submit" class="btn btn-warning mt-2">Observación</button>
-        </form>
-        
-=======
         <div class="row">
             <div class="col-md-6"><strong>Días Totales</strong><br />@Model.DiasTotales días</div>
             <div class="col-md-6"><strong>Días Transcurridos</strong><br />@Model.DiasTranscurridos días</div>
         </div>
->>>>>>> origin/HU15
     </div>
 
     <!-- INFORMACIÓN MÉDICA -->

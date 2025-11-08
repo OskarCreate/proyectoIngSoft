@@ -1,0 +1,80 @@
+@model proyectoIngSoft.Models.Descanso
+
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-file-medical"></i> Editar Descanso Médico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- INFORMACIÓN DEL EMPLEADO Y DESCANSO -->
+                <div class="section-box mb-3">
+                    <div class="row mb-2">
+                        <div class="col-md-6"><strong>Empleado</strong><br />@Model.NombreCompleto</div>
+                        <div class="col-md-6"><strong>DNI</strong><br />@Model.DNI</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-6"><strong>Razón del Descanso</strong><br />@Model.RazonDescanso</div>
+                        <div class="col-md-6"><strong>Fecha de Registro</strong><br />@Model.FechaSolicitud.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"><strong>Días Totales</strong><br />@Model.DiasTotales días</div>
+                        <div class="col-md-6"><strong>Días Transcurridos</strong><br />@Model.DiasTranscurridos días</div>
+                    </div>
+                </div>
+
+                <!-- FORMULARIO PARA EDITAR FECHAS -->
+                <form id="formEditarDescanso">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="IdDescanso" value="@Model.IdDescanso" />
+
+                    <div class="mb-3">
+                        <label for="FechaIni" class="form-label">Fecha Inicio</label>
+                        <input id="FechaIni" name="FechaIni" type="date" class="form-control"
+                               value="@Model.FechaIni.ToString("yyyy-MM-dd")" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="FechaFin" class="form-label">Fecha Fin</label>
+                        <input id="FechaFin" name="FechaFin" type="date" class="form-control"
+                               value="@Model.FechaFin.ToString("yyyy-MM-dd")" required />
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarCambios">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnGuardarCambios").click(function () {
+            var form = $("#formEditarDescanso");
+
+            $.ajax({
+                url: '@Url.Action("EditarDescanso", "HU11")',
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $("#modalEditar").modal("hide");
+                        location.reload();
+                    } else {
+                        let msg = response.message || "Revise los datos.";
+                        alert("Error: " + msg);
+                    }
+                },
+                error: function (xhr) {
+                    let msg = xhr.responseJSON?.message || "Error al enviar los datos.";
+                    alert("Error: " + msg);
+                }
+            });
+        });
+    });
+</script>

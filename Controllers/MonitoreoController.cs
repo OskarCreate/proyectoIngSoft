@@ -6,6 +6,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+<<<<<<< HEAD
+=======
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+>>>>>>> origin/HU15
 
 namespace proyectoIngSoft.Controllers
 {
@@ -26,13 +32,19 @@ namespace proyectoIngSoft.Controllers
                 .Include(d => d.TipoDescanso)
                 .AsQueryable();
 
+<<<<<<< HEAD
             // 🔹 Filtro por tipo de subsidio
+=======
+>>>>>>> origin/HU15
             if (!string.IsNullOrEmpty(tipo) && tipo.ToLower() == "subsidio")
             {
                 query = query.Where(d => d.EstadoSubsidioA == "Descanso Activo");
             }
 
+<<<<<<< HEAD
             // 🔹 Filtro por búsqueda (nombre, apellidos, dni o correo)
+=======
+>>>>>>> origin/HU15
             if (!string.IsNullOrEmpty(busqueda))
             {
                 busqueda = busqueda.ToLower();
@@ -43,7 +55,10 @@ namespace proyectoIngSoft.Controllers
                     d.User.Dni.ToLower().Contains(busqueda));
             }
 
+<<<<<<< HEAD
             // 🔹 Mapeo a modelo para la vista
+=======
+>>>>>>> origin/HU15
             var lista = await query
                 .Select(d => new MonitoreoViewModel
                 {
@@ -65,11 +80,18 @@ namespace proyectoIngSoft.Controllers
             return View(lista);
         }
 
+<<<<<<< HEAD
         // ✅ NUEVA VISTA HU16 (para tu nueva historia de usuario)
         [HttpGet]
         public async Task<IActionResult> HU16()
         {
             // 🔹 Traer todos los descansos con relaciones necesarias
+=======
+        // ✅ NUEVA VISTA HU16
+        [HttpGet]
+        public async Task<IActionResult> HU16()
+        {
+>>>>>>> origin/HU15
             var descansos = await _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
@@ -87,7 +109,10 @@ namespace proyectoIngSoft.Controllers
                 })
                 .ToListAsync();
 
+<<<<<<< HEAD
             // Si no hay registros, se envía una lista vacía (evita NullReference)
+=======
+>>>>>>> origin/HU15
             return View(descansos ?? new List<MonitoreoViewModel>());
         }
 
@@ -118,6 +143,84 @@ namespace proyectoIngSoft.Controllers
 
             return File(documento.Archivo, "application/pdf", documento.Nombre);
         }
+
+        // ✅ EXPORTAR HU16 A PDF
+        public IActionResult ExportarPDF_HU16()
+        {
+            var descansos = _context.DbSetDescanso
+                .Include(d => d.User)
+                .Include(d => d.TipoDescanso)
+                .OrderByDescending(d => d.FechaIni)
+                .Select(d => new MonitoreoViewModel
+                {
+                    Nombre = d.User.Username + " " + d.User.Apellidos,
+                    TipoSubsidio = d.TipoDescanso.Nombre,
+                    FechaInicio = d.FechaIni,
+                    FechaFin = d.FechaFin,
+                    Dias = (int)(d.FechaFin - d.FechaIni).TotalDays + 1,
+                    PagoPorDia = 85.5m,
+                    Total = ((int)(d.FechaFin - d.FechaIni).TotalDays + 1) * 85.5m,
+                    Estado = d.EstadoSubsidioJ
+                })
+                .ToList();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document doc = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter.GetInstance(doc, ms);
+                doc.Open();
+
+                // Título
+                var titulo = new Paragraph("Informe HU16 - Monitoreo")
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 20f
+                };
+                doc.Add(titulo);
+
+                // Tabla
+                PdfPTable tabla = new PdfPTable(6) { WidthPercentage = 100 };
+                tabla.SetWidths(new float[] { 3, 2, 2, 1, 2, 2 });
+
+                // Encabezados
+                tabla.AddCell("Nombre");
+                tabla.AddCell("Tipo Subsidio");
+                tabla.AddCell("Fecha Inicio");
+                tabla.AddCell("Días");
+                tabla.AddCell("Pago por Día");
+                tabla.AddCell("Total");
+
+                // Filas
+                foreach (var d in descansos)
+                {
+                    tabla.AddCell(d.Nombre);
+                    tabla.AddCell(d.TipoSubsidio);
+                    tabla.AddCell(d.FechaInicio.ToString("dd/MM/yyyy"));
+                    tabla.AddCell(d.Dias.ToString());
+                    tabla.AddCell(d.PagoPorDia.ToString("C"));
+                    tabla.AddCell(d.Total.ToString("C"));
+                }
+
+                doc.Add(tabla);
+                doc.Close();
+
+                byte[] archivoBytes = ms.ToArray();
+                return File(archivoBytes, "application/pdf", "Informe_HU16.pdf");
+            }
+        }
+    }
+
+    // ✅ VIEWMODEL PARA VISTA HU16 Y INDEX
+    public class MonitoreoViewModel
+    {
+        public string Nombre { get; set; }
+        public string TipoSubsidio { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFin { get; set; }
+        public int Dias { get; set; }
+        public decimal PagoPorDia { get; set; }
+        public decimal Total { get; set; }
+        public string Estado { get; set; }
     }
 
     // ✅ VIEWMODEL PARA VISTA HU16 Y INDEX
