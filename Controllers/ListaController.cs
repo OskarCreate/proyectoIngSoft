@@ -531,100 +531,97 @@ namespace proyectoIngSoft.Controllers
 
 
         public IActionResult DetalleMes(int año, int mes)
-        {
-            var detalleMes = ObtenerDetalleMes(año, mes);
-            
-            if (detalleMes == null || !detalleMes.Solicitudes.Any())
-            {
-                return RedirectToAction("ReporteMensual", new { año });
-            }
-            
-            return View("DetalleMes", detalleMes);
-        }
-
+{
+    var detalleMes = ObtenerDetalleMes(año, mes);
+    
+    if (detalleMes == null || !detalleMes.Solicitudes.Any())
+    {
+        TempData["Error"] = "No hay solicitudes revisadas para el mes seleccionado.";
+        return RedirectToAction("ReporteMensual", new { año });
+    }
+    
+    return View("DetalleMes", detalleMes);
+}
         private DetalleMesViewModel ObtenerDetalleMes(int año, int mes)
+{
+    var nombreMes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(mes);
+    var detalle = new DetalleMesViewModel
+    {
+        Año = año,
+        Mes = mes,
+        NombreMes = nombreMes
+    };
+
+    // Obtener SOLO las solicitudes REVISADAS del mes con todas las relaciones necesarias
+    var solicitudesMes = _context.DbSetDescanso
+        .Include(d => d.User)
+        .Include(d => d.TipoDescanso)
+        .Include(d => d.Accidente)
+        .Include(d => d.Enfermedad)
+        .Include(d => d.EnfermedadFam)
+        .Include(d => d.Fallecimiento)
+        .Include(d => d.Maternidad)
+        .Include(d => d.Paternidad)
+        .AsEnumerable()
+        .Where(d => d.FechaSolicitud.Year == año &&
+                   d.FechaSolicitud.Month == mes &&
+                   // Solo incluir registros REVISADOS
+                   ((d.EstadoSubsidioA == "Subsidio" || d.EstadoSubsidioA == "Rechazado") ||
+                    (d.EstadoProcesado == "Aceptado" || d.EstadoProcesado == "Rechazado")))
+        .ToList();
+
+    var random = new Random();
+
+    foreach (var solicitud in solicitudesMes)
+    {
+        // Determinar la categoría específica del descanso
+        string tipoEspecifico = ObtenerTipoEspecifico(solicitud);
+
+        // Determinar si es Subsidio o Descanso Médico para el estado
+        string categoria = (solicitud.EstadoSubsidioA == "Subsidio" || solicitud.EstadoSubsidioA == "Rechazado")
+            ? "Subsidio"
+            : "Descanso Médico";
+
+        // Generar ID único aleatorio (6 dígitos)
+        var idUnico = random.Next(100000, 999999).ToString();
+
+        detalle.Solicitudes.Add(new SolicitudDetalle
         {
-            var nombreMes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(mes);
-            var detalle = new DetalleMesViewModel
-            {
-                Año = año,
-                Mes = mes,
-                NombreMes = nombreMes
-            };
+            IdUnico = idUnico,
+            Empleado = $"{solicitud.User.Username} {solicitud.User.Apellidos}",
+            Dni = solicitud.User.Dni,
+            Tipo = tipoEspecifico,
+            Estado = categoria == "Subsidio" ? solicitud.EstadoSubsidioA : solicitud.EstadoProcesado,
+            FechaSolicitud = solicitud.FechaSolicitud,
+            IdDescanso = solicitud.IdDescanso
+        });
+    }
 
-            // Obtener SOLO las solicitudes REVISADAS del mes con todas las relaciones necesarias
-            var solicitudesMes = _context.DbSetDescanso
-                .Include(d => d.User)
-                .Include(d => d.TipoDescanso)
-                .Include(d => d.Accidente)
-                .Include(d => d.Enfermedad)
-                .Include(d => d.EnfermedadFam)
-                .Include(d => d.Fallecimiento)
-                .Include(d => d.Maternidad)
-                .Include(d => d.Paternidad)
-                .AsEnumerable()
-                .Where(d => d.FechaSolicitud.Year == año &&
-                           d.FechaSolicitud.Month == mes &&
-                           // Solo incluir registros REVISADOS
-                           ((d.EstadoSubsidioA == "Subsidio" || d.EstadoSubsidioA == "Rechazado") ||
-                            (d.EstadoProcesado == "Aceptado" || d.EstadoProcesado == "Rechazado")))
-                .ToList();
+    // Ordenar por fecha de solicitud (más reciente primero)
+    detalle.Solicitudes = detalle.Solicitudes
+        .OrderByDescending(s => s.FechaSolicitud)
+        .ToList();
 
-            var random = new Random();
-
-            foreach (var solicitud in solicitudesMes)
-            {
-                // Determinar la categoría específica del descanso
-                string tipoEspecifico = ObtenerTipoEspecifico(solicitud);
-
-                // Determinar si es Subsidio o Descanso Médico para el estado
-                string categoria = (solicitud.EstadoSubsidioA == "Subsidio" || solicitud.EstadoSubsidioA == "Rechazado")
-                    ? "Subsidio"
-                    : "Descanso Médico";
-
-                // Generar ID único aleatorio (6 dígitos)
-                var idUnico = random.Next(100000, 999999).ToString();
-
-                detalle.Solicitudes.Add(new SolicitudDetalle
-                {
-                    IdUnico = idUnico,
-                    Empleado = $"{solicitud.User.Username} {solicitud.User.Apellidos}",
-                    Dni = solicitud.User.Dni,
-                    Tipo = tipoEspecifico, // Ahora será "Enfermedad", "Fallecimiento", etc.
-                 
-                    Estado = categoria == "Subsidio" ? solicitud.EstadoSubsidioA : solicitud.EstadoProcesado,
-                    FechaSolicitud = solicitud.FechaSolicitud,
-                    IdDescanso = solicitud.IdDescanso
-                });
-            }
-
-            // Ordenar por fecha de solicitud (más reciente primero)
-            detalle.Solicitudes = detalle.Solicitudes
-                .OrderByDescending(s => s.FechaSolicitud)
-                .ToList();
-
-            return detalle;
-        }
-
+    return detalle;
+}
         private string ObtenerTipoEspecifico(Descanso descanso)
-        {
-            // Verificar qué relación tiene datos para determinar el tipo específico
-            if (descanso.Accidente != null)
-                return "Accidente";
-            else if (descanso.Maternidad != null)
-                return "Maternidad";
-            else if (descanso.Paternidad != null)
-                return "Paternidad";
-            else if (descanso.Enfermedad != null)
-                return "Enfermedad";
-            else if (descanso.EnfermedadFam != null)
-                return "Enfermedad Familiar";
-            else if (descanso.Fallecimiento != null)
-                return "Fallecimiento";
-            else
-                return descanso.TipoDescanso?.Nombre ?? "No Especificado";
-        }
-
+{
+    // Verificar qué relación tiene datos para determinar el tipo específico
+    if (descanso.Accidente != null)
+        return "Accidente";
+    else if (descanso.Maternidad != null)
+        return "Maternidad";
+    else if (descanso.Paternidad != null)
+        return "Paternidad";
+    else if (descanso.Enfermedad != null)
+        return "Enfermedad";
+    else if (descanso.EnfermedadFam != null)
+        return "Enfermedad Familiar";
+    else if (descanso.Fallecimiento != null)
+        return "Fallecimiento";
+    else
+        return descanso.TipoDescanso?.Nombre ?? "No Especificado";
+}
 
 
                 
