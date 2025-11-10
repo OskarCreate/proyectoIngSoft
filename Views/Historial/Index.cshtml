@@ -76,19 +76,10 @@
             <div class="mb-3">
                 <button id="btnOcultarFiltros" class="btn btn-outline-primary">Ocultar Filtros</button>
                 <button class="btn btn-outline-secondary" onclick="location.reload()">Actualizar Informe</button>
-                <a href="/Historial/Index" class="btn btn-outline-danger float-end">Limpiar Filtros</a>
             </div>
 
             <div id="panelFiltros" class="border rounded p-3 mb-4 bg-light">
                 <form method="get" asp-action="Index" class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Tipo</label>
-                        <select name="tipo" class="form-select">
-                            <option value="">Todos</option>
-                            <option value="Descanso Médico">Descanso Médico</option>
-                            <option value="Subsidio">Subsidio</option>
-                        </select>
-                    </div>
                     <div class="col-md-4">
                         <label class="form-label">Motivo</label>
                         <select name="motivo" class="form-select">

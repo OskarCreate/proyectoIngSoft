@@ -828,152 +828,73 @@ namespace proyectoIngSoft.Controllers
 // Método para calcular el progreso porcentual
 private int CalcularProgreso(Descanso descanso)
 {
-    var tipoSolicitud = DeterminarTipoSolicitud(descanso);
-    int pasosCompletados = ObtenerPasosCompletados(descanso);
-    int totalPasos = tipoSolicitud == "Descanso Médico" ? 6 : 6; // Ambos tipos tienen 6 pasos
-
-    return (int)Math.Round((double)pasosCompletados / totalPasos * 100);
-}
-
-// Método para obtener pasos completados - ACTUALIZADO
-private int ObtenerPasosCompletados(Descanso descanso)
-{
-    var tipoSolicitud = DeterminarTipoSolicitud(descanso);
-    int pasosCompletados = 1; // "Solicitud iniciada" siempre está completado
-
-    if (tipoSolicitud == "Descanso Médico")
+    if (DeterminarTipoSolicitud(descanso) == "Descanso Médico")
     {
-        // Flujo para Descanso Médico (6 pasos)
+        // Flujo: Solicitud → Asistente → ESSALUD → Jefa
+        int pasosCompletados = 1; // Siempre inicia completado
+
+        if (descanso.EstadoESSALUD == "En Observación" || descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasosCompletados++;
+
         if (descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
-            pasosCompletados++; // "Aprobado por ESSALUD"
+            pasosCompletados++;
 
         if (!string.IsNullOrEmpty(descanso.EstadoProcesado))
-            pasosCompletados++; // "Aprobado por el asistente de bienestar"
+            pasosCompletados++;
 
-        if (descanso.EstadoSubsidioJ == "Aprobado")
-            pasosCompletados++; // "Subsidio aprobado por la jefa de bienestar"
-
-        if (descanso.EstadoSubsidioJ == "Aprobado")
-            pasosCompletados++; // "Informado a planilla" (se completa automáticamente con la jefa)
-
-        if (descanso.EstadoSubsidioJ == "Aprobado")
-            pasosCompletados++; // "Subsidio" (se completa automáticamente con la jefa)
+        return (pasosCompletados * 100) / 4;
     }
     else
     {
-        // Flujo para Subsidio (6 pasos)
-        if (descanso.EstadoSubsidioA == "Subsidio")
-            pasosCompletados++; // "Aprobado por PSA"
+        // Flujo: Solicitud → PSA → Jefa → Subsidio
+        int pasosCompletados = 1; // Siempre inicia completado
 
-        if (descanso.EstadoSubsidioJ == "Aprobado")
-            pasosCompletados++; // "Aprobado por la jefa de bienestar"
+        if (descanso.EstadoSubsidioA == "Subsidio" || descanso.EstadoSubsidioA == "Rechazado")
+            pasosCompletados++;
 
-        if (descanso.EstadoSubsidioJ == "Aprobado")
-            pasosCompletados++; // "Informado a planilla" (se completa automáticamente con la jefa)
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasosCompletados++;
 
-        if (descanso.EstadoSubsidioJ == "Aprobado")
-            pasosCompletados++; // "Subsidio" (se completa automáticamente con la jefa)
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasosCompletados++;
 
-        // Para subsidios, ESSALUD también puede estar involucrado
-        if (descanso.EstadoESSALUD == "Válido")
-            pasosCompletados++; // "Aprobado por ESSALUD"
+        return (pasosCompletados * 100) / 4;
     }
-
-    return pasosCompletados;
 }
 
-// Método actualizado para obtener el historial de procesos
-private List<HistorialProceso> ObtenerHistorialProcesos(Descanso descanso)
+// Método para obtener pasos completados
+private int ObtenerPasosCompletados(Descanso descanso)
 {
-    var historial = new List<HistorialProceso>();
-    var tipoSolicitud = DeterminarTipoSolicitud(descanso);
-
-    // Solicitud iniciada (siempre presente)
-    historial.Add(new HistorialProceso
+    if (DeterminarTipoSolicitud(descanso) == "Descanso Médico")
     {
-        Etapa = "Solicitud iniciada",
-        Fecha = descanso.FechaSolicitud,
-        Completado = true
-    });
+        int pasos = 1; // Solicitud iniciada siempre completada
 
-    if (tipoSolicitud == "Descanso Médico")
-    {
-        // Flujo completo para Descanso Médico (6 pasos)
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Aprobado por ESSALUD",
-            Fecha = descanso.FechaSolicitud.AddDays(8),
-            Completado = descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido"
-        });
+        if (descanso.EstadoESSALUD == "En Observación" || descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasos++;
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Aprobado por el asistente de bienestar",
-            Fecha = descanso.FechaSolicitud.AddDays(15),
-            Completado = !string.IsNullOrEmpty(descanso.EstadoProcesado)
-        });
+        if (descanso.EstadoESSALUD == "Válido" || descanso.EstadoESSALUD == "No válido")
+            pasos++;
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Subsidio aprobado por la jefa de bienestar",
-            Fecha = descanso.FechaSolicitud.AddDays(27),
-            Completado = descanso.EstadoSubsidioJ == "Aprobado"
-        });
+        if (!string.IsNullOrEmpty(descanso.EstadoProcesado))
+            pasos++;
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Informado a planilla",
-            Fecha = descanso.FechaSolicitud.AddDays(34),
-            Completado = descanso.EstadoSubsidioJ == "Aprobado" // Se completa automáticamente
-        });
-
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Subsidio",
-            Fecha = descanso.FechaSolicitud.AddDays(42),
-            Completado = descanso.EstadoSubsidioJ == "Aprobado" // Se completa automáticamente
-        });
+        return pasos;
     }
     else
     {
-        // Flujo completo para Subsidio (6 pasos)
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Aprobado por PSA",
-            Fecha = descanso.FechaSolicitud.AddDays(5),
-            Completado = descanso.EstadoSubsidioA == "Subsidio"
-        });
+        int pasos = 1; // Solicitud iniciada siempre completada
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Aprobado por ESSALUD",
-            Fecha = descanso.FechaSolicitud.AddDays(12),
-            Completado = descanso.EstadoESSALUD == "Válido"
-        });
+        if (descanso.EstadoSubsidioA == "Subsidio" || descanso.EstadoSubsidioA == "Rechazado")
+            pasos++;
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Aprobado por la jefa de bienestar",
-            Fecha = descanso.FechaSolicitud.AddDays(19),
-            Completado = descanso.EstadoSubsidioJ == "Aprobado"
-        });
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasos++;
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Informado a planilla",
-            Fecha = descanso.FechaSolicitud.AddDays(26),
-            Completado = descanso.EstadoSubsidioJ == "Aprobado" // Se completa automáticamente
-        });
+        if (descanso.EstadoSubsidioJ == "Aprobado" || descanso.EstadoSubsidioJ == "Rechazado")
+            pasos++;
 
-        historial.Add(new HistorialProceso
-        {
-            Etapa = "Subsidio",
-            Fecha = descanso.FechaSolicitud.AddDays(33),
-            Completado = descanso.EstadoSubsidioJ == "Aprobado" // Se completa automáticamente
-        });
+        return pasos;
     }
-
-    return historial;
 }
        
 
@@ -985,6 +906,28 @@ private List<HistorialProceso> ObtenerHistorialProcesos(Descanso descanso)
         public IActionResult Error()
         {
             return View("Error!");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult EnviarReporte([FromBody] ReporteViewModel reporte)
+        {
+            if (string.IsNullOrWhiteSpace(reporte.Descripcion) || reporte.TrabajadorId <= 0)
+                return BadRequest("Datos incompletos");
+
+            // Aquí puedes guardar el reporte en una tabla 'ReportesTrabajadores' si existe
+            // o simular el guardado:
+            // Ejemplo de simulación de registro
+            Console.WriteLine($"Reporte enviado para trabajador {reporte.TrabajadorId}: {reporte.Descripcion}");
+
+            return Json(new { success = true });
+        }
+        
+        public class ReporteViewModel
+        {
+            public int TrabajadorId { get; set; }
+            public string Descripcion { get; set; }
         }
     }
 }

@@ -7,15 +7,104 @@
 }
 
 <div class="container-fluid py-4">
-    <!-- Header y tarjetas de resumen (mantener igual) -->
-    <!-- ... código anterior ... -->
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Mi Seguimiento</h2>
+            <p class="text-muted mb-0">Seguimiento en tiempo real del estado de mis solicitudes</p>
+        </div>
+        <div class="text-end">
+            <a href="@Url.Action("MisSolicitudes", "Lista")" class="btn btn-outline-primary">
+                <i class="bi bi-list-ul me-1"></i> Vista de Lista
+            </a>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Resumen -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0">@totalSolicitudes</h4>
+                            <p class="mb-0">Total Solicitudes</p>
+                        </div>
+                        <i class="bi bi-folder-plus display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0">@solicitudesActivas</h4>
+                            <p class="mb-0">En Proceso</p>
+                        </div>
+                        <i class="bi bi-clock-history display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0">@solicitudesFinalizadas</h4>
+                            <p class="mb-0">Finalizadas</p>
+                        </div>
+                        <i class="bi bi-check-circle display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @if (Model != null && Model.Any())
     {
-        <!-- Filtros (mantener igual) -->
-        <!-- ... código anterior ... -->
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Filtrar por Tipo</label>
+                        <select class="form-select" id="filtroTipo">
+                            <option value="todos">Todos los tipos</option>
+                            <option value="Descanso Médico">Descanso Médico</option>
+                            <option value="Subsidio">Subsidio</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Filtrar por Estado</label>
+                        <select class="form-select" id="filtroEstado">
+                            <option value="todos">Todos los estados</option>
+                            <option value="En Proceso">En Proceso</option>
+                            <option value="En Observación">En Observación</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Rechazado">Rechazado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Ordenar por</label>
+                        <select class="form-select" id="ordenarPor">
+                            <option value="fecha">Fecha más reciente</option>
+                            <option value="progreso">Mayor progreso</option>
+                            <option value="estado">Estado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-outline-secondary w-100" onclick="aplicarFiltros()">
+                            <i class="bi bi-funnel me-1"></i> Aplicar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Grid de Seguimiento ACTUALIZADO -->
+        <!-- Grid de Seguimiento -->
         <div class="row" id="gridSeguimiento">
             @foreach (var solicitud in Model)
             {
@@ -57,10 +146,10 @@
                                          aria-valuemax="100">
                                     </div>
                                 </div>
-                                <small class="text-muted">@solicitud.PasosCompletados de 6 pasos completados</small>
+                                <small class="text-muted">@solicitud.PasosCompletados de @solicitud.TotalPasos pasos completados</small>
                             </div>
 
-                            <!-- Timeline Visual ACTUALIZADO -->
+                            <!-- Timeline Visual -->
                             <div class="timeline-visual mb-3">
                                 @if (solicitud.Tipo == "Descanso Médico")
                                 {
@@ -71,23 +160,15 @@
                                         </div>
                                         <div class="timeline-step @(solicitud.PasosCompletados >= 2 ? "completed" : "")">
                                             <div class="timeline-dot"></div>
-                                            <small>ESSALUD</small>
+                                            <small>Asistente</small>
                                         </div>
                                         <div class="timeline-step @(solicitud.PasosCompletados >= 3 ? "completed" : "")">
                                             <div class="timeline-dot"></div>
-                                            <small>Asistente</small>
+                                            <small>ESSALUD</small>
                                         </div>
                                         <div class="timeline-step @(solicitud.PasosCompletados >= 4 ? "completed" : "")">
                                             <div class="timeline-dot"></div>
                                             <small>Jefa</small>
-                                        </div>
-                                        <div class="timeline-step @(solicitud.PasosCompletados >= 5 ? "completed" : "")">
-                                            <div class="timeline-dot"></div>
-                                            <small>Planilla</small>
-                                        </div>
-                                        <div class="timeline-step @(solicitud.PasosCompletados >= 6 ? "completed" : "")">
-                                            <div class="timeline-dot"></div>
-                                            <small>Subsidio</small>
                                         </div>
                                     </div>
                                 }
@@ -104,17 +185,9 @@
                                         </div>
                                         <div class="timeline-step @(solicitud.PasosCompletados >= 3 ? "completed" : "")">
                                             <div class="timeline-dot"></div>
-                                            <small>ESSALUD</small>
-                                        </div>
-                                        <div class="timeline-step @(solicitud.PasosCompletados >= 4 ? "completed" : "")">
-                                            <div class="timeline-dot"></div>
                                             <small>Jefa</small>
                                         </div>
-                                        <div class="timeline-step @(solicitud.PasosCompletados >= 5 ? "completed" : "")">
-                                            <div class="timeline-dot"></div>
-                                            <small>Planilla</small>
-                                        </div>
-                                        <div class="timeline-step @(solicitud.PasosCompletados >= 6 ? "completed" : "")">
+                                        <div class="timeline-step @(solicitud.PasosCompletados >= 4 ? "completed" : "")">
                                             <div class="timeline-dot"></div>
                                             <small>Subsidio</small>
                                         </div>
@@ -128,15 +201,15 @@
                                 <div class="d-flex flex-wrap gap-1">
                                     @if (solicitud.Tipo == "Descanso Médico")
                                     {
-                                        <span class="badge @GetEstadoMiniBadge(solicitud.EstadoESSALUD)">ESSALUD: @solicitud.EstadoESSALUD</span>
-                                        <span class="badge @GetEstadoMiniBadge(solicitud.EstadoProcesado)">Asistente: @solicitud.EstadoProcesado</span>
-                                        <span class="badge @GetEstadoMiniBadge(solicitud.EstadoSubsidioJ)">Jefa: @solicitud.EstadoSubsidioJ</span>
+                                        <span class="badge bg-light text-dark border">Asistente: @solicitud.EstadoESSALUD</span>
+                                        <span class="badge bg-light text-dark border">ESSALUD: @solicitud.EstadoESSALUD</span>
+                                        <span class="badge bg-light text-dark border">Jefa: @solicitud.EstadoProcesado</span>
                                     }
                                     else
                                     {
-                                        <span class="badge @GetEstadoMiniBadge(solicitud.EstadoSubsidioA)">PSA: @solicitud.EstadoSubsidioA</span>
-                                        <span class="badge @GetEstadoMiniBadge(solicitud.EstadoESSALUD)">ESSALUD: @solicitud.EstadoESSALUD</span>
-                                        <span class="badge @GetEstadoMiniBadge(solicitud.EstadoSubsidioJ)">Jefa: @solicitud.EstadoSubsidioJ</span>
+                                        <span class="badge bg-light text-dark border">PSA: @solicitud.EstadoSubsidioA</span>
+                                        <span class="badge bg-light text-dark border">Jefa: @solicitud.EstadoSubsidioJ</span>
+                                        <span class="badge bg-light text-dark border">Subsidio: @solicitud.EstadoGeneral</span>
                                     }
                                 </div>
                             </div>
@@ -160,8 +233,16 @@
     }
     else
     {
-        <!-- Mensaje cuando no hay solicitudes (mantener igual) -->
-        <!-- ... código anterior ... -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-binoculars display-1 text-muted"></i>
+            </div>
+            <h4 class="text-muted mb-3">No hay solicitudes para seguir</h4>
+            <p class="text-muted mb-4">Cuando tengas solicitudes activas, podrás ver su seguimiento aquí</p>
+            <a href="@Url.Action("Index", "Solicitud")" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i> Crear Nueva Solicitud
+            </a>
+        </div>
     }
 </div>
 
@@ -193,20 +274,7 @@
             "Aprobado" => "bg-success",
             "Rechazado" => "bg-danger",
             "En Observación" => "bg-warning text-dark",
-            "En Proceso" => "bg-primary",
-            _ => "bg-secondary"
-        };
-    }
-
-    public string GetEstadoMiniBadge(string estado)
-    {
-        return estado switch
-        {
-            "Aprobado" or "Válido" or "Subsidio" => "bg-success text-white",
-            "Rechazado" or "No válido" => "bg-danger text-white",
-            "En Observación" => "bg-warning text-dark",
-            "En Proceso" => "bg-primary text-white",
-            _ => "bg-light text-dark border"
+            _ => "bg-primary"
         };
     }
 
@@ -239,7 +307,6 @@
         text-align: center;
         flex: 1;
         position: relative;
-        min-width: 60px;
     }
 
     .timeline-step:not(:last-child)::after {
@@ -265,13 +332,11 @@
         margin: 0 auto 5px;
         position: relative;
         z-index: 2;
-        transition: all 0.3s ease;
     }
 
     .timeline-step.completed .timeline-dot {
         background-color: #198754;
         border: 2px solid #198754;
-        transform: scale(1.1);
     }
 
     .progress {
@@ -284,24 +349,62 @@
     }
 
     .estados-detallados .badge {
-        font-size: 0.65rem;
-        padding: 0.2rem 0.4rem;
-    }
-
-    .timeline-step small {
         font-size: 0.7rem;
-        line-height: 1.2;
+        padding: 0.25rem 0.5rem;
     }
 </style>
 
 @section Scripts {
     <script>
         function aplicarFiltros() {
-            // ... código anterior (mantener igual) ...
+            const filtroTipo = document.getElementById('filtroTipo').value;
+            const filtroEstado = document.getElementById('filtroEstado').value;
+            const ordenarPor = document.getElementById('ordenarPor').value;
+
+            const items = document.querySelectorAll('.solicitud-item');
+            
+            items.forEach(item => {
+                const tipo = item.getAttribute('data-tipo');
+                const estado = item.getAttribute('data-estado');
+                
+                let mostrar = true;
+
+                if (filtroTipo !== 'todos' && tipo !== filtroTipo) {
+                    mostrar = false;
+                }
+
+                if (filtroEstado !== 'todos' && estado !== filtroEstado) {
+                    mostrar = false;
+                }
+
+                item.style.display = mostrar ? 'block' : 'none';
+            });
+
+            // Ordenar items
+            const grid = document.getElementById('gridSeguimiento');
+            const itemsArray = Array.from(items).filter(item => item.style.display !== 'none');
+            
+            itemsArray.sort((a, b) => {
+                if (ordenarPor === 'fecha') {
+                    return 0; // Ya viene ordenado del servidor
+                } else if (ordenarPor === 'progreso') {
+                    const progresoA = parseInt(a.querySelector('.progress-bar').style.width);
+                    const progresoB = parseInt(b.querySelector('.progress-bar').style.width);
+                    return progresoB - progresoA;
+                } else if (ordenarPor === 'estado') {
+                    const estadoA = a.getAttribute('data-estado');
+                    const estadoB = b.getAttribute('data-estado');
+                    return estadoA.localeCompare(estadoB);
+                }
+                return 0;
+            });
+
+            // Reordenar en el DOM
+            itemsArray.forEach(item => grid.appendChild(item));
         }
 
         function verDetalleSeguimiento(descansoId) {
-            $.get('@Url.Action("DetalleSolicitudCompleto", "Lista")', { descansoId: descansoId }, function(data) {
+            $.get('@Url.Action("DetalleSolicitud", "Lista")', { descansoId: descansoId }, function(data) {
                 $('#detalleSeguimientoContenido').html(data);
                 $('#detalleSeguimientoModal').modal('show');
             }).fail(function() {
@@ -309,10 +412,10 @@
             });
         }
 
-        // Auto-refresh cada 30 segundos
+        // Auto-refresh cada 30 segundos para actualizar estados
         setInterval(function() {
             console.log('Actualizando estados de seguimiento...');
-            location.reload(); // Recarga simple para actualizar estados
+            // Aquí podrías agregar una llamada AJAX para actualizar los estados
         }, 30000);
     </script>
 }
