@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0dbpfeLap6I=",
+  "dgSpecHash": "/O4NOIgHtIQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\USUARIO\\Downloads\\Proyecto_Soft2\\proyectoIngSoft\\proyectoIngSoft.csproj",
+  "projectFilePath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USUARIO\\.nuget\\packages\\bouncycastle\\1.8.9\\bouncycastle.1.8.9.nupkg.sha512",
     "C:\\Users\\USUARIO\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
@@ -153,9 +153,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "El paquete \"BouncyCastle 1.8.9\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net9.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
-      "projectPath": "C:\\Users\\USUARIO\\Downloads\\Proyecto_Soft2\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectPath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\USUARIO\\Downloads\\Proyecto_Soft2\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "filePath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "libraryId": "BouncyCastle",
       "targetGraphs": [
         "net9.0"
@@ -165,9 +165,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "El paquete \"iTextSharp 5.5.13.3\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net9.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
-      "projectPath": "C:\\Users\\USUARIO\\Downloads\\Proyecto_Soft2\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "projectPath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\USUARIO\\Downloads\\Proyecto_Soft2\\proyectoIngSoft\\proyectoIngSoft.csproj",
+      "filePath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
       "libraryId": "iTextSharp",
       "targetGraphs": [
         "net9.0"

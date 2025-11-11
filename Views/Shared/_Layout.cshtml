@@ -108,10 +108,11 @@
                                         <li><a class="dropdown-item" asp-controller="Lista" asp-action="MisSolicitudes">Mis Solicitudes</a></li>
                                         <li><a class="dropdown-item" asp-controller="Lista" asp-action="MiSeguimiento">Seguimiento</a></li>
                                         <li><a class="dropdown-item" asp-controller="SistemaSolicitud" asp-action="Index">Solicitudes</a></li>
+                                        <li><a class="dropdown-item" asp-controller="MisSubsidios" asp-action="Index">Mis Subsidios</a></li>
 
                                         @if (rol == "Trabajador")
                                         {
-                                            <li><a class="dropdown-item" asp-controller="Simulaciones" asp-action="MisNotificaciones">Notificaciones de inactividad</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Simulaciones" asp-action="MisNotificaciones">Notificaciones de inactividad</a></li>                                            
                                         }
                                     </ul>
                                 </li>

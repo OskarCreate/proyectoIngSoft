@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = "Mis Subsidios";
+    var subsidios = ViewBag.Subsidios as IEnumerable<dynamic>;
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-1">Mis Subsidios 2025</h5>
+                <small class="text-muted">
+                    <i class="bi bi-clock-history"></i> Última actualización: @ViewBag.UltimaActualizacion
+                </small>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i> Actualizar
+                </button>
+                <form asp-action="ExportarPDF" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-file-earmark-pdf"></i> Exportar Informe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center bg-light">
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <i class="bi bi-person-circle fs-1 text-primary"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0">@ViewBag.Trabajador</h6>
+                    <small class="text-muted">ID: @ViewBag.Dni</small>
+                </div>
+            </div>
+            <div class="text-end">
+                <p class="mb-0 text-muted">Total a Cobrar</p>
+                <h4 class="text-primary fw-bold">S/ @String.Format("{0:N2}", ViewBag.TotalCobrar)</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <table class="table align-middle table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Tipo de Subsidio</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Días de Descanso</th>
+                        <th>Pago por Día</th>
+                        <th>Total a Pagar</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in subsidios)
+                    {
+                        string color = s.Estado == "Pagado" ? "bg-success text-white"
+                                      : s.Estado == "Pendiente" ? "bg-warning text-dark"
+                                      : "bg-secondary text-white";
+
+                        <tr>
+                            <td>
+                                <span class="badge bg-info text-dark">@s.Tipo</span>
+                            </td>
+                            <td>@(((DateTime)s.FechaInicio).ToString("d/M/yyyy"))</td>
+                            <td>@(((DateTime)s.FechaFin).ToString("d/M/yyyy"))</td>
+                            <td>
+                                <span class="badge rounded-pill bg-light text-primary border">@s.Dias</span>
+                            </td>
+                            <td>S/ @String.Format("{0:N2}", s.PagoPorDia)</td>
+                            <td>S/ @String.Format("{0:N2}", s.Total)</td>
+                            <td><span class="badge @color">@s.Estado</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="text-end mt-2">
+                <small class="text-muted">Total de subsidios: @subsidios.Count()</small><br />
+                <strong>Total a cobrar: <span class="text-primary">S/ @String.Format("{0:N2}", ViewBag.TotalCobrar)</span></strong>
+            </div>
+        </div>
+    </div>
+</div>
