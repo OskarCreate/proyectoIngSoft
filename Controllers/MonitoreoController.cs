@@ -65,14 +65,22 @@ namespace proyectoIngSoft.Controllers
             return View(lista);
         }
 
-        // ✅ NUEVA VISTA HU16
+        // ✅ NUEVA VISTA HU16 con FILTRO
         [HttpGet]
-        public async Task<IActionResult> HU16()
+        public async Task<IActionResult> HU16(string tipo = "Todos")
         {
-            var descansos = await _context.DbSetDescanso
+            var query = _context.DbSetDescanso
                 .Include(d => d.User)
                 .Include(d => d.TipoDescanso)
                 .OrderByDescending(d => d.FechaIni)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(tipo) && tipo != "Todos")
+            {
+                query = query.Where(d => d.TipoDescanso.Nombre == tipo);
+            }
+
+            var descansos = await query
                 .Select(d => new MonitoreoViewModel
                 {
                     Nombre = d.User.Username + " " + d.User.Apellidos,
@@ -86,6 +94,7 @@ namespace proyectoIngSoft.Controllers
                 })
                 .ToListAsync();
 
+            ViewBag.TipoSeleccionado = tipo;
             return View(descansos ?? new List<MonitoreoViewModel>());
         }
 
@@ -143,7 +152,6 @@ namespace proyectoIngSoft.Controllers
                 PdfWriter.GetInstance(doc, ms);
                 doc.Open();
 
-                // Título
                 var titulo = new Paragraph("Informe HU16 - Monitoreo")
                 {
                     Alignment = Element.ALIGN_CENTER,
@@ -151,11 +159,9 @@ namespace proyectoIngSoft.Controllers
                 };
                 doc.Add(titulo);
 
-                // Tabla
                 PdfPTable tabla = new PdfPTable(6) { WidthPercentage = 100 };
                 tabla.SetWidths(new float[] { 3, 2, 2, 1, 2, 2 });
 
-                // Encabezados
                 tabla.AddCell("Nombre");
                 tabla.AddCell("Tipo Subsidio");
                 tabla.AddCell("Fecha Inicio");
@@ -163,7 +169,6 @@ namespace proyectoIngSoft.Controllers
                 tabla.AddCell("Pago por Día");
                 tabla.AddCell("Total");
 
-                // Filas
                 foreach (var d in descansos)
                 {
                     tabla.AddCell(d.Nombre);
@@ -183,7 +188,7 @@ namespace proyectoIngSoft.Controllers
         }
     }
 
-    // ✅ VIEWMODEL PARA VISTA HU16 Y INDEX
+    // ✅ VIEWMODEL
     public class MonitoreoViewModel
     {
         public string Nombre { get; set; }

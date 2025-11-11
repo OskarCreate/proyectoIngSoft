@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace proyectoIngSoft.Models
 {
@@ -16,28 +12,33 @@ namespace proyectoIngSoft.Models
         public int IdEnfermedadFam { get; set; }
     
         [Required]
-        public string NombreFamiliar { get; set; }
+        public string NombreFamiliar { get; set; } = string.Empty;
+
         [Required]
         public DateOnly FechaIni { get; set; }
+
         [Required]
         public DateOnly FechaFin { get; set; }
-        [NotNull]
+
         [Required]
-        public string Parentesco { get; set; }
-        [NotNull]
+        public string Parentesco { get; set; } = string.Empty;
+
         [Required]
-        public string CentroMedico { get; set; }
-        [NotNull]
+        public string CentroMedico { get; set; } = string.Empty;
+
         [Required]
-        public string Medico { get; set; }
-        [NotNull]
+        public string Medico { get; set; } = string.Empty;
+
         [Required]
-        public string NumeroCMP { get; set; }
+        public string NumeroCMP { get; set; } = string.Empty;
+
         [Required]
         public DateOnly FechaDiag { get; set; }
+
         [Required]
         public int DiaSoli { get; set; }
 
-
+        // ⚠ Nullable-safe: puede venir NULL desde la base de datos
+        public string? CodigoEssalud { get; set; }
     }
 }

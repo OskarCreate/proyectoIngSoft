@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj": {}
+    "C:\\Users\\Miguel Cabrera\\Desktop\\MAIN-TOVAR\\proyectoIngSoft-main\\proyectoIngSoft.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj": {
+    "C:\\Users\\Miguel Cabrera\\Desktop\\MAIN-TOVAR\\proyectoIngSoft-main\\proyectoIngSoft.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
+        "projectUniqueName": "C:\\Users\\Miguel Cabrera\\Desktop\\MAIN-TOVAR\\proyectoIngSoft-main\\proyectoIngSoft.csproj",
         "projectName": "proyectoIngSoft",
-        "projectPath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\proyectoIngSoft.csproj",
-        "packagesPath": "C:\\Users\\USUARIO\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USUARIO\\Downloads\\Soft_proy\\proyectoIngSoft\\obj\\",
+        "projectPath": "C:\\Users\\Miguel Cabrera\\Desktop\\MAIN-TOVAR\\proyectoIngSoft-main\\proyectoIngSoft.csproj",
+        "packagesPath": "C:\\Users\\Miguel Cabrera\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Miguel Cabrera\\Desktop\\MAIN-TOVAR\\proyectoIngSoft-main\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\USUARIO\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Miguel Cabrera\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

@@ -1,0 +1,42 @@
+@model proyectoIngSoft.Models.Descanso
+
+<h4>Detalles del Descanso Médico</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Empleado</th>
+        <td>@Model.NombreCompleto</td>
+    </tr>
+    <tr>
+        <th>DNI</th>
+        <td>@Model.DNI</td>
+    </tr>
+    <tr>
+        <th>Tipo de Descanso</th>
+        <td>@Model.TipoDescanso?.Nombre</td>
+    </tr>
+    <tr>
+        <th>Fecha Inicio</th>
+        <td>@Model.FechaIni.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <th>Fecha Fin</th>
+        <td>@Model.FechaFin.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <th>Diagnóstico</th>
+        <td>@Model.DiagnosticoDescanso</td>
+    </tr>
+    <tr>
+        <th>Centro Médico</th>
+        <td>@Model.CentroMedicoDescanso</td>
+    </tr>
+    <tr>
+        <th>Médico Tratante</th>
+        <td>@Model.MedicoTratanteDescanso</td>
+    </tr>
+    <tr>
+        <th>CMP</th>
+        <td>@Model.CMPDescanso</td>
+    </tr>
+</table>

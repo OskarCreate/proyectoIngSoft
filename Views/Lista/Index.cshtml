@@ -98,6 +98,12 @@
                                    onclick="abrirModal(@item.IdDescanso)">
                                     Ver Detalles
                                 </a>
+                                      <a href="javascript:void(0)"
+       class="btn-editar"
+       data-descanso-id="@item.IdDescanso"
+       onclick="abrirModalEditar(@item.IdDescanso)">
+        Editar
+    </a>
                             </td>
                         </tr>
                     }
@@ -207,11 +213,18 @@
                                 </td>
                                 <td>
                                     <a href="javascript:void(0)"
-                                       class="btn-detalles"
-                                       data-descanso-id="@item.IdDescanso"
-                                       onclick="abrirModalProcesadas(@item.IdDescanso)">
-                                        Ver Detalles
-                                    </a>
+   class="btn-detalles"
+   data-descanso-id="@item.IdDescanso"
+   onclick="abrirModal(@item.IdDescanso, true)">
+    Ver Detalles
+</a>
+
+                                    <a href="javascript:void(0)"
+       class="btn-editar"
+       data-descanso-id="@item.IdDescanso"
+       onclick="abrirModalEditar(@item.IdDescanso)">
+        Editar
+    </a>
                                 </td>
                             </tr>
                         }
@@ -260,6 +273,12 @@
     </div>
   </div>
 </div>
+
+
+<!-- CONTENEDOR PARA EL MODAL DE EDICIÓN -->
+<div id="modalEditarContainer"></div>
+
+
 
 
 <!-- MODAL: Reportar Trabajador -->
@@ -327,6 +346,8 @@ function abrirModalProcesadas(descansoId) {
 }
 
 
+
+
 function filtrarTabla() {
     const filtroEmpleado = document.getElementById("filtroEmpleado").value.toLowerCase();
     const filtroLicencia = document.getElementById("filtroLicencia").value.toLowerCase();
@@ -384,6 +405,9 @@ function filtrarTablaProcesadas() {
     });
 }
 
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const descripcionInput = document.getElementById("descripcionReporte");
     const trabajadorSelect = document.getElementById("trabajadorSelect");
@@ -440,9 +464,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
-
+function abrirModalEditar(descansoId) {
+    $.get("/HU11/EditarDescanso", { id: descansoId }, function(modalHtml) {
+        $("#modalEditarContainer").html(modalHtml);
+        $("#modalEditarContainer .modal").modal("show");
+    }).fail(function () {
+        alert("No se pudo cargar el modal de edición.");
+    });
+}
 </script>
+
+
+
 
 <style>
 /* ESTILOS GENERALES */
@@ -666,6 +699,38 @@ document.addEventListener("DOMContentLoaded", function () {
     color: #fff;
     text-decoration: none;
 }
+
+/* ESTADOS PARA LA SEGUNDA TABLA */
+.badge-color {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 90px;
+}
+
+/* BOTÓN EDITAR */
+.btn-editar {
+    background: #2c5aa0; /* Puedes cambiar el color si quieres otro */
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+.btn-editar:hover {
+        background: #2c5aa0;
+    color: #fff;
+    text-decoration: none;
+
 
 /* ESTADOS PARA LA SEGUNDA TABLA */
 .badge-color {

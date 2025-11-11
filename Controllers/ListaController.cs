@@ -74,6 +74,31 @@ namespace proyectoIngSoft.Controllers
         // DETALLE DE UNA SOLICITUD DE DESCANSO
         // =======================================
         public IActionResult DetalleDescanso(int descansoId)
+{
+    // Cargar solo el descanso primero
+    var descanso = _context.DbSetDescanso
+        .FirstOrDefault(d => d.IdDescanso == descansoId);
+
+    if (descanso == null) return NotFound();
+
+    // Cargar referencias relacionadas una por una
+    _context.Entry(descanso).Reference(d => d.User).Load();
+    _context.Entry(descanso).Reference(d => d.TipoDescanso).Load();
+    _context.Entry(descanso).Reference(d => d.Accidente).Load();
+    _context.Entry(descanso).Reference(d => d.Enfermedad).Load();
+    _context.Entry(descanso).Reference(d => d.EnfermedadFam).Load();
+    _context.Entry(descanso).Reference(d => d.Fallecimiento).Load();
+    _context.Entry(descanso).Reference(d => d.Maternidad).Load();
+    _context.Entry(descanso).Reference(d => d.Paternidad).Load();
+
+    // Cargar colección de documentos
+    _context.Entry(descanso).Collection(d => d.DocumentosMedicos).Load();
+
+    return PartialView("_DetalleDescanso", descanso);
+}
+
+
+      public IActionResult DetalleDescansoProcesadas(int descansoId)
         {
             var descanso = _context.DbSetDescanso
                 .Include(d => d.User)
@@ -92,28 +117,11 @@ namespace proyectoIngSoft.Controllers
             return PartialView("_DetalleDescanso", descanso);
         }
 
-        public IActionResult DetalleDescansoProcesadas(int descansoId)
-        {
-            var descanso = _context.DbSetDescanso
-                .Include(d => d.User)
-                .Include(d => d.TipoDescanso)
-                .Include(d => d.Accidente)
-                .Include(d => d.Enfermedad)
-                .Include(d => d.EnfermedadFam)
-                .Include(d => d.Fallecimiento)
-                .Include(d => d.Maternidad)
-                .Include(d => d.Paternidad)
-                .Include(d => d.DocumentosMedicos)
-                .FirstOrDefault(d => d.IdDescanso == descansoId);
-
-            if (descanso == null) return NotFound();
-
-            return PartialView("_DetalleDescansoProcesadas", descanso);
-        }
 
 
 
-        [HttpPost]
+
+       [HttpPost]
         public IActionResult CambiarEstadoProcesada(int descansoId, string nuevoEstado)
         {
             try
@@ -139,6 +147,7 @@ namespace proyectoIngSoft.Controllers
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
+
 
         // ==========================================
         // ENVIAR OBSERVACIÓN Y MOSTRAR CONFIRMACIÓN
@@ -230,7 +239,7 @@ namespace proyectoIngSoft.Controllers
         // ======================
         // VER DOCUMENTO EN IFRAME
         // ======================
-        public IActionResult VerDocumento(int id)
+         public IActionResult VerDocumento(int id)
         {
             var documento = _context.DocumentosMedicos
                 .AsNoTracking()
@@ -242,6 +251,7 @@ namespace proyectoIngSoft.Controllers
             Response.Headers["Content-Disposition"] = $"inline; filename=\"{documento.Nombre}\"";
             return File(documento.Archivo, "application/pdf");
         }
+
 
 
         public IActionResult DescansosProlongados()
@@ -287,6 +297,7 @@ namespace proyectoIngSoft.Controllers
 
             return View("VerDocumentos", descanso);
         }
+        
         
         [HttpPost]
         public IActionResult EliminarDocumentos(int descansoId, List<int> documentosIds)

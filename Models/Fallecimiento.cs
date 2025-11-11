@@ -33,5 +33,8 @@ namespace proyectoIngSoft.Models
         [Required]
         public string Traslado { get; set; }
         
+        public string Motivo { get; set; }
+
+
     }
 }

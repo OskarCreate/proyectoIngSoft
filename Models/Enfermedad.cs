@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace proyectoIngSoft.Models
 {
@@ -15,31 +11,31 @@ namespace proyectoIngSoft.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdEnfermedad { get; set; }
        
-        [NotNull]
         [Required]
-        public string SubtipoSol { get; set; }
+        public string SubtipoSol { get; set; } = string.Empty;
+
         [Required]
         public DateOnly FechaIni { get; set; }
+
         [Required]
         public DateOnly FechaFin { get; set; }
-        [NotNull]
+
         [Required]
-        public string NombreMedi { get; set; }
-        [NotNull]
+        public string NombreMedi { get; set; } = string.Empty;
+
         [Required]
-        public string CentroMedico { get; set; }
-        [NotNull]
+        public string CentroMedico { get; set; } = string.Empty;
+
         [Required]
         public int DiasDesc { get; set; }
-        [NotNull]
-        [Required]
-        public string Diagnostico { get; set; }
-        [NotNull]
-        [Required]
-        public string DescEnfe { get; set; }
-        
-        
 
+        [Required]
+        public string Diagnostico { get; set; } = string.Empty;
 
+        [Required]
+        public string DescEnfe { get; set; } = string.Empty;
+
+        // ⚠ Nullable-safe: puede ser null en la base de datos
+        public string? CodigoEssalud { get; set; }
     }
 }

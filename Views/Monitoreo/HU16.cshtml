@@ -6,30 +6,29 @@
 
 <div class="container mt-4">
     <!-- Encabezado -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-        <h2 class="fw-bold text-primary">HISTORIAL DE PAGOS DE SUBSIDIOS 2025</h2>
-        <p class="text-muted">Última actualización: <strong>@fechaActual</strong></p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="fw-bold text-primary">HISTORIAL DE PAGOS DE SUBSIDIOS 2025</h2>
+            <p class="text-muted">Última actualización: <strong>@fechaActual</strong></p>
+        </div>
+        <div>
+            <button id="btnActualizar" class="btn btn-outline-primary me-2">
+                🔄 Actualizar
+            </button>
+            <a asp-controller="Monitoreo" asp-action="ExportarPDF_HU16" class="btn btn-success">
+                📊 Exportar informe
+            </a>
+        </div>
     </div>
-    <div>
-        <button id="btnActualizar" class="btn btn-outline-primary me-2">
-            🔄 Actualizar
-        </button>
-        <a asp-controller="Monitoreo" asp-action="ExportarPDF_HU16" class="btn btn-success">
-            📊 Exportar informe
-        </a>
-    </div>
-</div>
-
 
     <!-- Filtros -->
     <div class="d-flex align-items-center mb-4">
         <label class="me-2 fw-semibold">Filtrar por tipo de subsidio:</label>
         <select id="filtroTipo" class="form-select w-auto">
-            <option value="Todos" selected>Todos</option>
-            <option value="Maternidad">Maternidad</option>
-            <option value="Enfermedad">Enfermedad</option>
-            <option value="Accidente">Accidente Laboral</option>
+            <option value="todos" selected>Todos</option>
+            <option value="maternidad">Maternidad</option>
+            <option value="enfermedad">Enfermedad</option>
+            <option value="accidente">Accidente Laboral</option>
         </select>
     </div>
 
@@ -94,25 +93,7 @@
             location.reload();
         });
 
-        // ✅ Botón "Exportar informe": descargar Excel
-        document.getElementById("btnExportar").addEventListener("click", async () => {
-            try {
-                const response = await fetch('/Monitoreo/ExportarExcel');
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'Historial_Pagos_Subsidios_2025.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            } catch (err) {
-                alert("⚠️ Error al exportar el informe.");
-            }
-        });
-
-        // ✅ Filtro dinámico
+        // ✅ Filtro dinámico sin cambiar de URL
         document.getElementById("filtroTipo").addEventListener("change", (e) => {
             const filtro = e.target.value.toLowerCase();
             document.querySelectorAll("#tablaPagos tr").forEach(row => {
