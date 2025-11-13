@@ -124,10 +124,10 @@
                                         </td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-primary" 
-                                                    onclick="verDetalle(@solicitud.IdDescanso)"
-                                                    title="Ver detalles">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
+        onclick="verDetalle(@solicitud.IdDescanso)"
+        title="Ver detalles">
+    <i class="fas fa-eye"></i>
+</button>
                                             @if (solicitud.Estado == "En Observación")
                                             {
                                                 <button class="btn btn-sm btn-outline-warning" 
@@ -206,7 +206,7 @@
 @section Scripts {
     <script>
         function verDetalle(descansoId) {
-            $.get('@Url.Action("DetalleDescanso", "Lista")', { descansoId: descansoId })
+            $.get('@Url.Action("DetalleMiSolicitud", "Lista")', { descansoId: descansoId })
                 .done(function(data) {
                     $('#contenidoDetalle').html(data);
                     $('#modalDetalle').modal('show');
