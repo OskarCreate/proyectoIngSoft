@@ -73,7 +73,7 @@ namespace proyectoIngSoft.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("FechaFin")
                         .HasColumnType("timestamp without time zone");
@@ -222,7 +222,8 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<long>("Tamaño")
                         .HasColumnType("bigint");
@@ -244,6 +245,9 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("CentroMedico")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CodigoEssalud")
                         .HasColumnType("text");
 
                     b.Property<string>("DescEnfe")
@@ -286,6 +290,9 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("CentroMedico")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CodigoEssalud")
                         .HasColumnType("text");
 
                     b.Property<int>("DiaSoli")
@@ -342,6 +349,10 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("NombreFallec")
                         .IsRequired()
                         .HasColumnType("text");
@@ -373,7 +384,8 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Descripcion");
 
                     b.Property<DateOnly>("FechaFin")
                         .HasColumnType("date");
@@ -484,6 +496,10 @@ namespace proyectoIngSoft.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPater"));
 
                     b.Property<string>("CentroMed")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("text");
 

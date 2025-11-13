@@ -13,8 +13,8 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251026074904_fixmigracióntotal")]
-    partial class fixmigracióntotal
+    [Migration("20251112072310_SyncModeloLimpio")]
+    partial class SyncModeloLimpio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,48 @@ namespace proyectoIngSoft.Data.Migrations
                     b.ToTable("t_Accidente");
                 });
 
+            modelBuilder.Entity("proyectoIngSoft.Models.CalendarioEvento", b =>
+                {
+                    b.Property<int>("IdEvento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdEvento"));
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("FechaFin")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("IdUser")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TipoEvento")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("IdEvento");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("T_CalendarioEventos");
+                });
+
             modelBuilder.Entity("proyectoIngSoft.Models.CodigoSocial", b =>
                 {
                     b.Property<int>("IdCodigo")
@@ -103,6 +145,10 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<string>("EstadoProcesado")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("EstadoSubsidioA")
                         .IsRequired()
@@ -179,7 +225,8 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<long>("Tamaño")
                         .HasColumnType("bigint");
@@ -201,6 +248,9 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("CentroMedico")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CodigoEssalud")
                         .HasColumnType("text");
 
                     b.Property<string>("DescEnfe")
@@ -243,6 +293,9 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("CentroMedico")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CodigoEssalud")
                         .HasColumnType("text");
 
                     b.Property<int>("DiaSoli")
@@ -299,6 +352,10 @@ namespace proyectoIngSoft.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("NombreFallec")
                         .IsRequired()
                         .HasColumnType("text");
@@ -330,7 +387,8 @@ namespace proyectoIngSoft.Data.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Descripcion");
 
                     b.Property<DateOnly>("FechaFin")
                         .HasColumnType("date");
@@ -441,6 +499,10 @@ namespace proyectoIngSoft.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPater"));
 
                     b.Property<string>("CentroMed")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -614,6 +676,15 @@ namespace proyectoIngSoft.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ValidarDatos");
+                });
+
+            modelBuilder.Entity("proyectoIngSoft.Models.CalendarioEvento", b =>
+                {
+                    b.HasOne("proyectoIngSoft.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("proyectoIngSoft.Models.Descanso", b =>

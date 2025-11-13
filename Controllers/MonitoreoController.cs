@@ -65,7 +65,7 @@ namespace proyectoIngSoft.Controllers
             return View(lista);
         }
 
-        // ✅ NUEVA VISTA HU16 con FILTRO
+        // ✅ HU16 con filtro exacto y opciones visibles
         [HttpGet]
         public async Task<IActionResult> HU16(string tipo = "Todos")
         {
@@ -75,6 +75,7 @@ namespace proyectoIngSoft.Controllers
                 .OrderByDescending(d => d.FechaIni)
                 .AsQueryable();
 
+            // 🔹 Filtro exacto por tipo
             if (!string.IsNullOrEmpty(tipo) && tipo != "Todos")
             {
                 query = query.Where(d => d.TipoDescanso.Nombre == tipo);
@@ -93,6 +94,15 @@ namespace proyectoIngSoft.Controllers
                     Estado = d.EstadoSubsidioJ
                 })
                 .ToListAsync();
+
+            // 🔹 Opciones de filtro disponibles (ahora fijas)
+            ViewBag.Tipos = new List<string>
+            {
+                "Todos",
+                "Enfermedad",
+                "Enfermedad Familiar",
+                "Paternidad"
+            };
 
             ViewBag.TipoSeleccionado = tipo;
             return View(descansos ?? new List<MonitoreoViewModel>());
