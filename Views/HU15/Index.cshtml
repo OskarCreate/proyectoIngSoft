@@ -2,7 +2,7 @@
 @using proyectoIngSoft.Models
 
 @{
-    ViewData["Title"] = "Gestión de usuarios con descanso médico prolongado";
+    ViewData["Title"] = "Control de trabajador de descanso medico prolongado";
     var totalUsuarios = Model.Count();
     var enDescansoActivo = Model.Count(d => d.EstadoSubsidioA == "Descanso Activo");
     var convertidosSubsidio = Model.Count(d => d.EstadoSubsidioA == "Subsidio");

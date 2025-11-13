@@ -99,11 +99,11 @@
                                     Ver Detalles
                                 </a>
                                       <a href="javascript:void(0)"
-       class="btn-editar"
-       data-descanso-id="@item.IdDescanso"
-       onclick="abrirModalEditar(@item.IdDescanso)">
-        Editar
-    </a>
+                                class="btn-editar"
+                                data-descanso-id="@item.IdDescanso"
+                                onclick="abrirModalEditar(@item.IdDescanso)">
+                                    Editar
+                                </a>
                             </td>
                         </tr>
                     }
@@ -163,8 +163,9 @@
                     <th>Razón del Descanso</th>
                     <th>Fecha Registro</th>
                     <th>ESSALUD</th>
-                    <th>Estado</th> <!-- NUEVA COLUMNA -->
                     <th>Acciones</th>
+                    <th>Estado</th> <!-- NUEVA COLUMNA -->
+                    
                 </tr>
             </thead>
         </table>
@@ -194,6 +195,27 @@
                                     }
                                 </td>
                                 <td>
+                                    @if (item.EstadoProcesado == "Aceptado" || item.EstadoProcesado == "Rechazado")
+                                    {
+                                        <!-- Botón deshabilitado -->
+                                        <span class="btn-detalles disabled" 
+                                            style="background-color: #6c757d; cursor: not-allowed; opacity: 0.6;"
+                                            title="Solicitud finalizada - No editable">
+                                            Ver Detalles
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <!-- Botón habilitado -->
+                                        <a href="javascript:void(0)"
+                                        class="btn-detalles"
+                                        data-descanso-id="@item.IdDescanso"
+                                        onclick="abrirModalProcesadas(@item.IdDescanso)">
+                                            Ver Detalles
+                                        </a>
+                                    }
+                                </td>
+                                <td>
                                     @if (item.EstadoProcesado == "Procesado")
                                     {
                                         <span class="badge-color morado">Procesado</span>
@@ -208,17 +230,9 @@
                                     }
                                     else
                                     {
-                                        <span class="badge-color">@item.EstadoProcesado</span>
+                                        <span class="badge-color morado">Procesado</span>
                                     }
-                                </td>
-                                <td>
-                                    <a href="javascript:void(0)"
-                                       class="btn-detalles"
-                                       data-descanso-id="@item.IdDescanso"
-                                       onclick="abrirModalProcesadas(@item.IdDescanso)">
-                                        Ver Detalles
-                                    </a>
-                                </td>
+                                </td>                                
                             </tr>
                         }
                     }
@@ -482,6 +496,20 @@ function abrirModalEditar(descansoId) {
     border: 1px solid #e0e0e0;
 }
 
+.btn-editar {
+    background: #2c5aa0; /* Puedes cambiar el color si quieres otro */
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
 /* ENCABEZADO */
 .header {
     display: flex;
@@ -704,38 +732,6 @@ function abrirModalEditar(descansoId) {
     min-width: 90px;
 }
 
-/* BOTÓN EDITAR */
-.btn-editar {
-    background: #2c5aa0; /* Puedes cambiar el color si quieres otro */
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    display: inline-block;
-    transition: background-color 0.2s;
-}
-
-.btn-editar:hover {
-        background: #2c5aa0;
-    color: #fff;
-    text-decoration: none;
-
-
-/* ESTADOS PARA LA SEGUNDA TABLA */
-.badge-color {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
-    min-width: 90px;
-}
-
 .badge-color.verde {
     background-color: #d4edda;
     color: #155724;
@@ -803,3 +799,4 @@ function abrirModalEditar(descansoId) {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="~/css/Modal.css" asp-append-version="true">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
