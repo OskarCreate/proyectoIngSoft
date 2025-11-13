@@ -97,6 +97,30 @@ namespace proyectoIngSoft.Controllers
     return PartialView("_DetalleDescanso", descanso);
 }
 
+        public IActionResult DetalleMiSolicitud(int descansoId)
+        {
+            // Cargar solo el descanso primero
+            var descanso = _context.DbSetDescanso
+                .FirstOrDefault(d => d.IdDescanso == descansoId);
+
+            if (descanso == null) return NotFound();
+
+            // Cargar referencias relacionadas una por una
+            _context.Entry(descanso).Reference(d => d.User).Load();
+            _context.Entry(descanso).Reference(d => d.TipoDescanso).Load();
+            _context.Entry(descanso).Reference(d => d.Accidente).Load();
+            _context.Entry(descanso).Reference(d => d.Enfermedad).Load();
+            _context.Entry(descanso).Reference(d => d.EnfermedadFam).Load();
+            _context.Entry(descanso).Reference(d => d.Fallecimiento).Load();
+            _context.Entry(descanso).Reference(d => d.Maternidad).Load();
+            _context.Entry(descanso).Reference(d => d.Paternidad).Load();
+
+            // Cargar colección de documentos
+            _context.Entry(descanso).Collection(d => d.DocumentosMedicos).Load();
+
+            return PartialView("_DetalleMiSolicitud", descanso);
+        }
+
 
       public IActionResult DetalleDescansoProcesadas(int descansoId)
         {
