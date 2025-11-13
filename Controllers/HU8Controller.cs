@@ -47,7 +47,7 @@ namespace proyectoIngSoft.Controllers
 
             if (descanso == null) return NotFound();
 
-            return PartialView("_DetalleDescanso", descanso);
+             return PartialView("~/Views/Lista/DetalleDescansoModal.cshtml", descanso);
         }
     }
 }

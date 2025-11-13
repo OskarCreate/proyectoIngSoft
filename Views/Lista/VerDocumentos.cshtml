@@ -256,7 +256,42 @@
         nombreElem.appendChild(icono);
         div.classList.add("dup-alert");
     }
+
+
 </script>
+
+
+
+<!-- 🪟 Modal vacío donde se cargará el detalle -->
+<div class="modal fade" id="detalleModalProcesadas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="detalleContenidoProcesadas">
+            <!-- Aquí se inyecta _DetalleDescanso.cshtml -->
+        </div>
+    </div>
+</div>
+
+<!-- 🔽 jQuery y Bootstrap (si no están ya en tu Layout) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 🧠 Script para abrir el modal -->
+<script>
+    function abrirModalDetalleDescanso(id) {
+        $.ajax({
+            url: '/HU8/DetalleDescanso/' + id, // 👈 usa la acción real
+            type: 'GET',
+            success: function (data) {
+                $('#detalleContenidoProcesadas').html(data);
+                $('#detalleModalProcesadas').modal('show');
+            },
+            error: function () {
+                alert('No se pudieron cargar los detalles del descanso médico.');
+            }
+        });
+    }
+</script>
+
 
 
 <!-- === CSS === -->
