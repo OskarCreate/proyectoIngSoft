@@ -8,7 +8,7 @@
     <!-- Encabezado -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h2 class="fw-bold text-primary">HISTORIAL DE PAGOS DE SUBSIDIOS 2025</h2>
+            <h2 class="fw-bold text-primary">HISTORIAL DE IMPORTE DE PAGOS ANUALES</h2>
             <p class="text-muted">Última actualización: <strong>@fechaActual</strong></p>
         </div>
         <div>
@@ -89,6 +89,16 @@
     </table>
 </div>
 
+@if (ViewBag.TipoSeleccionado == "Accidente Laboral" && (Model == null || !Model.Any()))
+{
+    <div class="alert alert-warning mt-3" role="alert">
+        No hay subsidios de Accidente Laboral registrados.
+    </div>
+}
+
+
+
+
 @section Scripts {
     <script>
         // ✅ Botón "Actualizar": recargar la página
@@ -108,5 +118,12 @@
                 }
             });
         });
+    </script>
+
+    <script>
+    document.getElementById("filtroTipo").addEventListener("change", function () {
+        const tipoSeleccionado = this.value;
+        window.location.href = '/Monitoreo/HU16?tipo=' + encodeURIComponent(tipoSeleccionado);
+    });
     </script>
 }
