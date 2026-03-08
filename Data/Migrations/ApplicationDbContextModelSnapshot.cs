@@ -9,7 +9,7 @@ using proyectoIngSoft.Data;
 
 #nullable disable
 
-namespace proyectoIngSoft.Data.Migrations
+namespace proyectoIngSoft.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
