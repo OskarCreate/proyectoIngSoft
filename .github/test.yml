@@ -1,16 +1,13 @@
-name: Run Tests
+# Azure Pipelines YAML - Formato correcto
+trigger:
+- main
 
-on:
-  push:
-    branches: [ main ]
+pool:
+  vmImage: ubuntu-latest
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+steps:
+- checkout: self
+  displayName: 'Descargar código'
 
-    steps:
-      - name: Descargar código
-        uses: actions/checkout@v3
-
-      - name: Ejecutar pruebas
-        run: echo "Running automated tests"
+- script: echo "Running automated tests"
+  displayName: 'Ejecutar pruebas'
