@@ -70,19 +70,21 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Aplicar migraciones automáticamente al iniciar en producción
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<ApplicationDbContext>(); // Cambia por el nombre de tu DbContext
-        context.Database.Migrate(); // Aplica migraciones pendientes automáticamente
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate(); // Crea todas las tablas automáticamente
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error al aplicar migraciones a la base de datos.");
-        throw; // Re-lanza para que Render muestre el error en los logs
+        logger.LogError(ex, "Error al aplicar migraciones.");
+        throw;
     }
 }
+
 app.Run();
