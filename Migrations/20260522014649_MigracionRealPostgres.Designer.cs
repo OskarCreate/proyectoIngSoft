@@ -13,8 +13,8 @@ using proyectoIngSoft.Data;
 namespace proyectoIngSoft.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260522005252_InitialPostgreSQL")]
-    partial class InitialPostgreSQL
+    [Migration("20260522014649_MigracionRealPostgres")]
+    partial class MigracionRealPostgres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
